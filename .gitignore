@@ -32,3 +32,6 @@ archive/test/
 
 # --- Claude Code local state ---
 .claude/settings.local.json
+
+# Lecture 8 app lives in its own repository
+Lectures 8/

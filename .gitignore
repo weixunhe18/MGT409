@@ -29,3 +29,6 @@ frames/
 
 # --- Nested repo (has its own .git) ---
 archive/test/
+
+# --- Claude Code local state ---
+.claude/settings.local.json

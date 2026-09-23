@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lec8-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "Lectures 8/frontend", "run", "dev"],
+      "port": 5173,
+      "autoPort": true
+    }
+  ]
+}

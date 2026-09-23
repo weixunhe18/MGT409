@@ -1,0 +1,18 @@
+# Secrets — only .env.example is meant to be committed.
+.env
+.env.*
+!.env.example
+
+# Python
+backend/.venv/
+__pycache__/
+*.py[cod]
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Agent run log (regenerated locally; drop this line if you want it tracked)
+output/audit_trail.corrupt.json
+
+.DS_Store

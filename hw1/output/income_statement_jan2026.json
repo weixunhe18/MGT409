@@ -1,0 +1,92 @@
+{
+  "period": "2026-01",
+  "revenue_lines": [
+    {
+      "label": "january-business-revenue",
+      "amount_usd": 8150.0,
+      "category": "revenue",
+      "sources": [
+        "bank_transactions.json",
+        "email_owner_voice_memo.txt"
+      ]
+    }
+  ],
+  "revenue_usd": 8150.0,
+  "expense_lines": [
+    {
+      "label": "rent",
+      "amount_usd": 1800.0,
+      "category": "rent",
+      "sources": [
+        "bank_transactions.json"
+      ]
+    },
+    {
+      "label": "utilities",
+      "amount_usd": 276.41,
+      "category": "utilities",
+      "sources": [
+        "bank_transactions.json"
+      ]
+    },
+    {
+      "label": "new-haven-bike-parts",
+      "amount_usd": 960.58,
+      "category": "new_haven_bike_parts",
+      "sources": [
+        "bank_transactions.json",
+        "credit_card_transactions.json",
+        "receipts.json",
+        "email_owner_voice_memo.txt"
+      ]
+    },
+    {
+      "label": "park-tool-purchases",
+      "amount_usd": 471.95,
+      "category": "park_tool_purchases",
+      "sources": [
+        "bank_transactions.json",
+        "credit_card_transactions.json",
+        "receipts.json",
+        "email_owner_voice_memo.txt"
+      ]
+    },
+    {
+      "label": "matched-card-receipts",
+      "amount_usd": 520.12,
+      "category": "matched_card_receipts",
+      "sources": [
+        "credit_card_transactions.json",
+        "receipts.json",
+        "email_owner_voice_memo.txt"
+      ]
+    },
+    {
+      "label": "other-business-card-expenses",
+      "amount_usd": 204.26,
+      "category": "other_business_card_expenses",
+      "sources": [
+        "credit_card_transactions.json"
+      ]
+    },
+    {
+      "label": "insurance-bank-fee",
+      "amount_usd": 229.0,
+      "category": "insurance_bank_fee",
+      "sources": [
+        "bank_transactions.json"
+      ]
+    },
+    {
+      "label": "rei-business-jacket",
+      "amount_usd": 156.0,
+      "category": "rei_business_jacket",
+      "sources": [
+        "credit_card_transactions.json",
+        "email_owner_voice_memo.txt"
+      ]
+    }
+  ],
+  "total_expenses_usd": 4618.32,
+  "netincome_usd": 3531.68
+}

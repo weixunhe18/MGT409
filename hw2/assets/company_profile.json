@@ -1,0 +1,161 @@
+{
+  "company_name": "Navy Federal Credit Union",
+  "website": "https://www.navyfederal.org/",
+  "headquarters": {
+    "evidence": "Navy Federal identifies Vienna, Virginia in its corporate press releases; its 2024 event notice gives a Vienna address for the Navy Federal 5K start/finish line.",
+    "sources": [
+      "https://www.navyfederal.org/about/press-releases/2024/navy-federal-30th-annual-5k.html"
+    ],
+    "source_quote": "VIENNA, VA ... WHERE: Start & finish line located at 820 Follin Lane, Vienna, VA 22180"
+  },
+  "operating_locations": [
+    {
+      "evidence": "The company states that its global branch network includes 383 locations across four continents.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ],
+      "source_quote": "After opening 15 new branches in 2025, Navy Federal’s global network now includes 383 locations across four continents."
+    },
+    {
+      "evidence": "Navy Federal states it operates the Department of Defense Overseas Military Banking Program, providing deployed active-duty servicemembers access to approximately 60 branches in 10 countries and territories.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ],
+      "source_quote": "Navy Federal is contracted to operate the Overseas Military Banking Program ... which provides Active Duty military Servicemembers deployed overseas with access to some 60 branches and hundreds of ATMs spread across 10 countries and territories."
+    }
+  ],
+  "property_footprint": [
+    {
+      "evidence": "Navy Federal publicly reports a global network of 383 branch locations and a fully U.S.-based contact center. A 2025 release also states that 178 branches operate on or near military bases.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html",
+        "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html"
+      ],
+      "source_quote": "After opening 15 new branches in 2025, Navy Federal’s global network now includes 383 locations across four continents."
+    }
+  ],
+  "estimated_building_size": {
+    "value": null,
+    "basis": "The reviewed company pages publish branch-network counts but no defensible square footage, floor area, dimensions, or building-size total for its branches, headquarters, contact center, or other facilities.",
+    "confidence": "unknown",
+    "sources": [
+      "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+    ]
+  },
+  "estimated_room_count": {
+    "value": null,
+    "basis": "The reviewed website evidence does not state room counts, fixture counts, or enough facility-area details to calculate a room count.",
+    "confidence": "unknown",
+    "sources": []
+  },
+  "industry": [
+    {
+      "evidence": "Navy Federal describes itself as a member-owned, not-for-profit credit union serving the financial needs of the military community.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ],
+      "source_quote": "As a member-owned and not-for-profit organization ... Since 1933, this credit union has existed to serve the financial needs of America’s military community."
+    }
+  ],
+  "water_infrastructure": [],
+  "water_intensive_or_complex_assets": [
+    {
+      "evidence": "Navy Federal has a geographically distributed physical branch network: 383 locations across four continents, plus a U.S.-based contact center. This is evidence of a distributed operational footprint, not evidence of water-intensive operations or specific water assets.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ],
+      "source_quote": "After opening 15 new branches in 2025, Navy Federal’s global network now includes 383 locations across four continents. Additional ongoing investments in its fully US-based contact center..."
+    }
+  ],
+  "needs_and_risks": [],
+  "current_monitoring_and_asset_tools": [],
+  "decision_makers_and_departments": [
+    {
+      "role_or_person": "Rear Admiral John V. Menoni, USN (Ret.), Senior Vice President of Branch Operations",
+      "context": "Named to oversee the strategic direction of Navy Federal’s global branch network and operation of the Department of Defense Overseas Military Banking Program.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html"
+      ]
+    },
+    {
+      "role_or_person": "Kara Cardona, Chief Operating Officer",
+      "context": "Quoted announcing the Senior Vice President of Branch Operations appointment.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html"
+      ]
+    }
+  ],
+  "trigger_events": [
+    {
+      "event": "Navy Federal opened 15 new branches in 2025, bringing its reported global network to 383 locations across four continents.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ]
+    },
+    {
+      "event": "Navy Federal states it is expanding investments in workforce and operational infrastructure.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ]
+    },
+    {
+      "event": "A new Senior Vice President of Branch Operations was appointed in September 2025 to oversee branch-network strategy and the Overseas Military Banking Program.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html"
+      ]
+    }
+  ],
+  "nexa_fit": {
+    "assessment": "Potential, but unverified, fit. Navy Federal’s large and expanding distributed branch network and contact-center operations make it worth qualifying for centralized visibility and protection of water-related assets across occupied facilities. The website does not disclose any water infrastructure, water incidents, monitoring practices, or water-management priorities, so fit should not be treated as established.",
+    "evidence": [
+      {
+        "claim": "Navy Federal reports 383 locations across four continents after opening 15 branches in 2025, and continued investment in its operational infrastructure.",
+        "sources": [
+          "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+        ]
+      },
+      {
+        "claim": "Branch Operations has an identified senior leader responsible for the strategic direction of the global branch network.",
+        "sources": [
+          "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html"
+        ]
+      }
+    ]
+  },
+  "sales_hypotheses": [
+    {
+      "claim": "A 383-location branch footprint and contact-center operation likely include ordinary plumbing and water-bearing building systems; it may be worthwhile to ask whether facilities teams centrally monitor water use, leaks, shutoffs, or water-related asset conditions. The website does not confirm any of these assets or practices.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ]
+    },
+    {
+      "claim": "Recent branch openings and stated operational-infrastructure investment may create an opportunity to qualify whether water-asset standards, monitoring, or property-protection requirements are included in new or renovated sites. This is a discovery hypothesis, not a stated project requirement.",
+      "sources": [
+        "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html"
+      ]
+    }
+  ],
+  "unknowns": [
+    "Whether Navy Federal owns, leases, or otherwise controls its branch, headquarters, contact-center, and overseas banking facilities.",
+    "Which facilities contain water systems that Navy Federal is responsible for monitoring or maintaining, including plumbing, meters, shutoffs, mechanical systems, or irrigation.",
+    "Whether Navy Federal has experienced leaks, water damage, service interruptions, insurance claims, compliance issues, water scarcity concerns, or other water-related incidents.",
+    "Whether water monitoring, metering, building automation, CMMS/EAM, leak detection, or remote shutoff tools are already deployed; which teams own them; and whether systems are standardized across the portfolio.",
+    "Portfolio-wide building square footage, individual building size, number of rooms, and fixture counts are not published in the reviewed evidence.",
+    "The correct facilities, real-estate, engineering, maintenance, workplace, risk, procurement, or sustainability stakeholder for a water-infrastructure discovery conversation."
+  ],
+  "sources": [
+    "https://www.navyfederal.org/",
+    "https://www.navyfederal.org/about/operations.html",
+    "https://www.navyfederal.org/about/press-releases/2026-press-releases/Annual-Report-2026.html",
+    "https://www.navyfederal.org/about/press-releases/2025-press-releases/svp-branch-operations-announcement.html",
+    "https://www.navyfederal.org/about/press-releases/2024/navy-federal-30th-annual-5k.html"
+  ],
+  "research_quality": {
+    "pages_crawled": 20,
+    "pdfs_extracted": 0,
+    "urls_attempted": 20,
+    "evidence_backed_fields": 11,
+    "notes": "Profile uses only supplied first-party Navy Federal crawl evidence. Several crawled branch-location URLs returned only generic site-shell content and were not used to substantiate location-specific facts. No reviewed page disclosed water assets, water use, incidents, monitoring tools, building areas, or room counts."
+  }
+}

@@ -1,0 +1,19 @@
+LeaseLens local launch reminder
+================================
+
+1. Open Terminal and move to the app folder:
+   cd "/Users/bossman/Documents/Yale/MGT409/Lectures 2"
+
+2. Install dependencies if needed:
+   python3 -m pip install --user -r requirements.txt
+
+3. Launch the dashboard:
+   python3 app.py
+
+4. Open this URL in your browser:
+   http://127.0.0.1:8050/
+
+5. Stop the website:
+   Press Ctrl+C in the Terminal window running the app.
+
+Data source: lease_data.json

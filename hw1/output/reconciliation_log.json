@@ -1,0 +1,362 @@
+[
+  {
+    "id": "january-business-revenue",
+    "sources": [
+      "bank_transactions.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 420.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 1150.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 315.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 2400.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 560.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 1850.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 980.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 570.0
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 95.0
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 8150.0,
+    "resolution": "Include the January business deposits, excluding the $95 personal roommate tune-up from the $560 deposit: $420 + $1,150 + $315 + ($560 - $95) + $2,400 + $1,850 + $980 + $570 = $8,150.",
+    "plain_english": "The bank shows $8,245 of January deposits, but the owner identified $95 of the January 15 Square deposit as a personal tune-up. January business revenue is therefore $8,150."
+  },
+  {
+    "id": "deferred-prospective-revenue",
+    "sources": [
+      "email_fleet_wellness.txt",
+      "email_wedding_ebikes.txt",
+      "email_yale_cycling_club.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "email_fleet_wellness.txt",
+        "amount": 6800.0
+      },
+      {
+        "source": "email_fleet_wellness.txt",
+        "amount": 6750.0
+      },
+      {
+        "source": "email_fleet_wellness.txt",
+        "amount": 6200.0
+      },
+      {
+        "source": "email_wedding_ebikes.txt",
+        "amount": 5600.0
+      },
+      {
+        "source": "email_yale_cycling_club.txt",
+        "amount": 2400.0
+      },
+      {
+        "source": "email_yale_cycling_club.txt",
+        "amount": 150.0
+      }
+    ],
+    "included_in_income_statement": "no",
+    "amount_used_in_income_statement": 0,
+    "resolution": "Exclude all quoted or approved future work because the emails explicitly state that no January revenue was received or should be recorded.",
+    "plain_english": "The Hartford Mutual, wedding e-bike, and Yale Cycling Club amounts relate to future work and have no January payment, so none is January revenue."
+  },
+  {
+    "id": "rent",
+    "sources": [
+      "bank_transactions.json"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 1800.0
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 1800.0,
+    "resolution": "Book the business rent payment of $1,800.",
+    "plain_english": "The January 2 check is identified as business rent, so the full $1,800 is a January expense."
+  },
+  {
+    "id": "utilities",
+    "sources": [
+      "bank_transactions.json"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 186.42
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 89.99
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 276.41,
+    "resolution": "Combine the business electric and internet payments: $186.42 + $89.99 = $276.41.",
+    "plain_english": "Both January utility payments are labeled business expenses, so they are included once for a total of $276.41."
+  },
+  {
+    "id": "owner-personal-items",
+    "sources": [
+      "bank_transactions.json",
+      "credit_card_transactions.json",
+      "receipts.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 900.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 200.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 89.99
+      },
+      {
+        "source": "receipts.json",
+        "amount": 89.99
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 64.22
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 15.49
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 95.0
+      }
+    ],
+    "included_in_income_statement": "no",
+    "amount_used_in_income_statement": 0,
+    "resolution": "Exclude the $900 owner draw, $200 personal ATM withdrawal, $95 personal roommate tune-up, and personal card charges of $89.99, $64.22, and $15.49. The $156 REI jacket is handled separately as a business expense.",
+    "plain_english": "These amounts are identified as owner draws or personal spending, so they do not affect January business income. The REI jacket is excluded from this personal group because the owner says it was required for business fleet work."
+  },
+  {
+    "id": "new-haven-bike-parts",
+    "sources": [
+      "bank_transactions.json",
+      "credit_card_transactions.json",
+      "receipts.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 742.18
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 218.4
+      },
+      {
+        "source": "receipts.json",
+        "amount": 218.4
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 742.18
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 218.4
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 960.58,
+    "resolution": "Book the separate wholesale check and counter invoice once each: $742.18 + $218.40 = $960.58. The receipt supports the $218.40 card charge and is not added again.",
+    "plain_english": "The owner confirms these are two separate parts purchases. The $218.40 receipt matches the card charge, while the $742.18 check is a separate restock order, giving a total expense of $960.58."
+  },
+  {
+    "id": "park-tool-purchases",
+    "sources": [
+      "bank_transactions.json",
+      "credit_card_transactions.json",
+      "receipts.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 344.55
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 127.4
+      },
+      {
+        "source": "receipts.json",
+        "amount": 88.7
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 127.4
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 88.7
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 471.95,
+    "resolution": "Book the $127.40 Park Tool card charge once, with the $88.70 receipt treated as part of that charge, and separately book the $344.55 bank debit: $127.40 + $344.55 = $471.95.",
+    "plain_english": "The receipt is only part of the $127.40 card purchase, so it is not added separately. The unrelated $344.55 bank debit is also included, for $471.95 total."
+  },
+  {
+    "id": "matched-card-receipts",
+    "sources": [
+      "credit_card_transactions.json",
+      "receipts.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 425.0
+      },
+      {
+        "source": "receipts.json",
+        "amount": 425.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 28.0
+      },
+      {
+        "source": "receipts.json",
+        "amount": 28.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 67.12
+      },
+      {
+        "source": "receipts.json",
+        "amount": 67.12
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 520.12,
+    "resolution": "Count each matched card charge once: eBay $425.00 + Speedy Courier $28.00 + Home Depot $67.12 = $520.12.",
+    "plain_english": "Each receipt matches its corresponding card transaction. The purchases are included once, not twice, totaling $520.12."
+  },
+  {
+    "id": "other-business-card-expenses",
+    "sources": [
+      "credit_card_transactions.json"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 43.17
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 89.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 52.1
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 19.99
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 204.26,
+    "resolution": "Book the unmatched business card expenses: $43.17 + $89.00 + $52.10 + $19.99 = $204.26.",
+    "plain_english": "These four card charges are labeled business expenses and have no duplicate receipt or bank transaction in the evidence, so they are included once for $204.26."
+  },
+  {
+    "id": "insurance-bank-fee",
+    "sources": [
+      "bank_transactions.json"
+    ],
+    "amounts_seen": [
+      {
+        "source": "bank_transactions.json",
+        "amount": 214.0
+      },
+      {
+        "source": "bank_transactions.json",
+        "amount": 15.0
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 229.0,
+    "resolution": "Book the business liability premium and monthly bank fee: $214.00 + $15.00 = $229.00.",
+    "plain_english": "Both bank debits are identified as business operating expenses, so the combined January amount is $229.00."
+  },
+  {
+    "id": "rei-business-jacket",
+    "sources": [
+      "credit_card_transactions.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 156.0
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 156.0,
+    "resolution": "Book the $156.00 REI jacket as a business expense because the owner says high-visibility outerwear was required for on-site fleet work.",
+    "plain_english": "Although the card classifier initially marked the REI purchase personal, the owner explains that it was required business outerwear, so the $156.00 is included."
+  },
+  {
+    "id": "mike-smith-unpaid-iou",
+    "sources": [
+      "iou_mike_smith.pdf",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "iou_mike_smith.pdf",
+        "amount": 180.0
+      },
+      {
+        "source": "email_owner_voice_memo.txt",
+        "amount": 180.0
+      }
+    ],
+    "included_in_income_statement": "no",
+    "amount_used_in_income_statement": 0,
+    "resolution": "Exclude the $180.00 IOU because the owner confirms Mike has not paid and the amount is not in the January bank transactions.",
+    "plain_english": "The IOU documents money owed to the business, but it was not collected in January, so it is not booked as January revenue."
+  }
+]

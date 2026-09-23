@@ -1,0 +1,31 @@
+# --- Secrets: never commit ---
+.env
+.env.local
+*.pem
+*.key
+portkey API key.rtf
+!.env.example
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Node ---
+node_modules/
+npm-debug.log*
+
+# --- macOS ---
+.DS_Store
+
+# --- Large artifacts: regenerate or re-download instead ---
+*.zip
+videos/
+frames/
+
+# --- Nested repo (has its own .git) ---
+archive/test/

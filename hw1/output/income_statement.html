@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>January 2026 Income Statement</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #10182d; color: #f8f2df; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .12; background-image: repeating-linear-gradient(135deg, #f2a900 0 2px, transparent 2px 22px); }
+    main { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 11rem; position: relative; z-index: 1; }
+    h1, h2 { margin-top: 0; color: #ffb703; text-shadow: 2px 2px #8d1b1b; }
+    h1 { font-size: clamp(2rem, 5vw, 4rem); letter-spacing: .04em; }
+    section { background: #18233d; border: 2px solid #34466d; border-radius: 14px; padding: 1.25rem; margin: 1rem 0; box-shadow: 8px 8px 0 #090f20; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: .65rem .5rem; border-bottom: 1px solid #e3e8ed; text-align: left; vertical-align: top; }
+    th { color: #ffcf56; font-size: .85rem; }
+    td { color: #f8f2df; }
+    tr:hover td { background: #213052; }
+    .amount { text-align: right; white-space: nowrap; }
+    .totals { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; margin: 1rem 0; }
+    .total { background: linear-gradient(135deg, #243b68, #4b1d35); border-radius: 8px; padding: .9rem; border: 1px solid #e09f24; }
+    .total strong { display: block; font-size: 1.35rem; margin-top: .25rem; color: #ffe08a; }
+    .decision { border-left: 4px solid #ffb703; padding: .25rem 1rem; margin: 1rem 0; background: #221d38; }
+    .decision h3 { margin-bottom: .35rem; }
+    .sources, .muted { color: #b7c2df; font-size: .9rem; }
+    .ninja-runner { position: fixed; z-index: 5; right: clamp(.4rem, 3vw, 2rem); top: 18vh; font-size: 3.5rem; line-height: 1; filter: drop-shadow(4px 5px 0 #080c18); animation: ninja-run 1.1s steps(2, end) infinite, ninja-bob 1.1s ease-in-out infinite; user-select: none; }
+    .ninja-runner::after { content: ""; display: block; width: 3.8rem; height: .3rem; margin-top: .25rem; background: #e85d04; border-radius: 50%; opacity: .8; animation: dust 1.1s ease-out infinite; }
+    .cash-altar { margin: 3rem auto 0; text-align: center; padding: 2rem 1rem; border: 3px solid #e09f24; border-radius: 20px; background: radial-gradient(circle, #523b17 0 20%, #211a2d 65%); box-shadow: 0 0 30px #e09f2455; }
+    .cash-pile { font-size: clamp(3rem, 10vw, 7rem); letter-spacing: -.35em; filter: drop-shadow(0 7px 0 #07101c); animation: cash-pulse 2s ease-in-out infinite; }
+    .cash-altar p { color: #ffcf56; font-weight: 700; letter-spacing: .08em; }
+    @keyframes ninja-run { 0% { transform: translateX(0) rotate(-5deg); } 50% { transform: translateX(-12px) rotate(5deg); } 100% { transform: translateX(0) rotate(-5deg); } }
+    @keyframes ninja-bob { 0%, 100% { margin-top: 0; } 50% { margin-top: 14px; } }
+    @keyframes dust { 0% { transform: scaleX(.4); opacity: .2; } 50% { transform: scaleX(1); opacity: .9; } 100% { transform: scaleX(.4); opacity: .2; } }
+    @keyframes cash-pulse { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @media (max-width: 700px) { .totals { grid-template-columns: 1fr; } table { font-size: .9rem; } .ninja-runner { font-size: 2.5rem; right: .2rem; } }
+  </style>
+</head>
+<body>
+<div class="ninja-runner" aria-label="Animated ninja runner" title="Keep running toward the net income">🥷</div>
+<main>
+  <h1>January Income Statement</h1>
+  <p>Period: <strong>2026-01</strong></p>
+  <div class="totals">
+    <div class="total">Revenue<strong>$8,150.00</strong></div>
+    <div class="total">Total expenses<strong>$4,618.32</strong></div>
+    <div class="total">Net income<strong>$3,531.68</strong></div>
+  </div>
+  <section>
+    <h2>Revenue lines</h2>
+    <table><thead><tr><th>Label</th><th class="amount">Amount</th><th>Sources</th></tr></thead>
+    <tbody><tr><td>january-business-revenue</td><td class="amount">$8,150.00</td><td>bank_transactions.json, email_owner_voice_memo.txt</td></tr></tbody></table>
+  </section>
+  <section>
+    <h2>Expense lines</h2>
+    <table><thead><tr><th>Label</th><th>Category</th><th class="amount">Amount</th><th>Sources</th></tr></thead>
+    <tbody><tr><td>rent</td><td>rent</td><td class="amount">$1,800.00</td><td>bank_transactions.json</td></tr>
+<tr><td>utilities</td><td>utilities</td><td class="amount">$276.41</td><td>bank_transactions.json</td></tr>
+<tr><td>new-haven-bike-parts</td><td>new_haven_bike_parts</td><td class="amount">$960.58</td><td>bank_transactions.json, credit_card_transactions.json, receipts.json, email_owner_voice_memo.txt</td></tr>
+<tr><td>park-tool-purchases</td><td>park_tool_purchases</td><td class="amount">$471.95</td><td>bank_transactions.json, credit_card_transactions.json, receipts.json, email_owner_voice_memo.txt</td></tr>
+<tr><td>matched-card-receipts</td><td>matched_card_receipts</td><td class="amount">$520.12</td><td>credit_card_transactions.json, receipts.json, email_owner_voice_memo.txt</td></tr>
+<tr><td>other-business-card-expenses</td><td>other_business_card_expenses</td><td class="amount">$204.26</td><td>credit_card_transactions.json</td></tr>
+<tr><td>insurance-bank-fee</td><td>insurance_bank_fee</td><td class="amount">$229.00</td><td>bank_transactions.json</td></tr>
+<tr><td>rei-business-jacket</td><td>rei_business_jacket</td><td class="amount">$156.00</td><td>credit_card_transactions.json, email_owner_voice_memo.txt</td></tr></tbody></table>
+  </section>
+  <section>
+    <h2>Excluded personal and business rows</h2>
+    <article class="decision"><h3>deferred-prospective-revenue</h3><p><strong>Amount excluded:</strong> $0.00</p><p>The Hartford Mutual, wedding e-bike, and Yale Cycling Club amounts relate to future work and have no January payment, so none is January revenue.</p><p class="sources"><strong>Sources:</strong> email_fleet_wellness.txt, email_wedding_ebikes.txt, email_yale_cycling_club.txt</p></article>
+<article class="decision"><h3>owner-personal-items</h3><p><strong>Amount excluded:</strong> $0.00</p><p>These amounts are identified as owner draws or personal spending, so they do not affect January business income. The REI jacket is excluded from this personal group because the owner says it was required for business fleet work.</p><p class="sources"><strong>Sources:</strong> bank_transactions.json, credit_card_transactions.json, receipts.json, email_owner_voice_memo.txt</p></article>
+<article class="decision"><h3>mike-smith-unpaid-iou</h3><p><strong>Amount excluded:</strong> $0.00</p><p>The IOU documents money owed to the business, but it was not collected in January, so it is not booked as January revenue.</p><p class="sources"><strong>Sources:</strong> iou_mike_smith.pdf, email_owner_voice_memo.txt</p></article>
+  </section>
+  <section>
+    <h2>Judgment calls</h2>
+    <article class="decision"><h3>rei-business-jacket</h3><p><strong>Decision:</strong> Book the $156.00 REI jacket as a business expense because the owner says high-visibility outerwear was required for on-site fleet work.</p><p>Although the card classifier initially marked the REI purchase personal, the owner explains that it was required business outerwear, so the $156.00 is included.</p></article>
+<article class="decision"><h3>other-business-card-expenses</h3><p><strong>Decision:</strong> Book the unmatched business card expenses: $43.17 + $89.00 + $52.10 + $19.99 = $204.26.</p><p>These four card charges are labeled business expenses and have no duplicate receipt or bank transaction in the evidence, so they are included once for $204.26.</p></article>
+<article class="decision"><h3>matched-card-receipts</h3><p><strong>Decision:</strong> Count each matched card charge once: eBay $425.00 + Speedy Courier $28.00 + Home Depot $67.12 = $520.12.</p><p>Each receipt matches its corresponding card transaction. The purchases are included once, not twice, totaling $520.12.</p></article>
+  </section>
+  <div class="cash-altar" aria-label="Cash pile at the bottom of the page">
+    <div class="cash-pile">💵💵💰💵💰</div>
+    <p>THE CASH PILE AWAITS</p>
+  </div>
+</main>
+</body>
+</html>

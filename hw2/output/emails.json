@@ -1,0 +1,69 @@
+[
+  {
+    "target_company": "Digital Realty",
+    "to": null,
+    "subject": "Water-system visibility alongside Digital Realty\u2019s facility controls",
+    "body": "Hello,\n\nI saw Digital Realty is expanding data-center capacity in Singapore and has described using BMS monitoring across its Singapore facilities, including work on chilled-water operating temperatures.\n\nNexa provides water-system sensing, alerts, reporting, and centralized visibility for building water assets, including selected hydronic and cooling-tower use cases. We would not assume this replaces existing BMS coverage; rather, I\u2019m reaching out to see whether there are sites where your team is evaluating more water-specific monitoring or leak-risk visibility.\n\nWould a brief conversation with the team responsible for facilities engineering, critical-environment operations, or sustainability be useful to determine whether there is a fit?",
+    "personalization_evidence": [
+      {
+        "claim": "Digital Realty says it uses BMS to monitor more than 30,000 infrastructure points across its Singapore facilities and has collaborated on higher chilled-water operating temperatures.",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore"
+        ]
+      },
+      {
+        "claim": "Digital Realty is expanding data-center capacity in Singapore and Switzerland.",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore",
+          "https://www.digitalrealty.com/about/newsroom/press-releases/3351782/digital-realty-breaks-ground-on-new-state-of-the-art-data-center-in-switzerland"
+        ]
+      }
+    ],
+    "call_to_action": "Ask for a short discovery conversation or routing to the appropriate facilities-engineering, critical-operations, or sustainability owner.",
+    "status": "draft_only"
+  },
+  {
+    "target_company": "AvalonBay Communities, Inc.",
+    "to": null,
+    "subject": "Qualifying water visibility across AvalonBay communities",
+    "body": "Hello,\n\nAvalonBay publicly reports 98,271 apartment homes and identifies sustainability solutions that reduce impact, expenses, and risk as a strategic focus.\n\nNexa helps building teams monitor water movement, receive alerts on abnormal activity, and gain centralized visibility across suitable properties. For a portfolio of managed apartment communities, I thought it could be useful to understand whether water use, leak response, metering, or shutoff visibility is managed consistently today.\n\nWould you be open to a short exploratory discussion, or could you direct me to the property-operations, facilities, or sustainability team that evaluates these systems?",
+    "personalization_evidence": [
+      {
+        "claim": "AvalonBay reports 98,271 apartment homes as of March 31, 2026.",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      },
+      {
+        "claim": "AvalonBay identifies value-enhancing sustainability solutions to reduce impact, expenses, and risk as a strategic focus area.",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      }
+    ],
+    "call_to_action": "Ask for a brief exploratory conversation or referral to property operations, facilities, or sustainability.",
+    "status": "draft_only"
+  },
+  {
+    "target_company": "BXP, Inc.",
+    "to": null,
+    "subject": "Water-specific visibility for BXP\u2019s actively managed office assets",
+    "body": "Hello,\n\nBXP\u2019s ESG reporting describes an actively managed office portfolio, long-term water-consumption goals, and an operational-monitoring program using real-time infrastructure data. It also identifies flooding, water costs, and business continuity among property-related considerations.\n\nNexa provides building-water sensing, alerts, reports, and multi-property visibility for selected commercial real-estate use cases. We would not presume a gap in BXP\u2019s existing EIS or BMS tools, but I\u2019d welcome the chance to learn whether any properties would benefit from more water-specific monitoring or leak-risk visibility.\n\nWould a 20-minute discovery call with the relevant property-management, engineering, or sustainability leader be worthwhile?",
+    "personalization_evidence": [
+      {
+        "claim": "BXP says it has long-term water goals, reported water-use reduction, and assigns asset-level energy, emissions, water, and waste targets to regional managers and heads of property management.",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "BXP describes real-time monitoring infrastructure and notes water, flooding, and business-continuity considerations in its property-risk discussion.",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      }
+    ],
+    "call_to_action": "Ask for a 20-minute discovery call with the relevant property-management, engineering, or sustainability owner.",
+    "status": "draft_only"
+  }
+]

@@ -1,0 +1,221 @@
+[
+  {
+    "company_name": "Digital Realty",
+    "website": "https://www.digitalrealty.com/",
+    "headquarters": "Austin, Texas, United States",
+    "operating_locations": [
+      "300+ data-center facilities in 55+ metros across 30+ countries on six continents",
+      "Singapore: three operational data centers; a fourth facility has been selected for development on Jurong Island",
+      "Glattbrugg, Switzerland: ZUR4 data-center campus expansion under construction"
+    ],
+    "industry": "Data-center, colocation, and interconnection infrastructure",
+    "business_context": [
+      {
+        "claim": "Digital Realty states that it operates a global data-center footprint of 300+ facilities in 55+ metros across 30+ countries on six continents.",
+        "sources": [
+          "https://www.digitalrealty.com/",
+          "https://www.digitalrealty.com/about/newsroom/press-releases/3357028/digital-realty-strengthens-nairobi-as-east-africa-digital-gateway-with-new-data-center"
+        ]
+      },
+      {
+        "claim": "Its Singapore operations include three operational data centers, a regional Asia-Pacific headquarters, and a Global Command Center; the company has been selected to develop a new 50 MW data center on Jurong Island.",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore"
+        ]
+      },
+      {
+        "claim": "Digital Realty broke ground on ZUR4 in Glattbrugg, Switzerland; the planned facility is expected to provide 15 MW of IT capacity across approximately 6,300 m².",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/3351782/digital-realty-breaks-ground-on-new-state-of-the-art-data-center-in-switzerland"
+        ]
+      }
+    ],
+    "water_or_facility_signals": [
+      {
+        "claim": "Digital Realty says its Singapore team collaborated on a tropical data-center standard involving higher chilled-water operating temperatures, and that it uses Building Management Systems to monitor more than 30,000 infrastructure points across its Singapore facilities.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore"
+        ]
+      },
+      {
+        "claim": "The ZUR4 project is described as using state-of-the-art cooling systems and an energy-efficient architecture.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.digitalrealty.com/about/newsroom/press-releases/3351782/digital-realty-breaks-ground-on-new-state-of-the-art-data-center-in-switzerland"
+        ]
+      },
+      {
+        "claim": "Because Digital Realty operates a large, expanding data-center portfolio with cooling infrastructure, it may be worth qualifying whether Nexa’s water-system sensing, alerts, and centralized dashboard could complement—not replace—existing BMS coverage for selected domestic-water, hydronic, cooling-tower, meter, or leak-risk use cases. The website does not establish a water-monitoring gap or a Nexa-compatible deployment.",
+        "kind": "contextual_hypothesis",
+        "sources": [
+          "https://www.digitalrealty.com/",
+          "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore",
+          "https://www.digitalrealty.com/about/newsroom/press-releases/3351782/digital-realty-breaks-ground-on-new-state-of-the-art-data-center-in-switzerland"
+        ]
+      }
+    ],
+    "why_seller_fit": "Strong qualification candidate: data centers are a Nexa-supported market, and Digital Realty publicly documents a large multi-site facility footprint, chilled-water efficiency work, BMS monitoring, cooling-system design, and active expansion. Nexa may be relevant where Digital Realty wants additional water-system visibility or leak-protection coverage; discovery must establish ownership, existing instrumentation, integration requirements, and whether Nexa would add value alongside its BMS.",
+    "contact": {
+      "email": null,
+      "contact_type": "unknown",
+      "source": null
+    },
+    "unknowns": [
+      "No public facilities, engineering, sustainability, or procurement email was identified in the reviewed official pages; the displayed sales and customer-care addresses are not suitable vendor-prospect routes.",
+      "Which sites and water-bearing systems Digital Realty owns or operates directly, including cooling towers, hydronic loops, domestic water, meters, and shutoffs.",
+      "Whether existing BMS monitoring covers water flow, leaks, pressure, temperature, anomaly detection, and remote shutoff; required integrations and cybersecurity constraints.",
+      "Who owns the budget and technical evaluation for water-risk and water-efficiency systems."
+    ],
+    "sources": [
+      "https://www.digitalrealty.com/",
+      "https://www.digitalrealty.com/about/newsroom/press-releases/30616/digital-realty-selected-to-develop-50-megawatts-of-new-data-center-capacity-in-singapore",
+      "https://www.digitalrealty.com/about/newsroom/press-releases/3351782/digital-realty-breaks-ground-on-new-state-of-the-art-data-center-in-switzerland"
+    ],
+    "index": 1
+  },
+  {
+    "company_name": "AvalonBay Communities, Inc.",
+    "website": "https://www.avaloncommunities.com/about-us/",
+    "headquarters": null,
+    "operating_locations": [
+      "Select U.S. markets; the company’s site lists apartment communities in Southern and Northern California, Colorado, District of Columbia, Florida, Georgia, Maryland, Massachusetts, New Jersey, New York, North Carolina, Texas, Virginia, and Washington."
+    ],
+    "industry": "Multifamily residential real estate investment trust (REIT)",
+    "business_context": [
+      {
+        "claim": "AvalonBay says it develops, redevelops, acquires, and manages distinctive multifamily communities in select U.S. markets.",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      },
+      {
+        "claim": "The company reports 98,271 apartment homes and nearly 3,000 associates, with data stated as of March 31, 2026.",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      },
+      {
+        "claim": "AvalonBay identifies value-enhancing sustainability solutions intended to reduce impact, expenses, and risk as one of its strategic focus areas.",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      }
+    ],
+    "water_or_facility_signals": [
+      {
+        "claim": "AvalonBay’s reported 98,271 apartment homes across multiple U.S. markets are evidence of a large distributed residential-property footprint.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      },
+      {
+        "claim": "AvalonBay publicly states a strategic focus on sustainability solutions to reduce impact, expenses, and risk.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      },
+      {
+        "claim": "A large portfolio of managed apartment communities likely has ordinary building plumbing and water-bearing systems. It may be worth qualifying whether AvalonBay centrally monitors water use, leaks, meters, and shutoffs at portfolio, community, or unit level. The reviewed website does not confirm those systems, their condition, or a water-related problem.",
+        "kind": "contextual_hypothesis",
+        "sources": [
+          "https://www.avaloncommunities.com/about-us/"
+        ]
+      }
+    ],
+    "why_seller_fit": "Strong qualification candidate because Nexa explicitly supports multifamily residential properties, while AvalonBay publicly reports a large, geographically distributed apartment portfolio and a strategy to reduce expense and risk through sustainability solutions. Nexa may be a fit for qualifying water visibility and property-protection workflows across suitable communities; no public evidence establishes leaks, water waste, or an unmet monitoring need.",
+    "contact": {
+      "email": null,
+      "contact_type": "unknown",
+      "source": null
+    },
+    "unknowns": [
+      "The website page reviewed does not provide a headquarters address or a public facilities, asset-management, sustainability, engineering, or procurement email.",
+      "Community count, water-system ownership and responsibility, and the portion of the portfolio under AvalonBay operational control.",
+      "Whether the company currently uses submetering, leak detection, water analytics, building automation, remote shutoff, or a property-management integration.",
+      "Priority geographies, current water-risk incidents or claims, and the relevant property-operations decision-maker."
+    ],
+    "sources": [
+      "https://www.avaloncommunities.com/about-us/"
+    ],
+    "index": 2
+  },
+  {
+    "company_name": "BXP, Inc.",
+    "website": "https://www.bxp.com/",
+    "headquarters": null,
+    "operating_locations": [
+      "Boston, Los Angeles, New York, San Francisco, and Washington, DC"
+    ],
+    "industry": "Class A office real estate owner, developer, operator, and manager",
+    "business_context": [
+      {
+        "claim": "BXP describes itself as the largest publicly held developer and owner of Class A office properties in the United States, concentrated in Boston, Los Angeles, New York, San Francisco, and Washington, DC.",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "In its 2019 ESG report, BXP reported 196 properties totaling 52.0 million net rentable square feet; 102 occupied, actively managed office buildings totaled 40.9 million gross square feet.",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "BXP says its sustainability strategy includes long-term goals for energy, emissions, water consumption, and waste, and reports that its regional managers and heads of property management have asset-level targets that roll up to regional and company-wide targets.",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      }
+    ],
+    "water_or_facility_signals": [
+      {
+        "claim": "BXP reported a 30% like-for-like water-use reduction below its 2008 baseline in its 2019 ESG report, and stated that it manages water-consumption goals across its portfolio.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "BXP says it deployed Energy Intelligence Software and real-time energy-monitoring infrastructure, including 265 commodity meters at 95 sites, and uses BMS programming and controls for facility operations. The cited page does not state that those meters monitor water specifically.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "BXP states that severe storms, flooding, water costs, and business-continuity risks can affect its properties and that its resilience planning includes waterproofing subgrade infrastructure and flood-related measures.",
+        "kind": "verified_fact",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      },
+      {
+        "claim": "Given BXP’s managed office portfolio, water-reduction goals, and existing operational-monitoring program, it may be worthwhile to qualify whether Nexa could add water-specific sensing, anomaly alerts, or reporting at selected properties. This is not evidence that its current systems lack those functions.",
+        "kind": "contextual_hypothesis",
+        "sources": [
+          "https://www.bxp.com/news/2019-esg-report"
+        ]
+      }
+    ],
+    "why_seller_fit": "High-potential commercial-real-estate candidate. Nexa supports commercial real estate and offices; BXP has publicly documented an actively managed office portfolio, water-management goals, real-time operational monitoring infrastructure, and climate/resilience risks. Nexa may be relevant as water-specific visibility or protection alongside—not as a claimed replacement for—BXP’s existing BMS and energy-intelligence tooling. The newest water-tool and portfolio-control details require validation.",
+    "contact": {
+      "email": null,
+      "contact_type": "unknown",
+      "source": null
+    },
+    "unknowns": [
+      "No public facilities, property-management, engineering, sustainability, or procurement email was identified in the reviewed official pages.",
+      "The current portfolio size, current water-consumption baseline, and whether the 2019 water and monitoring disclosures remain current.",
+      "Which BXP sites have water meters, leak sensors, flow/pressure/temperature sensing, cooling towers, hydronic systems, or remote shutoff; and which are under BXP operational control.",
+      "Whether existing EIS/BMS tooling already provides water analytics or leak detection, and the applicable integration, cybersecurity, and purchasing requirements."
+    ],
+    "sources": [
+      "https://www.bxp.com/news/2019-esg-report",
+      "https://www.bxp.com/news/888-boylston-bostons-most-sustainable-building"
+    ],
+    "index": 3
+  }
+]

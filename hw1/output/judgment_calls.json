@@ -1,0 +1,89 @@
+[  {
+    "id": "rei-business-jacket",
+    "sources": [
+      "credit_card_transactions.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 156.0
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 156.0,
+    "resolution": "Book the $156.00 REI jacket as a business expense because the owner says high-visibility outerwear was required for on-site fleet work.",
+    "plain_english": "Although the card classifier initially marked the REI purchase personal, the owner explains that it was required business outerwear, so the $156.00 is included.",
+    "confidence": "medium"
+  },
+
+{
+    "id": "other-business-card-expenses",
+    "sources": [
+      "credit_card_transactions.json"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 43.17
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 89.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 52.1
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 19.99
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 204.26,
+    "resolution": "Book the unmatched business card expenses: $43.17 + $89.00 + $52.10 + $19.99 = $204.26.",
+    "plain_english": "These four card charges are labeled business expenses and have no duplicate receipt or bank transaction in the evidence, so they are included once for $204.26.",
+    "confidence": "low"
+  }, 
+    {
+    "id": "matched-card-receipts",
+    "sources": [
+      "credit_card_transactions.json",
+      "receipts.json",
+      "email_owner_voice_memo.txt"
+    ],
+    "amounts_seen": [
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 425.0
+      },
+      {
+        "source": "receipts.json",
+        "amount": 425.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 28.0
+      },
+      {
+        "source": "receipts.json",
+        "amount": 28.0
+      },
+      {
+        "source": "credit_card_transactions.json",
+        "amount": 67.12
+      },
+      {
+        "source": "receipts.json",
+        "amount": 67.12
+      }
+    ],
+    "included_in_income_statement": "yes",
+    "amount_used_in_income_statement": 520.12,
+    "resolution": "Count each matched card charge once: eBay $425.00 + Speedy Courier $28.00 + Home Depot $67.12 = $520.12.",
+    "plain_english": "Each receipt matches its corresponding card transaction. The purchases are included once, not twice, totaling $520.12.",
+    "confidence": "high"
+  }
+
+]

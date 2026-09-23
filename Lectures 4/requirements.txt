@@ -1,0 +1,5 @@
+dash>=3.0,<4
+openai>=1.0
+python-dotenv>=1.0
+pydantic-ai-slim[openai]>=1.0
+yfinance>=0.2

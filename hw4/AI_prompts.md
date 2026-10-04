@@ -372,7 +372,23 @@ prompts I needed when the first one did not get the job done.
 
 **First prompt:**
 
-> _(to be filled in when I start this problem)_
+> Double check to ensure my hw4 format looks like this. If not, adjust as needed.
+> [attached the expected file layout and the local-only data pack rules]
+
+**Follow-up prompt:**
+
+> yes delete both, then commit everything
+
+> changed my mind. put it in MGT409 repo. that's fine
+
+> p13 now, push to github and submit url
+
+**What was lacking after the first prompt:**
+
+> Checking the layout turned up more than formatting — data/ was not gitignored, so the
+> database and all 102 product images would have been committed, and .env.example and
+> README.md were missing entirely; I also had to decide separately whether to sweep hw3's
+> data pack into the same commit.
 
 **Follow-up prompt:**
 

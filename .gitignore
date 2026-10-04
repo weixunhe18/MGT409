@@ -26,6 +26,7 @@ npm-debug.log*
 *.zip
 videos/
 frames/
+.cache/
 
 # --- Nested repo (has its own .git) ---
 archive/test/

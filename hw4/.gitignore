@@ -1,0 +1,30 @@
+# ─── Local-only data pack — never commit these ───────────────────────────────
+# The database and product images are course-supplied assets, not source.
+# Place them yourself after cloning; see README.md.
+data/
+data.zip
+
+# ─── Secrets ─────────────────────────────────────────────────────────────────
+# .env.example IS committed (placeholders only). A real .env never is.
+.env
+.env.local
+.env.*.local
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+.venv/
+__pycache__/
+*.pyc
+
+# ─── Node ────────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+
+# ─── Generated / scratch ─────────────────────────────────────────────────────
+campus_customs.dump.sql
+.DS_Store
+
+# ─── Superseded package directories ──────────────────────────────────────────
+# Replaced by backend/agent.py. Safe to delete locally:
+#   rm -rf backend/agent backend/app
+backend/agent/
+backend/app/

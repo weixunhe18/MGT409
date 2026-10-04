@@ -1,0 +1,11 @@
+# Campus Customs — FastAPI backend + PydanticAI agent
+fastapi
+uvicorn[standard]
+pydantic-ai
+python-dotenv
+pyjwt
+email-validator
+python-multipart
+# Build-time only: ships a static ffmpeg binary used by
+# scripts/make_motion_loops.py to encode the product loops. Not imported at runtime.
+imageio-ffmpeg

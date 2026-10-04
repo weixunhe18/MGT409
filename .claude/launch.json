@@ -7,6 +7,51 @@
       "runtimeArgs": ["--prefix", "Lectures 8/frontend", "run", "dev"],
       "port": 5173,
       "autoPort": true
+    },
+    {
+      "name": "lec10-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "Lectures 10/mult_agent_hp/frontend", "run", "dev", "--", "--port", "5180", "--strictPort"],
+      "port": 5180
+    },
+    {
+      "name": "lec10-backend",
+      "runtimeExecutable": "/Users/bossman/Documents/Yale/MGT409/Lectures 10/mult_agent_hp/backend/.venv/bin/python",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--app-dir",
+        "/Users/bossman/Documents/Yale/MGT409/Lectures 10/mult_agent_hp/backend",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8010"
+      ],
+      "port": 8010
+    },
+    {
+      "name": "hw4-backend",
+      "runtimeExecutable": "/Users/bossman/Documents/Yale/MGT409/hw4/.venv/bin/python",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--app-dir",
+        "/Users/bossman/Documents/Yale/MGT409/hw4/backend",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--reload"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "hw4-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "hw4/frontend", "run", "dev", "--", "--port", "5190", "--strictPort"],
+      "port": 5190
     }
   ]
 }

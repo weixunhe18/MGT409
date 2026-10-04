@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "yale-som-courses": {
+      "command": "/Users/bossman/Documents/Yale/MGT409/Lectures 9/mcp/.venv/bin/python",
+      "args": [
+        "/Users/bossman/Documents/Yale/MGT409/Lectures 9/mcp/mcp_server.py"
+      ]
+    }
+  }
+}

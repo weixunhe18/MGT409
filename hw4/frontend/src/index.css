@@ -1,0 +1,230 @@
+/* ---------------------------------------------------------------------------
+   Spirit-adaptive themes.
+
+   Every colour, weight and texture in the shop reads from a custom property, so
+   a theme is a swap of variables rather than a second stylesheet. Themes are
+   applied as `data-theme` on <html>, which means a change repaints the whole
+   site — nav, grid, forms, chat panel — with no component re-render.
+
+   Three tokens are worth calling out:
+     --image-bg   stays light in every theme. Product photos are shot on white,
+                  so a dark tile behind them would frame each garment in a glowing
+                  rectangle.
+     --w-display  carries the typography weight, which is part of the mood: the
+                  heritage era is a light serif, game day is heavy and shouting.
+     --texture    a CSS-only background image. No files to download, and it scales
+                  with the page.
+   --------------------------------------------------------------------------- */
+
+:root,
+[data-theme="heritage"] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --bg: #faf7f0;
+  --surface: #ffffff;
+  --surface-alt: #f1ebdd;
+  --image-bg: #ffffff;
+
+  /* Ink */
+  --ink: #1c1a17;
+  --ink-soft: #55504a;
+  --rule: #d9d0bd;
+
+  /* Accents */
+  --accent: #00356b;
+  --accent-dark: #00254c;
+  --accent-light: #286dc0;
+  --on-accent: #ffffff;
+  --on-accent-soft: rgba(255, 255, 255, 0.86);
+  --on-accent-dim: rgba(255, 255, 255, 0.16);
+  --gold: #a8894a;
+  --dan-bg: #dce8f4;
+
+  /* States */
+  --danger: #b3452f;
+  --danger-bg: #fbeeea;
+  --danger-ink: #8a2f1d;
+  --success: #4a7a46;
+  --success-bg: #eef4ec;
+  --success-ink: #2f5a2c;
+
+  /* Type */
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Charter", Georgia, "Times New Roman", serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --w-display: 400;
+  --w-strong: 600;
+  --heading-case: none;
+  --heading-tracking: 0;
+
+  /* Texture: faint laid-paper grain */
+  --texture: repeating-linear-gradient(
+      0deg,
+      rgba(120, 100, 60, 0.035) 0 1px,
+      transparent 1px 4px
+    ),
+    repeating-linear-gradient(90deg, rgba(120, 100, 60, 0.025) 0 1px, transparent 1px 6px);
+
+  --radius: 4px;
+  --shadow: 0 6px 20px rgba(0, 20, 50, 0.1);
+  --banner-bg: var(--accent);
+  --banner-ink: #ffffff;
+}
+
+/* Game Day — brighter, louder, heavier. Everything a notch more awake. */
+[data-theme="gameday"] {
+  color-scheme: light;
+
+  --bg: #eef3fa;
+  --surface: #ffffff;
+  --surface-alt: #dde8f7;
+  --image-bg: #ffffff;
+
+  --ink: #0d1b2e;
+  --ink-soft: #46586f;
+  --rule: #c2d4ea;
+
+  --accent: #0f4d9e;
+  --accent-dark: #0a3570;
+  --accent-light: #2f7ae0;
+  --on-accent: #ffffff;
+  --on-accent-soft: rgba(255, 255, 255, 0.88);
+  --on-accent-dim: rgba(255, 255, 255, 0.18);
+  --gold: #e8a317;
+  --dan-bg: #d6e6fb;
+
+  --danger: #c0392b;
+  --danger-bg: #fdeeec;
+  --danger-ink: #8d2a1f;
+  --success: #2f7d4f;
+  --success-bg: #e9f5ee;
+  --success-ink: #1f5c39;
+
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --w-display: 800;
+  --w-strong: 700;
+  --heading-case: uppercase;
+  --heading-tracking: -0.015em;
+
+  /* Texture: stadium bunting, on the diagonal */
+  --texture: repeating-linear-gradient(
+    135deg,
+    rgba(15, 77, 158, 0.05) 0 14px,
+    transparent 14px 28px,
+    rgba(232, 163, 23, 0.05) 28px 42px,
+    transparent 42px 56px
+  );
+
+  --radius: 3px;
+  --shadow: 0 8px 22px rgba(10, 53, 112, 0.16);
+  --banner-bg: var(--accent);
+  --banner-ink: #ffffff;
+}
+
+/* Gameday Night — the bowl under floodlights. */
+[data-theme="night"] {
+  color-scheme: dark;
+
+  --bg: #0a1526;
+  --surface: #122540;
+  --surface-alt: #0e1d33;
+  /* Photos are shot on white; keep their tile light or every garment sits in a
+     glowing box. Dimmed slightly so it does not punch a hole in the page. */
+  --image-bg: #e9eef5;
+
+  --ink: #e9f0fa;
+  --ink-soft: #9db1cd;
+  --rule: #23395c;
+
+  --accent: #4d8ff0;
+  --accent-dark: #2f6fcc;
+  --accent-light: #7fb0f7;
+  --on-accent: #06101f;
+  --on-accent-soft: rgba(6, 16, 31, 0.78);
+  --on-accent-dim: rgba(6, 16, 31, 0.14);
+  --gold: #f0b323;
+  --dan-bg: #1b3356;
+
+  --danger: #e8705c;
+  --danger-bg: #2a1713;
+  --danger-ink: #f3a494;
+  --success: #5fbf84;
+  --success-bg: #11261a;
+  --success-ink: #9fdcb5;
+
+  --font-display: Georgia, "Iowan Old Style", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --w-display: 600;
+  --w-strong: 600;
+  --heading-case: none;
+  --heading-tracking: 0.01em;
+
+  /* Texture: floodlight glow from the top corners */
+  --texture: radial-gradient(
+      900px 420px at 15% -10%,
+      rgba(77, 143, 240, 0.16),
+      transparent 70%
+    ),
+    radial-gradient(820px 400px at 85% -6%, rgba(240, 179, 35, 0.1), transparent 70%);
+
+  --radius: 5px;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  --banner-bg: #061020;
+  --banner-ink: #9db1cd;
+}
+
+/* --------------------------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  background-image: var(--texture);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* Themes cross-fade rather than snapping. */
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: var(--w-display);
+  text-transform: var(--heading-case);
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+
+a {
+  color: var(--accent);
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}

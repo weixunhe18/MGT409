@@ -1,0 +1,75 @@
+.motion {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sits over the still rather than replacing it, so there is no empty frame
+   while the first video frame decodes. */
+.motion__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.motion__video--on {
+  opacity: 1;
+}
+
+.motion__toggle {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  padding: 5px 11px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(10, 18, 32, 0.72);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.18s ease;
+}
+
+/* Revealed on hover or keyboard focus — the badge should not clutter a grid of
+   102 tiles, but it must still be reachable without a mouse. */
+.motion:hover .motion__toggle,
+.motion__toggle:focus-visible,
+.motion__toggle[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.motion__toggle:hover {
+  background: rgba(10, 18, 32, 0.9);
+}
+
+.motion__toggle:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+/* On touch there is no hover, so the control is always visible. */
+@media (hover: none) {
+  .motion__toggle {
+    opacity: 1;
+  }
+}
+
+/* The detail page gets a larger, always-visible control. */
+.motion--detail .motion__toggle {
+  opacity: 1;
+  right: 14px;
+  bottom: 14px;
+  font-size: 12.5px;
+  padding: 7px 14px;
+}

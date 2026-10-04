@@ -36,3 +36,9 @@ archive/test/
 
 # Lecture 8 app lives in its own repository
 Lectures 8/
+
+# --- Clones of the instructor's repos (not our work) ---
+# Keep them on disk so `git pull` still fetches his updates, but never
+# commit them: github.com/zlisto/yale_som_courses_mcp and .../mult_agent_hp
+Lectures 9/
+Lectures 10/mult_agent_hp/

@@ -1,0 +1,19 @@
+# ─── Local-only data pack — never commit these ───────────────────────────────
+# Course-supplied product and test images, not source. Place them yourself
+# after cloning, then run build_catalogue.py.
+data/
+data.zip
+
+# ─── Secrets ─────────────────────────────────────────────────────────────────
+# .env.example IS committed (placeholders only). A real .env never is.
+.env
+.env.local
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+.venv/
+__pycache__/
+*.pyc
+
+# ─── Caches ──────────────────────────────────────────────────────────────────
+.cache/
+.DS_Store

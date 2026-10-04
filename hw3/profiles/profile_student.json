@@ -1,0 +1,23 @@
+{
+  "profile_id": "student",
+  "label": "Yale undergraduate",
+  "role": "student",
+  "age_min": 16,
+  "age_max": 21,
+  "traits": [
+    "smart",
+    "thoughtful",
+    "inquisitive",
+    "social"
+  ],
+  "relationship_to_yale": "Currently enrolled undergraduate living in a residential college. Yale is their daily life rather than a symbol, so college and team affiliation matters more to them than the university wordmark.",
+  "buying_motivation": "Buys for game days, intramurals and club events, for a residential-college crewneck that signals which college they belong to, and occasionally a gift to send home to family. Wants to look like a student, not like a campus tour brochure.",
+  "price_sensitivity": "High. On a student budget with a meal plan and textbooks competing for the same money; a $70 hoodie is a considered purchase, and a visible discount or bundle genuinely changes the decision.",
+  "skeptical_of": "Advertising that performs school spirit at them. Grew up with targeted ads and spots a hard sell instantly; an overly polished corporate spot reads as inauthentic and gets skipped, while a peer-made clip gets watched.",
+  "ad_priorities": {
+    "production_quality": 2,
+    "thoughtful_voice": 5,
+    "clear_call_to_action": 3,
+    "sound_logic": 4
+  }
+}

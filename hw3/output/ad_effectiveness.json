@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-09-26T02:29:49.083812Z",
+  "model": "gpt-5.6-terra",
+  "results": [
+    {
+      "video_file": "ad_humble.mp4",
+      "profile_id": "parent",
+      "profile_label": "Parent of a Yale student",
+      "ad_scores": {
+        "production_quality": 4,
+        "thoughtful_voice": 2,
+        "clear_call_to_action": 1,
+        "sound_logic": 1
+      },
+      "weighted_fit": 37.6,
+      "likelihood_to_shop": "low",
+      "strengths": [
+        "The polished, deliberate fashion imagery makes the Yale wordmark and apparel look premium, which can resonate with a proud parent who values quality.",
+        "The group styling clearly presents collegiate apparel as a confident, giftable expression of Yale affiliation."
+      ],
+      "weaknesses": [
+        "This parent is skeptical of vagueness, yet the visible ad never identifies Campus Customs or explains what products are available.",
+        "There is no visible purchase path—no website, store information, price range, or invitation to shop—despite clear call to action being a top priority for this profile.",
+        "It provides no practical reason to buy, such as garment quality, gift options, or value, which matters strongly to a parent buying for several people."
+      ],
+      "reasoning": "The polished Yale-focused visuals may create pride, but this parent wants a sensible, concrete purchase decision. With no visible Campus Customs identification, buying details, or reasoned product information, the ad is unlikely to turn interest into a visit.",
+      "recommendation": "Add a direct end card naming Campus Customs with a clear shopping URL or location and one concrete value cue, such as quality apparel and Yale gifts for the whole family.",
+      "frames_sampled": 8,
+      "audio_analyzed": false
+    },
+    {
+      "video_file": "ad_humble.mp4",
+      "profile_id": "student",
+      "profile_label": "Yale undergraduate",
+      "ad_scores": {
+        "production_quality": 4,
+        "thoughtful_voice": 2,
+        "clear_call_to_action": 1,
+        "sound_logic": 2
+      },
+      "weighted_fit": 41.4,
+      "likelihood_to_shop": "low",
+      "strengths": [
+        "The deliberate, fashion-forward imagery and coordinated Yale apparel could appeal to a student who wants campus clothing that feels less like a standard tour-brochure souvenir.",
+        "Its group styling connects Yale gear with social settings, which is relevant to this undergraduate's interest in game days, clubs, and looking like a student."
+      ],
+      "weaknesses": [
+        "This profile is especially skeptical of polished school-spirit advertising, and the posed underpass fashion campaign is more stylized than peer-made or candid.",
+        "There is no visible price, discount, bundle, product detail, Campus Customs name, or shopping direction—missing the practical value case that matters to a price-sensitive student.",
+        "The video provides only an image-based reason to buy, rather than showing a residential-college design, event-specific use, or other affiliation this student values."
+      ],
+      "reasoning": "The polished streetwear treatment makes the apparel look confident, but it risks reading as performed school spirit to a student who dislikes hard-sell campus branding. With no visible offer or way to shop, it is unlikely to overcome their high price sensitivity. Audio was not assessed.",
+      "recommendation": "Add a candid student-led moment that shows specific residential-college or event gear alongside a clear student discount or bundle and a visible Campus Customs shopping link.",
+      "frames_sampled": 8,
+      "audio_analyzed": false
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "profile_id": "parent",
+  "label": "Parent of a Yale student",
+  "role": "parent",
+  "age_min": 40,
+  "age_max": 60,
+  "traits": [
+    "caring",
+    "wealthy",
+    "college-educated",
+    "proud"
+  ],
+  "relationship_to_yale": "Parent of a current undergraduate. Experiences Yale a few times a year — move-in, Parents' Weekend, The Game, graduation — and treats the university wordmark itself as the point, rather than a specific residential college.",
+  "buying_motivation": "Buying is an act of pride and connection: a Yale Dad or Yale Mom crewneck to wear at home, gifts for the student and for grandparents, and something to wear on campus visits. Often shopping for several people at once.",
+  "price_sensitivity": "Low. Comfortable paying for quality and unlikely to comparison-shop over $20, but wants to feel the purchase was sensible rather than extravagant — value, not cheapness.",
+  "skeptical_of": "Vagueness and gimmicks. Being college-educated and experienced, they discount claims with no substance behind them, and an ad that never says what is being sold or how to buy it simply ends the interaction.",
+  "ad_priorities": {
+    "production_quality": 4,
+    "thoughtful_voice": 3,
+    "clear_call_to_action": 5,
+    "sound_logic": 5
+  }
+}

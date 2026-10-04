@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-09-26T00:53:19.818131Z",
+  "model": "gpt-5.6-terra",
+  "results": [
+    {
+      "image_file": "image_01_true.jpeg",
+      "product_present": true,
+      "matched_product_id": "yale-dad-t-shirt",
+      "confidence": "high",
+      "reasoning": "The grey short-sleeve shirt has the clearly legible navy “YALE UNIVERSITY DAD” design, matching the catalogue Yale Dad T-shirt.",
+      "observation": {
+        "garment_present": true,
+        "clothing_type": "t-shirt",
+        "color": "grey",
+        "text_on_garment": "YALE UNIVERSITY DAD",
+        "description": "A heather grey short-sleeve T-shirt with large navy YALE lettering, small UNIVERSITY beneath, and DAD below."
+      },
+      "candidates_considered": [
+        {
+          "product_id": "yale-dad-t-shirt",
+          "score": 9.75,
+          "reason": "Exact printed text, grey colour, and t-shirt type match."
+        },
+        {
+          "product_id": "yale-dad-crewneck",
+          "score": 7.588,
+          "reason": "Same design text and colour, but the photo shows a t-shirt rather than a crewneck."
+        },
+        {
+          "product_id": "yale-dad-hoodie",
+          "score": 6.273,
+          "reason": "Same design text, but the photo is neither a navy garment nor a hoodie."
+        }
+      ]
+    },
+    {
+      "image_file": "image_02_false.jpeg",
+      "product_present": false,
+      "matched_product_id": null,
+      "confidence": "high",
+      "reasoning": "The visible gray hoodie clearly reads “ESSENTIALS” in black and has no Yale branding. The catalogue shortlist contained only distinct navy Yale-design hoodies, and photo comparison found no match.",
+      "observation": {
+        "garment_present": true,
+        "clothing_type": "hoodie",
+        "color": "gray",
+        "text_on_garment": "ESSENTIALS",
+        "description": "A person is wearing a gray pullover hoodie with “ESSENTIALS” printed across the chest in black."
+      },
+      "candidates_considered": [
+        {
+          "product_id": "yale-dad-hoodie",
+          "score": 2.476,
+          "reason": "Shared hoodie silhouette only; it is navy and says YALE UNIVERSITY DAD."
+        },
+        {
+          "product_id": "yale-aunt-hoodie",
+          "score": 2.455,
+          "reason": "Shared hoodie silhouette only; it is navy and carries YALE UNIVERSITY AUNT branding."
+        },
+        {
+          "product_id": "crew-left-chest-hoodie",
+          "score": 2.364,
+          "reason": "Shared hoodie silhouette only; it has YALE CREW text."
+        }
+      ]
+    },
+    {
+      "image_file": "image_03_true.jpeg",
+      "product_present": true,
+      "matched_product_id": "dry-zone-long-sleeve",
+      "confidence": "high",
+      "reasoning": "The navy long-sleeve shirt has the clearly legible centered white “YALE BULLDOGS” design, matching the catalogue product.",
+      "observation": {
+        "garment_present": true,
+        "clothing_type": "long-sleeve shirt",
+        "color": "navy",
+        "text_on_garment": "YALE BULLDOGS",
+        "description": "A navy long-sleeve shirt with large white YALE lettering and BULLDOGS printed beneath it."
+      },
+      "candidates_considered": [
+        {
+          "product_id": "dry-zone-long-sleeve",
+          "score": 10.2,
+          "reason": "Exact garment type, navy color, and YALE BULLDOGS chest print."
+        },
+        {
+          "product_id": "ua-mens-tech-l-s-2-0",
+          "score": 9.778,
+          "reason": "Similar navy long-sleeve Yale Bulldogs design, but its catalogue print includes a Y and Under Armour logo."
+        },
+        {
+          "product_id": "yale-maplehouse-diana-mockneck",
+          "score": 6.32,
+          "reason": "Shares Bulldogs text but is a white crewneck."
+        }
+      ]
+    },
+    {
+      "image_file": "image_04_false.jpeg",
+      "product_present": false,
+      "matched_product_id": null,
+      "confidence": "high",
+      "reasoning": "The visible navy T-shirt has a small Balenciaga wordmark and red-and-white underline on the left chest, not a Yale/Campus Customs design. The shortlisted navy Campus Customs tees do not match.",
+      "observation": {
+        "garment_present": true,
+        "clothing_type": "t-shirt",
+        "color": "navy",
+        "text_on_garment": "Balenciaga",
+        "description": "A person is wearing a navy short-sleeve T-shirt with a small Balenciaga logo on the left chest."
+      },
+      "candidates_considered": [
+        {
+          "product_id": "football-left-chest-t-shirt",
+          "score": 3.9,
+          "reason": "Same navy T-shirt format and left-chest placement, but its print is YALE FOOTBALL rather than Balenciaga."
+        },
+        {
+          "product_id": "track-field-left-chest-t-shirt",
+          "score": 3.857,
+          "reason": "Same navy T-shirt format and left-chest placement, but its print is YALE TRACK & FIELD rather than Balenciaga."
+        },
+        {
+          "product_id": "boola-boola-t-shirt",
+          "score": 3.444,
+          "reason": "Same garment type and color, but it has a large Boola Boola front graphic."
+        }
+      ]
+    }
+  ]
+}

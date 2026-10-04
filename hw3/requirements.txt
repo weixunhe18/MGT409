@@ -1,0 +1,6 @@
+av==18.1.0
+openai==3.19.2
+pillow==12.3.0
+pydantic==2.13.5
+pydantic-ai==2.51.0
+python-dotenv==1.2.3

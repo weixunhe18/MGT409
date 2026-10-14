@@ -24,6 +24,8 @@ from backend.models import AgentReport, TeamDeps
 
 
 HW_ROOT = Path(__file__).resolve().parents[1]
+# Reads hw5/.env if present, otherwise the repository root .env.
+load_dotenv(HW_ROOT / ".env")
 load_dotenv(HW_ROOT.parent / ".env")
 
 MODEL_ID = "gpt-5.6-luna"

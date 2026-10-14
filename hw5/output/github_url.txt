@@ -1,0 +1,5 @@
+https://github.com/weixunhe18/MGT409
+
+Homework 5 is in the hw5/ folder: https://github.com/weixunhe18/MGT409/tree/main/hw5
+
+Clone: git clone https://github.com/weixunhe18/MGT409.git

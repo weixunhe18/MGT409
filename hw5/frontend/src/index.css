@@ -1,0 +1,66 @@
+:root {
+  /* Robinhood-style dark palette */
+  --bg: #000000;
+  --surface: #0f1111;
+  --surface-2: #171a1a;
+  --surface-3: #1f2323;
+  --line: #262a2a;
+  --ink: #ffffff;
+  --muted: #8e9494;
+  --green: #00c805;
+  --green-dim: rgba(0, 200, 5, 0.14);
+  --red: #ff5000;
+  --red-dim: rgba(255, 80, 0, 0.14);
+  --amber: #ffc24b;
+  --amber-dim: rgba(255, 194, 75, 0.12);
+  --shadow: 0 0 0 1px var(--line);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--surface-3);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 8px;
+}

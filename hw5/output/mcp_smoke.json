@@ -1,0 +1,48 @@
+{
+  "description": "Problem 4 smoke test: one campus-customs MCP tool call per ticket (101-103), checked against data/campus_customs_new.db.",
+  "run_date": "2026-10-13",
+  "database": "data/campus_customs_new.db (fresh copy of data/campus_customs.db; shop date 2026-08-31)",
+  "tests": [
+    {
+      "ticket_id": 101,
+      "prompt": "Ticket 101: Tauhid Zaman needs a Bulldog tee (CC-TEE-WHITE) in size S, qty 1. Use the campus-customs tool to fulfill the order.",
+      "tool": "fulfill_customer_order",
+      "arguments": {"sku": "CC-TEE-WHITE", "size": "S", "qty": 1, "ticket_id": 101},
+      "output": {"status": "backordered", "sku": "CC-TEE-WHITE", "size": "S", "qty_requested": 1, "in_stock": 0, "shortfall": 1, "vendor": "Bulldog Print Co", "invoice_id": 501, "lead_days": 5, "expected_date": "2026-09-05", "message": "Existing open vendor order (invoice 501) already covers CC-TEE-WHITE S"},
+      "db_check": {
+        "inventory CC-TEE-WHITE S qty": 0,
+        "invoices 501": {"vendor_id": 1, "status": "open", "description": "Rush reprint CC-TEE-WHITE S"},
+        "tickets 101 status": "awaiting_restock",
+        "matches": true
+      }
+    },
+    {
+      "ticket_id": 102,
+      "prompt": "Ticket 102: Elm City Properties says shop rent is due in 2 days. Use the campus-customs tool to pay rent on lease 1.",
+      "tool": "pay_rent",
+      "arguments": {"lease_id": 1, "approved_by": "Weixun He", "ticket_id": 102},
+      "output": {"status": "paid", "lease": "Chapel Street shop", "landlord": "Elm City Properties", "amount": 2400, "due_date": "2026-09-02", "paid_on": "2026-08-31", "on_time": true, "new_balance": 1000, "next_due": "2026-10-02"},
+      "db_check": {
+        "leases 1": {"monthly_rent": 2400.0, "next_due": "2026-10-02"},
+        "cash_accounts checking balance": 1000.0,
+        "payments": {"id": 1, "kind": "rent", "ref_id": 1, "amount": 2400.0, "paid_at": "2026-08-31", "approved_by": "Weixun He"},
+        "tickets 102 status": "resolved",
+        "matches": true
+      }
+    },
+    {
+      "ticket_id": 103,
+      "prompt": "Ticket 103: Yale AI Club wants 20 navy hoodies (CC-HOOD-NAVY) in size M and is asking for a bulk discount. Use the campus-customs tool to propose a discount.",
+      "tool": "negotiate_discount",
+      "arguments": {"sku": "CC-HOOD-NAVY", "size": "M", "qty": 20, "ticket_id": 103},
+      "output": {"sku": "CC-HOOD-NAVY", "size": "M", "qty": 20, "list_price": 58, "discount_pct": 10, "unit_price": 52.2, "order_total": 1044, "margin_pct_after_discount": 57.9, "at_max_discount": false, "in_stock": 8, "enough_stock": false, "status": "offer"},
+      "db_check": {
+        "pricing CC-HOOD-NAVY": {"unit_cost": 22.0, "list_price": 58.0},
+        "computed": "58 x 0.90 = 52.20; x 20 = 1044; margin (52.20-22)/52.20 = 57.9%",
+        "inventory CC-HOOD-NAVY M qty": 8,
+        "tickets 103 status": "negotiating",
+        "matches": true
+      }
+    }
+  ]
+}

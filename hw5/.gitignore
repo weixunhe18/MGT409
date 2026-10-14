@@ -1,0 +1,16 @@
+# Secrets: never commit the real key
+.env
+.env.local
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node (frontend/ has its own .gitignore too)
+node_modules/
+dist/
+
+# macOS and downloaded archives
+.DS_Store
+*.zip

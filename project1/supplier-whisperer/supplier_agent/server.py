@@ -106,9 +106,32 @@ class App:
         with _LOCAL_OPENER.open(request, timeout=15) as response:
             return int(response.status)
 
+    def start_mailbox(self, mailbox) -> None:
+        """Poll the real inbox; process mail on the agent worker, then deliver replies on the same worker."""
+        self.mailbox = mailbox
+        self.pipeline.mailbox_allow = list(mailbox.cfg.extra_allow)
+
+        def deliver() -> None:
+            mailbox.deliver_pending()
+
+        def loop() -> None:
+            while True:
+                try:
+                    for event in mailbox.fetch_new():
+                        msg = event["message"]
+                        auth = "DKIM/DMARC pass" if msg["auth"]["verified"] else "DKIM/DMARC FAILED"
+                        self.log(f"Gmail: new mail from {msg['from']} ({auth})")
+                        self.enqueue_event(event, f"received via Gmail IMAP · {auth}")
+                    self.jobs.put(deliver)  # also picks up replies Wei approved in the dashboard
+                except Exception as exc:  # noqa: BLE001  keep polling; the next round retries
+                    self.log(f"Gmail poll failed ({type(exc).__name__}: {exc}). Retrying next round.")
+                time.sleep(mailbox.cfg.poll_seconds)
+
+        threading.Thread(target=loop, name="gmail-poller", daemon=True).start()
+
     def replay_samples(self, reset: bool) -> bool:
-        if not self.idle:
-            return False
+        if not self.idle or getattr(self, "mailbox", None):
+            return False  # never wipe a live mailbox's conversations with the demo inbox
         if reset:
             self.store.reset()
         events = load_sample_events(self.config.dataset_dir)
@@ -382,7 +405,7 @@ class _Server(ThreadingHTTPServer):
     allow_reuse_address = os.name != "nt"
 
 
-def run_server(config: AppConfig, open_browser: bool = True, replay: bool = False) -> None:
+def run_server(config: AppConfig, open_browser: bool = True, replay: bool = False, mailbox_cfg=None) -> None:
     if config.host not in LOOPBACK_HOSTS and (config.using_dev_secret or os.getenv("ALLOW_REMOTE") != "1"):
         raise SystemExit(
             f"Refusing to listen on {config.host}: the dashboard API has no login, so it must stay on 127.0.0.1.\n"
@@ -404,8 +427,16 @@ def run_server(config: AppConfig, open_browser: bool = True, replay: bool = Fals
     print(f"  Webhook:    POST {url}/webhook/agentmail  (Svix-signed)")
     print(f"  Dataset:    {config.dataset_dir.name}   Model: {mode}")
     print(f"  .env found: {', '.join(str(p) for p in config.env_files) or 'none (mock mode works without it)'}")
+    if mailbox_cfg is not None:
+        from .mailbox import GmailMailbox
+
+        sending = "SENDING real replies" if mailbox_cfg.sending else "DRY-RUN (replies are NOT sent; MAILBOX_SEND=on)"
+        print(f"  Mailbox:    {mailbox_cfg.display_name} <{mailbox_cfg.address}> · every {mailbox_cfg.poll_seconds} s"
+              f" · {sending}")
+        print(f"  Also allowed (DKIM/DMARC required): {', '.join(mailbox_cfg.extra_allow) or 'none'}")
+        app.start_mailbox(GmailMailbox(mailbox_cfg, app.store, log=lambda t: (print("  " + t), app.log(t))))
     print("  Press Ctrl+C to stop.\n")
-    if replay:
+    if replay and mailbox_cfg is None:
         threading.Timer(0.5, lambda: app.replay_samples(reset=True)).start()
     if open_browser:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()

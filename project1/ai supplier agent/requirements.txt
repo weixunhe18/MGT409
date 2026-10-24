@@ -1,3 +1,0 @@
-# Supplier Whisperer uses only the Python standard library (3.10+).
-# Nothing to install: `python app.py` is enough, in mock mode AND in live gpt-6-luna mode
-# (the Portkey call is a plain HTTPS request via urllib).

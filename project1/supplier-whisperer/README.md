@@ -12,13 +12,14 @@ model reads them.
 
 ## Run it (one command)
 
-Requires **Python 3.10+**. There is **nothing to pip install**: the app uses only the standard library.
+Requires **Python 3.10+**. Mock mode needs **nothing installed**: the app uses only the standard library. For live
+mode, `pip install -r requirements.txt` (one package, `certifi`, for HTTPS certificates on macOS).
 
 ```bash
 python app.py
 ```
 
-Your browser opens **http://127.0.0.1:8000**. Click **▶ Run demo inbox** to replay 8 overnight supplier emails
+Your browser opens **http://127.0.0.1:8000**. Click **▶ Run demo inbox** to replay 9 overnight supplier emails
 through the signed webhook. Click any email to see the agent trace step by step.
 
 | What | Command |
@@ -27,13 +28,15 @@ through the signed webhook. Click any email to see the agent trace step by step.
 | Same, live on gpt-6-luna | `python app.py --live` (needs `PORTKEY_API_KEY`, see below) |
 | Terminal-only demo (no browser) | `python app.py --demo --show-drafts` |
 | Try other settings | `python app.py --demo --risk high --schedule supervised` |
-| Run the 66 tests | `python app.py --test` |
+| Run the 77 tests | `python app.py --test` |
+| Real Gmail inbox (dry-run by default) | `python app.py --live --mailbox` (see *Live mailbox*) |
 | Another port | `python app.py --port 8001` |
 | Start fresh | `python app.py --reset` |
 
 ### Live mode (gpt-6-luna via Portkey)
 
-1. Copy `.env.example` to `.env` **in this folder or in the folder above it** (the app checks both, in that order).
+1. Copy `.env.example` to `.env` **in this folder, the folder above it, or the enclosing git repo's root** (checked
+   in that order).
 2. Set `PORTKEY_API_KEY=...` (the MGT 409 course key).
 3. Restart. The header shows **⚡ gpt-6-luna (live)**. You can switch between *Mock* and *gpt-6-luna* in the
    "AI engine" card at any time.
@@ -42,8 +45,31 @@ Without a key, everything still runs end to end on the **mock engine**. This is 
 for the four agents, and its token counts are labeled *estimated*. Live mode makes plain HTTPS calls (urllib) to
 Portkey's OpenAI-compatible Responses API, so it needs no SDK.
 
-**Nothing is ever really emailed.** Inbound mail is a set of AgentMail-format webhook events, and outbound mail lands
-in a mock outbox (the "Sent" tab).
+**By default nothing is ever really emailed.** Inbound mail is a set of AgentMail-format webhook events, and outbound
+mail lands in a mock outbox (the "Sent" tab). The optional Gmail connector below is the only path to a real inbox.
+
+### Live mailbox (Gmail, optional)
+
+`python app.py --live --mailbox` connects **weideals25@gmail.com** (display name *John, Northfield Outdoor Labs*). It
+polls the inbox over IMAP every 60 s (no public URL, works on a laptop) and runs each new email through the same
+pipeline. Replies go out over SMTP **in the sender's thread**, so a conversation can continue.
+
+1. On the Google account: turn on 2-Step Verification, then create an **app password** (Google Account → Security →
+   App passwords). Put it in `.env` as `GMAIL_APP_PASSWORD=...`. Never commit it.
+2. Start in the default **dry-run**: replies appear in the dashboard's Sent tab but are **not transmitted**.
+3. When you're happy, set `MAILBOX_SEND=on` in `.env` and restart.
+
+Who gets an answer: the allowlist in `policy.json`, `MY_PERSONAL_EMAIL`, and any **@yale.edu** sender (demo-only).
+Everyone else is held for you in the dashboard ("Add to allowlist & re-run"). Extra safety for real mail:
+
+* Allowlisted senders must pass **DKIM or DMARC** (Gmail's own `Authentication-Results` stamp), otherwise they're
+  treated as unknown: a forged `From:` gets nothing.
+* Replies go only to the authenticated `From` address, never to `Reply-To`.
+* Daily caps: 10 replies per sender, 50 in total. Mailing lists, bulk mail and auto-replies are never answered.
+* The mailbox uses its own database (`…-mailbox.db`), and **Run demo inbox** is disabled while it's connected, so a
+  demo reset can't wipe real conversations.
+* It only answers while the app is running. Mail that arrives while it's off waits in the inbox and is answered
+  on the next start.
 
 ---
 
@@ -92,7 +118,7 @@ flowchart LR
 |---|---|---|---|
 | Fully grounded technical answers at night | approve | **auto-send** | auto-send |
 | Replies with open items ("Wei will follow up") | approve | approve | auto-send |
-| Holding reply on price/qty/date/PO topics | approve | approve | auto-send (never commits) |
+| Holding reply on price/qty/date/PO topics ("Wei will reply directly") | approve | **auto-send** (never commits) | auto-send (never commits) |
 | Price, quantity, dates, POs, drawings | **always escalated: hard rule** | same | same |
 | Injection, impersonation, unknown senders | **always blocked: hard rule** | same | same |
 
@@ -139,11 +165,12 @@ supplier_agent/
   knowledge.py              spec parser (shareable vs confidential), retrieval, leak list
   llm.py                    Portkey Responses API client, token meter, budget caps
   webhook.py                Svix signing/verification, AgentMail payload normalization
-  store.py                  SQLite (runs, mock outbox, settings, feedback)
+  store.py                  SQLite (runs, outbox + delivery status, settings, feedback)
+  mailbox.py                Gmail connector: IMAP polling, DKIM/DMARC check, threaded SMTP replies
   prompts/*.md              agent instructions
   static/index.html         single-page dashboard (no build step)
 data/sample/                demo dataset
-tests/                      66 unit + end-to-end tests (no network)
+tests/                      77 unit + end-to-end tests (no network)
 ```
 
 ## Troubleshooting
@@ -155,15 +182,18 @@ tests/                      66 unit + end-to-end tests (no network)
   Check `PORTKEY_API_KEY`, then try `python app.py --demo --live`.
 * **Cloud-synced folders (OneDrive/Dropbox/iCloud)**: the app then keeps its SQLite file in your local app-data
   folder automatically. Override with `WHISPERER_DB=...` in `.env`.
-* **macOS + python.org Python, live mode fails with `CERTIFICATE_VERIFY_FAILED`**: run
-  `/Applications/Python 3.12/Install Certificates.command` once.
+* **macOS + python.org Python, live mode fails with `CERTIFICATE_VERIFY_FAILED`**: `pip install -r requirements.txt`
+  (installs `certifi`, which the app uses automatically), or run `Install Certificates.command` in your Python folder.
+* **Live mode fails with HTTP 403 "error code: 1010"**: Portkey's Cloudflare front blocked the client's User-Agent.
+  The app sends its own; if you call Portkey from other urllib code, set a User-Agent header.
 * **`.env` written by PowerShell `>`** (UTF-16) is fine; the app reads both UTF-8 and UTF-16.
 * **Hosting online**: the dashboard has no login, so the app refuses to listen on anything but 127.0.0.1 unless you
   set a real `WEBHOOK_SECRET` **and** `ALLOW_REMOTE=1`, and put it behind an authenticating proxy.
 
 ## Course notes (MGT 409)
 
-* Model: `gpt-6-luna` via `PORTKEY_API_KEY` only. No other keys are needed to grade the app.
-* `.env` is read from the repo folder, then the folder above. `.env` is git-ignored, and `.env.example` lists names only.
+* Model: `gpt-6-luna` via `PORTKEY_API_KEY` only. No other keys are needed to grade the app. The Gmail connector
+  needs its own app password, so graders use the mock inbox; the live mailbox is shown in the demo video.
+* `.env` is read from the project folder, then the folder above, then the git repo root. `.env` is git-ignored, and `.env.example` lists names only.
 * Token counts per agent call (input / cached / output) and the dollar cost per email appear in the dashboard and in
   `python app.py --demo --live`.

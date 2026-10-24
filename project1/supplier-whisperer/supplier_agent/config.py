@@ -84,15 +84,26 @@ def _parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
-def load_env() -> list[Path]:
-    """Load .env from the project folder, then its parent.
+def _repo_root() -> Path | None:
+    for folder in PROJECT_ROOT.parents:
+        if (folder / ".git").exists():
+            return folder
+    return None
 
-    Real environment variables win. The project .env wins over the parent one.
+
+def load_env() -> list[Path]:
+    """Load .env from the project folder, then its parent, then the enclosing git repo's root.
+
+    Real environment variables win. Nearer files win over farther ones.
     Empty values never override (so a blank PORTKEY_API_KEY= copied from
     .env.example does not hide the staff key in the folder above).
     """
     loaded: list[Path] = []
-    for folder in (PROJECT_ROOT, PROJECT_ROOT.parent):
+    folders = [PROJECT_ROOT, PROJECT_ROOT.parent]
+    root = _repo_root()
+    if root and root not in folders:
+        folders.append(root)  # e.g. a course repo whose root .env holds the shared key
+    for folder in folders:
         path = folder / ".env"
         if not path.is_file():
             continue

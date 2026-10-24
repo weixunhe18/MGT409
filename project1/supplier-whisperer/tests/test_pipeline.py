@@ -78,7 +78,7 @@ class PipelineTests(unittest.TestCase):
             expected = event["_demo"]["expected"]
             self.assertEqual(runs[event["event_id"]]["outcome"], expected,
                              f"{event['event_id']}: {runs[event['event_id']].get('headline')}")
-        self.assertEqual(len(store.list_outbox()), 1)
+        self.assertEqual(len(store.list_outbox()), 3)  # email 9 answered + holding replies to emails 3 and 6
 
     def test_auto_sent_reply_is_locked_to_sender_and_compliant(self):
         pipeline, _ = make()
@@ -115,13 +115,14 @@ class PipelineTests(unittest.TestCase):
         self.assertNotIn("AUTO_SENT", outcomes)
         self.assertEqual(store.list_outbox(), [])
 
-    def test_high_risk_sends_holding_reply_without_commitments(self):
-        pipeline, _ = make(risk_tolerance="high")
-        run = run_all(pipeline)["evt_sample_03"]
-        self.assertEqual(run["outcome"], "ESCALATED")
-        self.assertTrue(run.get("sent"))
-        for forbidden in ("4.20", "3.85", "20k", "Nov 15", "deposit"):
-            self.assertNotIn(forbidden, run["draft"]["body"])
+    def test_medium_and_high_risk_send_holding_reply_without_commitments(self):
+        for risk in ("medium", "high"):
+            pipeline, _ = make(risk_tolerance=risk)
+            run = run_all(pipeline)["evt_sample_03"]
+            self.assertEqual(run["outcome"], "ESCALATED", risk)
+            self.assertTrue(run.get("sent"), risk)
+            for forbidden in ("4.20", "3.85", "20k", "Nov 15", "deposit"):
+                self.assertNotIn(forbidden, run["draft"]["body"])
 
     def test_threats_cost_zero_model_calls(self):
         pipeline, _ = make()
@@ -267,7 +268,7 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(lines[0].startswith("Texture:"))  # not every line that merely contains a "1"
 
     def test_human_approval_sends_and_flags_risky_edits(self):
-        pipeline, store = make()
+        pipeline, store = make(risk_tolerance="low")  # Low: the holding reply waits for Wei
         run = run_all(pipeline)["evt_sample_03"]
         risky = pipeline.approve(run["id"], body="Hi Jason, we accept USD 3.85.")
         self.assertTrue(risky.get("needs_force"))

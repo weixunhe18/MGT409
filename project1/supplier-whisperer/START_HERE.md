@@ -1,19 +1,15 @@
-# Start here (morning of Sat Oct 24)
+# Start here (updated Sat Oct 24, evening)
 
-**Status:** the MVP is built and verified (66/66 tests, 8/8 demo outcomes; now 9/9 after email 9 was added on Oct 24, dashboard clicked through end to end) in a
-real Python 3.12 runtime inside Claude's sandboxed browser. This laptop has no Python, so nothing was installed here.
-An independent review then found 13 issues, including a double-send race, script injection via a sender address,
-and a kill switch that ignored in-flight emails. All are fixed and covered by tests.
-**The live gpt-6-luna path has never been run.** Do that first.
+**Status:** running on your Mac (Python 3.13, `.venv`). 77/77 tests, and 9/9 demo outcomes in **live gpt-6-luna** and
+mock mode. Live mode needs no manual setup: the key is read from the repo-root `.env`, and `certifi` handles HTTPS.
+The Gmail connector is built and tested with fake servers, but **not yet run against the real inbox** (it needs the
+app password).
 
-> **On a new machine?** Claude's memory from the first session stays on the work laptop. Tell Claude Code:
-> *"Read START_HERE.md and decisions.md first."*
-
-## Your first 3 actions
-1. Open `questions_for_morning.md` (3 blockers, ~10 decisions, each with a recommendation).
-2. Get Python 3.12 running (personal machine recommended), then in this folder: `python app.py --test`, then
-   `python app.py`, then click **▶ Run demo inbox**.
-3. Put `PORTKEY_API_KEY` in `.env` one folder up and run `python app.py --demo --live --show-drafts`.
+## Your next actions
+1. Create a Google **app password** for weideals25@gmail.com and put `GMAIL_APP_PASSWORD=...` in the repo-root `.env`.
+2. Run `python app.py --live --mailbox` (dry-run) and email it from your Yale address. Check the draft in the dashboard.
+3. Set `MAILBOX_SEND=on` once the drafts look right. **Ask the professor before TAs use it** (course rule on extra keys).
+4. Share the real Alibaba supplier threads; they'll be anonymized into `data/real_anonymized/` before any commit.
 
 ## What's in the folder
 

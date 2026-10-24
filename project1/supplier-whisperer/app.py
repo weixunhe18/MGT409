@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import unittest
 from pathlib import Path
@@ -113,6 +114,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--no-browser", action="store_true", help="don't open a browser tab")
     parser.add_argument("--replay", action="store_true", help="reset and replay the sample inbox right after start")
     parser.add_argument("--reset", action="store_true", help="delete this dataset's local database first")
+    parser.add_argument("--mailbox", action="store_true",
+                        help="connect the real Gmail inbox (IMAP/SMTP). Needs GMAIL_APP_PASSWORD in .env. Replies are "
+                             "dry-run unless MAILBOX_SEND=on. Uses its own database, separate from the demo.")
     args = parser.parse_args(argv)
 
     if args.test:
@@ -127,12 +131,21 @@ def main(argv: list[str] | None = None) -> int:
     if args.demo:
         return run_demo(config, args.risk, args.schedule, args.show_drafts)
 
+    mailbox_cfg = None
+    if args.mailbox:
+        from supplier_agent.mailbox import MailboxConfig, check_login
+
+        mailbox_cfg = MailboxConfig.from_env(load_policy(config.dataset_dir))
+        check_login(mailbox_cfg)
+        if not os.getenv("WHISPERER_DB"):  # real conversations never share the demo's resettable database
+            config.db_path = config.db_path.with_name(config.db_path.stem + "-mailbox.db")
+
     if args.reset and config.db_path.exists():
         config.db_path.unlink()
         print(f"Deleted {config.db_path}")
     from supplier_agent.server import run_server
 
-    run_server(config, open_browser=not args.no_browser, replay=args.replay)
+    run_server(config, open_browser=not args.no_browser, replay=args.replay, mailbox_cfg=mailbox_cfg)
     return 0
 
 

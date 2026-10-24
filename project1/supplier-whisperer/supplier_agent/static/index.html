@@ -211,8 +211,8 @@ const LABELS = {AUTO_SENT: 'Sent by agent', NEEDS_APPROVAL: 'Draft awaiting you'
   QUARANTINED: 'Quarantined', BLOCKED: 'Blocked', HELD: 'Held', FYI: 'No reply needed'};
 const RISK_HINT = {
   low: 'Conservative: the agent drafts everything and you approve every reply. Threats are still blocked automatically.',
-  medium: 'Balanced: at night the agent sends replies only when every answer comes straight from the spec and nothing touches commitments.',
-  high: 'Trusting: also sends replies with open items and holding replies on commercial topics. It never commits to anything.'};
+  medium: 'Balanced: at night the agent sends replies only when every answer comes straight from the spec, plus holding replies ("Wei will reply directly") when a decision waits on you.',
+  high: 'Trusting: also sends replies with open items. It never commits to anything.'};
 let S = null, tab = 'inbox', openId = null, openUpdated = null, draftDirty = false, CUR = {id: null, from: ''}, acting = false;
 
 function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }

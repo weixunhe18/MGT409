@@ -40,8 +40,12 @@ CREATE TABLE IF NOT EXISTS outbox (
     subject TEXT,
     body TEXT,
     sent_by TEXT,
-    sent_at TEXT
+    sent_at TEXT,
+    delivery TEXT,
+    delivered_at TEXT,
+    smtp_message_id TEXT
 );
+CREATE TABLE IF NOT EXISTS mail_ids (message_id TEXT PRIMARY KEY, thread_id TEXT);
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT);
 CREATE TABLE IF NOT EXISTS feedback (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,6 +76,11 @@ class Store:
         self._conn.row_factory = sqlite3.Row
         with self._lock:
             self._conn.executescript(SCHEMA)
+            # Databases created before the Gmail connector lack the delivery columns.
+            have = {r["name"] for r in self._conn.execute("PRAGMA table_info(outbox)")}
+            for column in ("delivery", "delivered_at", "smtp_message_id"):
+                if column not in have:
+                    self._conn.execute(f"ALTER TABLE outbox ADD COLUMN {column} TEXT")
             self._conn.commit()
 
     # ------------------------------------------------------------- helpers
@@ -158,7 +167,9 @@ class Store:
                 continue
             items.append({"direction": "inbound", "at": r["received_at"], "from": r["from_name"] or r["from_addr"],
                           "subject": r["subject"], "body": (email.get("text") or "")[:800]})
-        for r in self._query("SELECT * FROM outbox WHERE thread_id = ?", (thread_id,)):
+        # Replies a send cap stopped never reached the sender, so they are not part of the conversation.
+        for r in self._query("SELECT * FROM outbox WHERE thread_id = ? AND (delivery IS NULL OR delivery "
+                             "NOT LIKE 'capped%')", (thread_id,)):
             items.append({"direction": "outbound", "at": r["sent_at"], "from": f"us ({r['sent_by']})",
                           "subject": r["subject"], "body": (r["body"] or "")[:800]})
         items.sort(key=lambda x: x["at"] or "")
@@ -220,11 +231,44 @@ class Store:
     def feedback_for(self, run_id: int) -> list[dict]:
         return [dict(r) for r in self._query("SELECT * FROM feedback WHERE run_id = ? ORDER BY id", (run_id,))]
 
+    # ------------------------------------------------------- real mailbox
+    def remember_message(self, message_id: str, thread_id: str) -> None:
+        self._write("INSERT OR IGNORE INTO mail_ids (message_id, thread_id) VALUES (?, ?)", (message_id, thread_id))
+
+    def thread_for_message(self, message_id: str) -> str | None:
+        rows = self._query("SELECT thread_id FROM mail_ids WHERE message_id = ?", (message_id,))
+        return rows[0]["thread_id"] if rows else None
+
+    def pending_deliveries(self, source: str) -> list[dict]:
+        """Outbox replies not yet handed to a real mailbox, for emails that came from `source`."""
+        items = []
+        for r in self._query("SELECT o.*, r.email_json FROM outbox o JOIN runs r ON r.id = o.run_id "
+                             "WHERE o.delivery IS NULL ORDER BY o.id"):
+            email = json.loads(r["email_json"] or "{}")
+            if email.get("source") == source:
+                item = {k: r[k] for k in r.keys() if k != "email_json"}
+                item["email"] = email
+                items.append(item)
+        return items
+
+    def mark_delivery(self, outbox_id: int, status: str, smtp_message_id: str = "") -> None:
+        self._write("UPDATE outbox SET delivery = ?, delivered_at = ?, smtp_message_id = ? WHERE id = ?",
+                    (status, now_iso(), smtp_message_id or None, outbox_id))
+
+    def deliveries_today(self, to_addr: str | None = None) -> int:
+        since = (datetime.now() - timedelta(hours=24)).isoformat(timespec="seconds")
+        sql, params = "SELECT COUNT(*) AS n FROM outbox WHERE delivery = 'sent' AND delivered_at >= ?", [since]
+        if to_addr:
+            sql += " AND to_addr = ?"
+            params.append(to_addr)
+        rows = self._query(sql, tuple(params))
+        return int(rows[0]["n"]) if rows else 0
+
     # --------------------------------------------------------------- reset
     def reset(self) -> None:
         with self._lock:
             self._conn.executescript(
-                "DELETE FROM runs; DELETE FROM outbox; DELETE FROM feedback; "
+                "DELETE FROM runs; DELETE FROM outbox; DELETE FROM feedback; DELETE FROM mail_ids; "
                 "DELETE FROM sqlite_sequence WHERE name IN ('runs', 'outbox', 'feedback');"  # ids restart at 1
             )
             self._conn.commit()

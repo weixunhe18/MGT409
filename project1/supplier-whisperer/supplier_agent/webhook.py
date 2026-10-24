@@ -107,6 +107,9 @@ def normalize_event(event: dict) -> dict:
         "in_reply_to": msg.get("in_reply_to"),
         "timestamp": str(msg.get("timestamp") or ""),
         "agent_armor": msg.get("agent_armor"),
+        # Set only by the Gmail connector: where the email came from and its DKIM/DMARC verdict.
+        "source": str(msg.get("source") or "webhook"),
+        "auth": msg.get("auth"),
         "demo": event.get("_demo") or {},
     }
 

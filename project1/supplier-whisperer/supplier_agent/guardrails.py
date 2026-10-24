@@ -454,6 +454,8 @@ def is_auto_reply(subject: str, headers: dict | None) -> bool:
         return True
     if "x-autoreply" in headers or "x-autorespond" in headers:
         return True
+    if headers.get("precedence", "") in ("bulk", "junk", "list") or "list-id" in headers:
+        return True  # newsletters and mailing lists never get a reply
     return bool(re.match(r"^(automatic reply|auto(-|\s)?reply|out of (the )?office|自动回复)", (subject or "").strip(), re.I))
 
 

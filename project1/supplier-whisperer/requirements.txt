@@ -1,0 +1,4 @@
+# Supplier Whisperer runs on the Python standard library (3.10+): mock mode needs nothing installed.
+# For live gpt-6-luna mode, install this one package. It supplies HTTPS certificates that python.org
+# builds on macOS lack (otherwise: CERTIFICATE_VERIFY_FAILED).
+certifi

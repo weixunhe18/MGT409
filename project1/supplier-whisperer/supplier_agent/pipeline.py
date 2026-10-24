@@ -89,6 +89,8 @@ class Pipeline:
         self.shareable_text = kb.shareable_text()
         self.own_domain = domain_of(str(policy.get("owner", {}).get("inbox", "")))
         self._human_lock = threading.Lock()
+        # Extra allowlist entries that apply only when a real mailbox is connected (e.g. "@yale.edu").
+        self.mailbox_allow: list[str] = []
 
     # ------------------------------------------------------------- settings
     @property
@@ -240,8 +242,13 @@ class Pipeline:
                                 ["auto_reply"])
 
         # 1. Sender gate: before any model sees anything.
-        sender = check_sender(email.get("from_raw", ""), self.policy, settings.get("extra_allow"),
-                              settings.get("extra_block"))
+        sender = check_sender(email.get("from_raw", ""), self.policy,
+                              list(settings.get("extra_allow") or []) + self.mailbox_allow, settings.get("extra_block"))
+        auth = email.get("auth")
+        if sender["status"] == "allowed" and isinstance(auth, dict) and not auth.get("verified"):
+            # Real mail: anyone can type an allowlisted From line, so trust it only with DKIM/DMARC.
+            sender = {**sender, "status": "unknown", "contact": None,
+                      "reason": "Sender is allowlisted, but the message failed DKIM/DMARC, so it may be forged."}
         run["sender"] = sender
         if sender["status"] == "blocked":
             trace.add("sender", "Sender check", "stop", sender["reason"])
@@ -398,7 +405,9 @@ class Pipeline:
         if triage["hard_topics"]:
             labels = ", ".join(TOPIC_LABELS[t] for t in triage["hard_topics"])
             # "Are you a bot?" never gets an automatic reply, not even a holding one: Wei answers that personally.
-            holding_ok = autonomous and risk == "high" and not soft and "identity" not in triage["hard_topics"]
+            # At Medium and High the supplier gets a no-commitment holding reply so they know Wei is on it.
+            holding_ok = (autonomous and risk in ("medium", "high") and not soft
+                          and "identity" not in triage["hard_topics"])
             note = "Holding reply sent (no commitments)." if holding_ok else "Holding reply drafted for your approval."
             return done("ESCALATED", f"{labels[0].upper() + labels[1:]}: needs your decision. {note}",
                         ["commitment"] + list(triage["hard_topics"]), send=holding_ok, status="warn")

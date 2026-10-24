@@ -72,7 +72,7 @@ uses no new libraries). Put **AgentMail on the product roadmap**. Keep the **moc
   Mon 9–5 ET") on your machine, a ~$5/month always-on VM (money, so your call), or a GitHub Actions cron that polls every
   10 min (free but clunky).
 
-### Safety work required before any real send (not built yet)
+### Safety work required before any real send (built Sat Oct 24, `supplier_agent/mailbox.py`)
 1. **Anti-spoofing:** anyone can forge `From: kevin.zhang@hongyuan-mold.example`. For allowlisted senders, require
    `dkim=pass` / `dmarc=pass` in Gmail's `Authentication-Results` header (or AgentMail's `authentication_results`);
    otherwise treat the sender as unknown.
@@ -144,3 +144,16 @@ LLM tokens.
   questions) was added as the auto-send example.
 - **Trade-off:** suppliers wait a few hours longer on change questions that the spec already answers. In return the agent
   never approves a change on its own: a spec line can be outdated, and changes are where the expensive mistakes happen.
+
+---
+
+## D6. Holding replies auto-send at Medium risk (decided Sat)
+
+- **Before:** when a decision waits on Wei (price, quantity, dates, POs, drawings), the holding reply ("Wei will
+  review this and reply directly") was only sent automatically at High risk. At Medium it waited for approval.
+- **Now:** at Medium and High, at night, the supplier gets the holding reply right away, so they know someone is on it.
+  The decision itself still always comes from Wei.
+- **Unchanged guards:** the holding reply must pass every deterministic compliance check (no numbers, no commitment
+  verbs). It is never sent if any soft warning fired (injection suspicion, reviewer flag, loop guard), or for
+  "are you a bot?" questions. Low risk and business hours still make everything wait.
+- **Trade-off:** a supplier may read a quick holding reply as "yes is coming". The wording promises only a review.

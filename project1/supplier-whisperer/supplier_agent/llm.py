@@ -11,10 +11,22 @@ from __future__ import annotations
 import json
 import math
 import re
+import ssl
 import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+
+
+def ssl_context() -> ssl.SSLContext:
+    """CA bundle for HTTPS. python.org builds on macOS ship without system certificates
+    (CERTIFICATE_VERIFY_FAILED) until "Install Certificates.command" is run, so prefer
+    certifi when it is installed; otherwise fall back to the system store."""
+    try:
+        import certifi
+    except ImportError:
+        return ssl.create_default_context()
+    return ssl.create_default_context(cafile=certifi.where())
 
 
 class LLMError(RuntimeError):
@@ -213,7 +225,7 @@ class PortkeyLLM:
                 },
             )
             try:
-                with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                with urllib.request.urlopen(request, timeout=self.timeout, context=ssl_context()) as response:
                     return json.loads(response.read().decode("utf-8"))
             except urllib.error.HTTPError as exc:
                 detail = exc.read().decode("utf-8", "replace")[:400]

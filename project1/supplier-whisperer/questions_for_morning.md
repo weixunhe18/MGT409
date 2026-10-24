@@ -1,5 +1,27 @@
 # Questions for you (morning of Sat Oct 24)
 
+## ✅ Your answers (Sat Oct 24)
+
+| # | Question | Answer | Status |
+|---|---|---|---|
+| 1 | Where to run Python | Personal Mac (Python 3.13, `.venv`) | Done: 77 tests pass |
+| 2 | Move off the employer OneDrive | Done | Repo lives in personal `MGT409` |
+| 3 | Live test with the course key | Works | 9/9 live outcomes, about $0.004 per 9-email night |
+| 4 | AI disclosure | Done (D3) | |
+| 5 | Real-user evidence | Real Alibaba supplier threads coming next | Will be **anonymized** before committing (the repo is public) → `data/real_anonymized/` |
+| 6 | Baseline numbers | Later | Open |
+| 7 | GitHub | `weixunhe18/MGT409` (public), folder `project1/supplier-whisperer` | Done |
+| 8 | Hosting | Local for now | |
+| 14 | Live email | Yes: Gmail, TAs can email it and hold a conversation | Built (`--mailbox`, D2). Dry-run until you set `MAILBOX_SEND=on`. @yale.edu pre-allowlisted (DKIM/DMARC required). **Still to do: ask the professor** (course rule on extra keys) and announce a live window |
+| 15 | Gmail account | `weideals25@gmail.com`, display name "John, Northfield Outdoor Labs" | You create the app password |
+| 9 | Product name | Keep "Supplier Whisperer" | |
+| 10 | Demo defaults | Night + Medium OK | |
+| 11 | Demo video | Yes | Open (Sunday) |
+| 12 | Holding replies at Medium | Yes: auto-send so the supplier knows we're on it | Done (D6) |
+
+The original questions follow for reference.
+
+
 Ordered by urgency. Each has my recommendation so you can just say "yes" or "no".
 
 ## 🔴 Blockers: needed before anything else runs

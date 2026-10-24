@@ -88,17 +88,22 @@ class Meter:
             raise BudgetExceeded(f"{agent}: daily budget ${self.daily_budget_usd:.2f} reached")
 
     def record(self, agent: str, input_tokens: int, cached_tokens: int, output_tokens: int,
-               ms: int, estimated: bool, model: str) -> dict:
+               ms: int, estimated: bool, model: str, cache_write_tokens: int = 0, extra: dict | None = None) -> dict:
         call = {
             "agent": agent,
             "model": model,
             "input_tokens": int(input_tokens),
             "cached_tokens": int(cached_tokens),
             "output_tokens": int(output_tokens),
-            "cost_usd": round(cost_usd(self.prices, input_tokens, cached_tokens, output_tokens), 8),
+            "cost_usd": round(cost_usd(self.prices, input_tokens, cached_tokens, output_tokens,
+                                       cache_write_tokens), 8),
             "ms": int(ms),
             "estimated": estimated,
         }
+        if cache_write_tokens:
+            call["cache_write_tokens"] = int(cache_write_tokens)
+        if extra:
+            call.update(extra)
         self.calls.append(call)
         return call
 
@@ -152,6 +157,14 @@ def parse_usage(data: dict) -> tuple[int, int, int]:
     return input_tokens, cached, output_tokens
 
 
+def parse_usage_details(data: dict) -> tuple[int, int]:
+    """(cache_write_tokens, reasoning_tokens). Reasoning tokens are already inside output_tokens."""
+    usage = data.get("usage") or {}
+    in_details = usage.get("input_tokens_details") or usage.get("prompt_tokens_details") or {}
+    out_details = usage.get("output_tokens_details") or usage.get("completion_tokens_details") or {}
+    return int(in_details.get("cache_write_tokens") or 0), int(out_details.get("reasoning_tokens") or 0)
+
+
 class MockLLM:
     """Offline stand-in. Agents run deterministic heuristics; this only meters estimates."""
 
@@ -173,13 +186,18 @@ class PortkeyLLM:
     live = True
 
     def __init__(self, api_key: str, base_url: str = "https://api.portkey.ai/v1", model: str = "gpt-6-luna",
-                 provider: str = "openai", reasoning_effort: str = "", timeout: int = 90):
+                 provider: str = "openai", reasoning_effort: str = "", timeout: int = 90, cache: str = ""):
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.provider = provider
         self.reasoning_effort = reasoning_effort
         self.timeout = timeout
+        # Extra request headers, e.g. {"x-portkey-cache-force-refresh": "true"} for measurements.
+        self.extra_headers: dict[str, str] = {}
+        if cache == "refresh":  # PORTKEY_CACHE=refresh: always a fresh model answer, never a gateway-cached one
+            self.extra_headers["x-portkey-cache-force-refresh"] = "true"
+        self.last_gateway_cache = ""  # Portkey's x-portkey-cache-status of the last response (HIT/MISS/...)
 
     def complete_json(self, *, agent: str, instructions: str, input_text: str, meter: Meter,
                       max_output_tokens: int = 4000) -> tuple[dict, dict]:
@@ -197,7 +215,12 @@ class PortkeyLLM:
         data = self._post(payload)
         ms = int((time.perf_counter() - t0) * 1000)
         input_tokens, cached, output_tokens = parse_usage(data)
-        call = meter.record(agent, input_tokens, cached, output_tokens, ms, False, self.model)
+        cache_write, reasoning = parse_usage_details(data)
+        extra = {"reasoning_tokens": reasoning}
+        if self.last_gateway_cache:
+            extra["gateway_cache"] = self.last_gateway_cache
+        call = meter.record(agent, input_tokens, cached, output_tokens, ms, False, self.model,
+                            cache_write_tokens=cache_write, extra=extra)
         status = str(data.get("status") or "completed")
         if status != "completed":
             details = data.get("incomplete_details")
@@ -222,10 +245,12 @@ class PortkeyLLM:
                     "x-portkey-provider": self.provider,
                     # Portkey's Cloudflare front rejects urllib's default "Python-urllib" agent (403, code 1010).
                     "User-Agent": "supplier-whisperer/0.1",
+                    **self.extra_headers,
                 },
             )
             try:
                 with urllib.request.urlopen(request, timeout=self.timeout, context=ssl_context()) as response:
+                    self.last_gateway_cache = response.headers.get("x-portkey-cache-status", "")
                     return json.loads(response.read().decode("utf-8"))
             except urllib.error.HTTPError as exc:
                 detail = exc.read().decode("utf-8", "replace")[:400]

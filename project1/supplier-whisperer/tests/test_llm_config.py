@@ -52,6 +52,19 @@ class ResponsesApiTests(unittest.TestCase):
         self.assertEqual(llm.payloads[0]["model"], "gpt-6-luna")
         self.assertEqual(llm.payloads[0]["text"], {"format": {"type": "json_object"}})
 
+    def test_reasoning_and_cache_write_tokens_are_recorded_and_billed(self):
+        usage = {"input_tokens": 1500, "input_tokens_details": {"cached_tokens": 1024, "cache_write_tokens": 100},
+                 "output_tokens": 300, "output_tokens_details": {"reasoning_tokens": 250}}
+        llm, meter = FakePortkey(dict(RESPONSE, usage=usage)), self.meter()
+        _, call = llm.complete_json(agent="context", instructions="i", input_text="x", meter=meter)
+        self.assertEqual(call["reasoning_tokens"], 250)
+        self.assertEqual(call["cache_write_tokens"], 100)
+        self.assertAlmostEqual(call["cost_usd"], cost_usd(DEFAULT_PRICES, 1500, 1024, 300, 100), places=8)
+
+    def test_portkey_cache_refresh_option_sets_the_force_refresh_header(self):
+        self.assertEqual(PortkeyLLM("k", cache="refresh").extra_headers, {"x-portkey-cache-force-refresh": "true"})
+        self.assertEqual(PortkeyLLM("k").extra_headers, {})
+
     def test_incomplete_response_fails_closed_but_is_still_billed(self):
         partial = dict(RESPONSE, status="incomplete", incomplete_details={"reason": "max_output_tokens"})
         llm, meter = FakePortkey(partial), self.meter()

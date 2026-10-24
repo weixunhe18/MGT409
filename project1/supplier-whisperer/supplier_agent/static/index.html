@@ -337,7 +337,7 @@ async function openRun(id, quiet) {
   CUR = {id: r.id, from: em.from_addr || ''};  // untrusted values stay out of inline handlers (no HTML/JS injection)
   const steps = (res.trace || []).map(s => {
     const icon = {ok: '✓', warn: '!', stop: '■', skip: '↷', info: 'i'}[s.status] || '•';
-    const u = s.usage ? `<div class="u">${s.usage.estimated ? 'est. ' : ''}${s.usage.input_tokens} in · ${s.usage.cached_tokens} cached · ${s.usage.output_tokens} out · ${money(s.usage.cost_usd)} · ${esc(s.usage.model)}${s.usage.ms ? ' · ' + s.usage.ms + ' ms' : ''}</div>` : '';
+    const u = s.usage ? `<div class="u">${s.usage.estimated ? 'est. ' : ''}${s.usage.input_tokens} in · ${s.usage.cached_tokens} cached · ${s.usage.output_tokens} out · ${money(s.usage.cost_usd)} · ${esc(s.usage.model)}${s.usage.ms ? ' · ' + s.usage.ms + ' ms' : ''}${s.usage.gateway_cache ? ' · Portkey cache ' + esc(s.usage.gateway_cache) : ''}</div>` : '';
     return `<li><div class="ico ${esc(s.status)}">${icon}</div><div><div class="t">${esc(s.title)}</div><div class="d">${esc(s.detail)}</div>${u}</div></li>`;
   }).join('');
   let alert = '';

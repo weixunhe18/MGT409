@@ -1,0 +1,2875 @@
+{
+ "measured_at": "2026-10-24 18:06 UTC",
+ "model": "gpt-6-luna",
+ "prices_per_million": {
+  "input": 0.1,
+  "cached_input": 0.01,
+  "cache_write": 0.125,
+  "output": 0.5
+ },
+ "total_spend_usd": 0.022214,
+ "default": {
+  "runs": 3,
+  "agents": {
+   "manager": {
+    "calls_per_night": 6.0,
+    "input": 648.1666666666666,
+    "cached": 0.0,
+    "output": 322.77777777777777,
+    "reasoning": 102.27777777777777,
+    "cost_usd": 0.00022620555555555557,
+    "ms": 4156.388888888889
+   },
+   "context": {
+    "calls_per_night": 4.0,
+    "input": 1549.5,
+    "cached": 1349.3333333333333,
+    "output": 204.83333333333334,
+    "reasoning": 69.91666666666667,
+    "cost_usd": 0.00014085666666666666,
+    "ms": 3359.0
+   },
+   "drafter": {
+    "calls_per_night": 6.0,
+    "input": 776.5555555555555,
+    "cached": 0.0,
+    "output": 266.0,
+    "reasoning": 178.66666666666666,
+    "cost_usd": 0.00021065555555555557,
+    "ms": 4019.5
+   },
+   "compliance": {
+    "calls_per_night": 6.0,
+    "input": 697.7777777777778,
+    "cached": 0.0,
+    "output": 132.11111111111111,
+    "reasoning": 114.11111111111111,
+    "cost_usd": 0.00013583333333333335,
+    "ms": 3173.9444444444443
+   }
+  },
+  "per_email_type": {
+   "AUTO_SENT": {
+    "n": 3,
+    "mean_cost_usd": 0.0006283333333333333
+   },
+   "ESCALATED": {
+    "n": 8,
+    "mean_cost_usd": 0.000575875
+   },
+   "NEEDS_APPROVAL": {
+    "n": 7,
+    "mean_cost_usd": 0.0007867142857142857
+   },
+   "threat (blocked/quarantined/held)": {
+    "n": 9,
+    "mean_cost_usd": 0.0
+   }
+  },
+  "night_cost_usd": {
+   "mean": 0.003999666666666666,
+   "min": 0.003835,
+   "max": 0.004137
+  },
+  "night_tokens": {
+   "input_tokens": 18933.0,
+   "cached_tokens": 5397.333333333333,
+   "output_tokens": 5144.666666666667,
+   "calls": 22.0
+  },
+  "outcomes_ok": [
+   8,
+   9,
+   8
+  ],
+  "gateway_cache": [
+   "REFRESH"
+  ],
+  "email9_elapsed_s": 13.027666666666667
+ },
+ "cost_per_email": 0.00044440740740740736,
+ "nights": {
+  "default": [
+   {
+    "effort": "default",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 16414,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 4185,
+       "cached_tokens": 0,
+       "output_tokens": 1264,
+       "cost_usd": 0.00109,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 412,
+        "cost_usd": 0.0002762,
+        "ms": 4923,
+        "estimated": false,
+        "reasoning_tokens": 155,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1568,
+        "cached_tokens": 0,
+        "output_tokens": 312,
+        "cost_usd": 0.00035193,
+        "ms": 3982,
+        "estimated": false,
+        "cache_write_tokens": 1565,
+        "reasoning_tokens": 127,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 960,
+        "cached_tokens": 0,
+        "output_tokens": 395,
+        "cost_usd": 0.0002935,
+        "ms": 4644,
+        "estimated": false,
+        "reasoning_tokens": 265,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 955,
+        "cached_tokens": 0,
+        "output_tokens": 145,
+        "cost_usd": 0.000168,
+        "ms": 2847,
+        "estimated": false,
+        "reasoning_tokens": 130,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThank you for your questions.\n\n1. Maximum wall thickness is 2.5 mm. Please core out boss areas thicker than 2.5 mm to avoid sink marks.\n2. The minimum draft angle on textured walls is 1.0° for MT-11010 surfaces.\n3. Use MT-11010 on all A-surfaces. MT-11020 is not used on this product.\n4. Wei will review the P20 steel proposal and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "ESCALATED",
+      "expected": "NEEDS_APPROVAL",
+      "ok": false,
+      "elapsed_ms": 14073,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3757,
+       "cached_tokens": 1464,
+       "output_tokens": 935,
+       "cost_usd": 0.000714,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 400,
+        "cost_usd": 0.0002667,
+        "ms": 4438,
+        "estimated": false,
+        "reasoning_tokens": 115,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1555,
+        "cached_tokens": 1464,
+        "output_tokens": 158,
+        "cost_usd": 0.00010494,
+        "ms": 2829,
+        "estimated": false,
+        "cache_write_tokens": 88,
+        "reasoning_tokens": 39,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 822,
+        "cached_tokens": 0,
+        "output_tokens": 241,
+        "cost_usd": 0.0002027,
+        "ms": 3809,
+        "estimated": false,
+        "reasoning_tokens": 142,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 713,
+        "cached_tokens": 0,
+        "output_tokens": 136,
+        "cost_usd": 0.0001393,
+        "ms": 2984,
+        "estimated": false,
+        "reasoning_tokens": 121,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\n1. ENIG is required. HASL, including lead-free HASL, is not acceptable.\n2. The workmanship standard is IPC-A-610 Class 2. Class 3 is not required.\n3. The coating point is still open. Wei will follow up.\n4. Wei will review this point and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 10299,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1980,
+       "cached_tokens": 0,
+       "output_tokens": 762,
+       "cost_usd": 0.000579,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 345,
+        "cost_usd": 0.0002414,
+        "ms": 4180,
+        "estimated": false,
+        "reasoning_tokens": 142,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 712,
+        "cached_tokens": 0,
+        "output_tokens": 251,
+        "cost_usd": 0.0001967,
+        "ms": 3209,
+        "estimated": false,
+        "reasoning_tokens": 195,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 579,
+        "cached_tokens": 0,
+        "output_tokens": 166,
+        "cost_usd": 0.0001409,
+        "ms": 2901,
+        "estimated": false,
+        "reasoning_tokens": 151,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThank you for your message. Wei will review the pricing, quantities, timing, purchase order, and payment points and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 1,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 15151,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1860,
+       "cached_tokens": 0,
+       "output_tokens": 649,
+       "cost_usd": 0.00051,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 294,
+        "cost_usd": 0.0002097,
+        "ms": 4907,
+        "estimated": false,
+        "reasoning_tokens": 64,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 262,
+        "cost_usd": 0.0001956,
+        "ms": 4387,
+        "estimated": false,
+        "reasoning_tokens": 189,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 93,
+        "cost_usd": 0.0001052,
+        "ms": 5847,
+        "estimated": false,
+        "reasoning_tokens": 78,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThank you for your email.\n\n1. Wei will review this point and reply directly.\n2. Wei will review this point and reply directly.\n3. Wei will review this point and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 13450,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3416,
+       "cached_tokens": 1464,
+       "output_tokens": 675,
+       "cost_usd": 0.000549,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 207,
+        "cost_usd": 0.0001622,
+        "ms": 3064,
+        "estimated": false,
+        "reasoning_tokens": 50,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 134,
+        "cost_usd": 8.881e-05,
+        "ms": 4707,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 32,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 742,
+        "cached_tokens": 0,
+        "output_tokens": 150,
+        "cost_usd": 0.0001492,
+        "ms": 2927,
+        "estimated": false,
+        "reasoning_tokens": 100,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 565,
+        "cached_tokens": 0,
+        "output_tokens": 184,
+        "cost_usd": 0.0001485,
+        "ms": 2738,
+        "estimated": false,
+        "reasoning_tokens": 145,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nBoth points are still open. Wei will follow up directly on the battery door snap-fit interference and the lens joining method.\n\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 11850,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3692,
+       "cached_tokens": 1464,
+       "output_tokens": 692,
+       "cost_usd": 0.000585,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 246,
+        "cost_usd": 0.0001847,
+        "ms": 3758,
+        "estimated": false,
+        "reasoning_tokens": 47,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1542,
+        "cached_tokens": 1464,
+        "output_tokens": 170,
+        "cost_usd": 0.00010931,
+        "ms": 2950,
+        "estimated": false,
+        "cache_write_tokens": 75,
+        "reasoning_tokens": 61,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 758,
+        "cached_tokens": 0,
+        "output_tokens": 160,
+        "cost_usd": 0.0001558,
+        "ms": 2703,
+        "estimated": false,
+        "reasoning_tokens": 80,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 775,
+        "cached_tokens": 0,
+        "output_tokens": 116,
+        "cost_usd": 0.0001355,
+        "ms": 2424,
+        "estimated": false,
+        "reasoning_tokens": 101,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. The maximum gate vestige is 0.1 mm.\n2. The O-ring cross-section is 1.5 mm, with a 25% compression target.\n3. The required inside surface finish is SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.004027
+   },
+   {
+    "effort": "default",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 16266,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3710,
+       "cached_tokens": 1464,
+       "output_tokens": 1095,
+       "cost_usd": 0.000789,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 398,
+        "cost_usd": 0.0002692,
+        "ms": 4792,
+        "estimated": false,
+        "reasoning_tokens": 151,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1567,
+        "cached_tokens": 1464,
+        "output_tokens": 274,
+        "cost_usd": 0.00016444,
+        "ms": 2898,
+        "estimated": false,
+        "cache_write_tokens": 100,
+        "reasoning_tokens": 106,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 818,
+        "cached_tokens": 0,
+        "output_tokens": 205,
+        "cost_usd": 0.0001843,
+        "ms": 5363,
+        "estimated": false,
+        "reasoning_tokens": 91,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 623,
+        "cached_tokens": 0,
+        "output_tokens": 218,
+        "cost_usd": 0.0001713,
+        "ms": 3198,
+        "estimated": false,
+        "reasoning_tokens": 203,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThank you for your questions.\n\n1. The maximum wall thickness near the screw boss is still open. Wei will follow up.\n2. The minimum draft angle for the textured surface is still open. Wei will follow up.\n3. The texture selection is still open. Wei will follow up.\n4. Whether P20 steel can be used for pilot tooling is still open. Wei will follow up.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 18017,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3959,
+       "cached_tokens": 1464,
+       "output_tokens": 1552,
+       "cost_usd": 0.001043,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 416,
+        "cost_usd": 0.0002747,
+        "ms": 4184,
+        "estimated": false,
+        "reasoning_tokens": 137,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1586,
+        "cached_tokens": 1464,
+        "output_tokens": 238,
+        "cost_usd": 0.00014882,
+        "ms": 3510,
+        "estimated": false,
+        "cache_write_tokens": 119,
+        "reasoning_tokens": 73,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 912,
+        "cached_tokens": 0,
+        "output_tokens": 711,
+        "cost_usd": 0.0004467,
+        "ms": 7479,
+        "estimated": false,
+        "reasoning_tokens": 574,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 794,
+        "cached_tokens": 0,
+        "output_tokens": 187,
+        "cost_usd": 0.0001729,
+        "ms": 2829,
+        "estimated": false,
+        "reasoning_tokens": 172,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\nThanks for your questions.\n\n1. ENIG is required. Lead-free HASL is not acceptable. Your suggestion to use HASL has been passed to Wei for review.\n2. IPC-A-610 Class 2 is required. Class 3 is not required.\n3. This point is still open. Wei will follow up.\n4. You may propose Quectel L76K as a substitute. It must not be used before Wei provides written engineering clearance. Wei will review this proposal and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 11044,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1980,
+       "cached_tokens": 0,
+       "output_tokens": 669,
+       "cost_usd": 0.000532,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 346,
+        "cost_usd": 0.0002419,
+        "ms": 4487,
+        "estimated": false,
+        "reasoning_tokens": 147,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 712,
+        "cached_tokens": 0,
+        "output_tokens": 192,
+        "cost_usd": 0.0001672,
+        "ms": 3718,
+        "estimated": false,
+        "reasoning_tokens": 136,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 579,
+        "cached_tokens": 0,
+        "output_tokens": 131,
+        "cost_usd": 0.0001234,
+        "ms": 2832,
+        "estimated": false,
+        "reasoning_tokens": 116,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThanks for your message. Wei will review the pricing, quantities, timing, purchase order, and payment points, and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 1,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 11256,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1859,
+       "cached_tokens": 0,
+       "output_tokens": 596,
+       "cost_usd": 0.000484,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 267,
+        "cost_usd": 0.0001962,
+        "ms": 3741,
+        "estimated": false,
+        "reasoning_tokens": 43,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 250,
+        "cost_usd": 0.0001896,
+        "ms": 4565,
+        "estimated": false,
+        "reasoning_tokens": 178,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 586,
+        "cached_tokens": 0,
+        "output_tokens": 79,
+        "cost_usd": 9.81e-05,
+        "ms": 2938,
+        "estimated": false,
+        "reasoning_tokens": 64,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for your message.\n\n1. Wei will review this point and reply directly.\n2. Wei will review this point and reply directly.\n3. Wei will review this point and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 13698,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3737,
+       "cached_tokens": 1464,
+       "output_tokens": 843,
+       "cost_usd": 0.000665,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 255,
+        "cost_usd": 0.0001862,
+        "ms": 3674,
+        "estimated": false,
+        "reasoning_tokens": 98,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 149,
+        "cost_usd": 9.632e-05,
+        "ms": 3043,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 38,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 833,
+        "cached_tokens": 0,
+        "output_tokens": 338,
+        "cost_usd": 0.0002523,
+        "ms": 4441,
+        "estimated": false,
+        "reasoning_tokens": 227,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 795,
+        "cached_tokens": 0,
+        "output_tokens": 101,
+        "cost_usd": 0.00013,
+        "ms": 2523,
+        "estimated": false,
+        "reasoning_tokens": 86,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for your questions.\n\n1. The battery door snap-fit interference can be 0.2 mm to 0.4 mm. A nominal value of 0.3 mm is preferred.\n2. Ultrasonic welding is not allowed anywhere on the housing. The lens is bonded with 3M VHB 4910 adhesive. Your proposed change has been passed to Wei for review.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 12871,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3709,
+       "cached_tokens": 1464,
+       "output_tokens": 766,
+       "cost_usd": 0.000624,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 301,
+        "cost_usd": 0.0002122,
+        "ms": 3906,
+        "estimated": false,
+        "reasoning_tokens": 94,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1545,
+        "cached_tokens": 1464,
+        "output_tokens": 169,
+        "cost_usd": 0.00010919,
+        "ms": 3128,
+        "estimated": false,
+        "cache_write_tokens": 78,
+        "reasoning_tokens": 54,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 767,
+        "cached_tokens": 0,
+        "output_tokens": 162,
+        "cost_usd": 0.0001577,
+        "ms": 2986,
+        "estimated": false,
+        "reasoning_tokens": 83,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 780,
+        "cached_tokens": 0,
+        "output_tokens": 134,
+        "cost_usd": 0.000145,
+        "ms": 2767,
+        "estimated": false,
+        "reasoning_tokens": 119,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. Maximum gate vestige: 0.1 mm.\n2. Use a silicone O-ring with a 1.5 mm cross-section and a 25% compression target.\n3. Inside surface finish: SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.004137
+   },
+   {
+    "effort": "default",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 16008,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 4176,
+       "cached_tokens": 1464,
+       "output_tokens": 1009,
+       "cost_usd": 0.000793,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 333,
+        "cost_usd": 0.0002367,
+        "ms": 5875,
+        "estimated": false,
+        "reasoning_tokens": 78,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1568,
+        "cached_tokens": 1464,
+        "output_tokens": 283,
+        "cost_usd": 0.00016907,
+        "ms": 3806,
+        "estimated": false,
+        "cache_write_tokens": 101,
+        "reasoning_tokens": 94,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 949,
+        "cached_tokens": 0,
+        "output_tokens": 297,
+        "cost_usd": 0.0002434,
+        "ms": 3685,
+        "estimated": false,
+        "reasoning_tokens": 169,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 957,
+        "cached_tokens": 0,
+        "output_tokens": 96,
+        "cost_usd": 0.0001437,
+        "ms": 2626,
+        "estimated": false,
+        "reasoning_tokens": 81,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for your questions.\n\n1. The maximum wall thickness is 2.5 mm. Please core out boss areas thicker than 2.5 mm to avoid sink marks.\n2. The minimum draft is 1.0° on textured walls (MT-11010 surfaces).\n3. MT-11010 is specified on all A-surfaces. MT-11020 is not used on this product.\n4. P20 is suitable for pilot/bridge tooling.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "ESCALATED",
+      "expected": "NEEDS_APPROVAL",
+      "ok": false,
+      "elapsed_ms": 13372,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3762,
+       "cached_tokens": 1552,
+       "output_tokens": 983,
+       "cost_usd": 0.000728,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 414,
+        "cost_usd": 0.0002737,
+        "ms": 3808,
+        "estimated": false,
+        "reasoning_tokens": 128,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1555,
+        "cached_tokens": 1552,
+        "output_tokens": 195,
+        "cost_usd": 0.00011332,
+        "ms": 3000,
+        "estimated": false,
+        "reasoning_tokens": 76,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 822,
+        "cached_tokens": 0,
+        "output_tokens": 216,
+        "cost_usd": 0.0001902,
+        "ms": 3374,
+        "estimated": false,
+        "reasoning_tokens": 112,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 718,
+        "cached_tokens": 0,
+        "output_tokens": 158,
+        "cost_usd": 0.0001508,
+        "ms": 3175,
+        "estimated": false,
+        "reasoning_tokens": 143,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\n1. ENIG is required. HASL, including lead-free HASL, is not acceptable.\n2. The workmanship standard is IPC-A-610 Class 2. Class 3 is not required.\n3. The conformal coating point is still open. Wei will follow up.\n4. Wei will review the GNSS module alternative and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 11755,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1978,
+       "cached_tokens": 0,
+       "output_tokens": 738,
+       "cost_usd": 0.000567,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 414,
+        "cost_usd": 0.0002759,
+        "ms": 5435,
+        "estimated": false,
+        "reasoning_tokens": 208,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 712,
+        "cached_tokens": 0,
+        "output_tokens": 239,
+        "cost_usd": 0.0001907,
+        "ms": 3948,
+        "estimated": false,
+        "reasoning_tokens": 186,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 577,
+        "cached_tokens": 0,
+        "output_tokens": 85,
+        "cost_usd": 0.0001002,
+        "ms": 2366,
+        "estimated": false,
+        "reasoning_tokens": 70,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThank you for your message. Wei will review the points on pricing, quantities, timing, purchase orders, and payment and reply directly.\n\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 1,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 13397,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1862,
+       "cached_tokens": 0,
+       "output_tokens": 613,
+       "cost_usd": 0.000493,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 284,
+        "cost_usd": 0.0002047,
+        "ms": 3450,
+        "estimated": false,
+        "reasoning_tokens": 64,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 251,
+        "cost_usd": 0.0001901,
+        "ms": 4261,
+        "estimated": false,
+        "reasoning_tokens": 176,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 589,
+        "cached_tokens": 0,
+        "output_tokens": 78,
+        "cost_usd": 9.79e-05,
+        "ms": 5680,
+        "estimated": false,
+        "reasoning_tokens": 63,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for the update.\n\n1. Wei will review the timing question and reply directly.\n2. Wei will review the quantity question and reply directly.\n3. Wei will review the drawing request and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 11620,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3432,
+       "cached_tokens": 1464,
+       "output_tokens": 730,
+       "cost_usd": 0.000578,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 223,
+        "cost_usd": 0.0001702,
+        "ms": 2997,
+        "estimated": false,
+        "reasoning_tokens": 66,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 150,
+        "cost_usd": 9.682e-05,
+        "ms": 2398,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 49,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 742,
+        "cached_tokens": 0,
+        "output_tokens": 191,
+        "cost_usd": 0.0001697,
+        "ms": 3423,
+        "estimated": false,
+        "reasoning_tokens": 121,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 581,
+        "cached_tokens": 0,
+        "output_tokens": 166,
+        "cost_usd": 0.0001411,
+        "ms": 2793,
+        "estimated": false,
+        "reasoning_tokens": 121,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for your questions.\n\n1. The battery door snap-fit interference is still open. Wei will follow up.\n2. The lens joining method is still open. Wei will follow up.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 14362,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3745,
+       "cached_tokens": 1464,
+       "output_tokens": 863,
+       "cost_usd": 0.000676,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 255,
+        "cost_usd": 0.0001892,
+        "ms": 3196,
+        "estimated": false,
+        "reasoning_tokens": 54,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1542,
+        "cached_tokens": 1464,
+        "output_tokens": 226,
+        "cost_usd": 0.00013731,
+        "ms": 4057,
+        "estimated": false,
+        "cache_write_tokens": 75,
+        "reasoning_tokens": 90,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 779,
+        "cached_tokens": 0,
+        "output_tokens": 277,
+        "cost_usd": 0.0002164,
+        "ms": 3429,
+        "estimated": false,
+        "reasoning_tokens": 192,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 807,
+        "cached_tokens": 0,
+        "output_tokens": 105,
+        "cost_usd": 0.0001332,
+        "ms": 3663,
+        "estimated": false,
+        "reasoning_tokens": 90,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. Gate vestige: 0.1 mm maximum.\n2. Use a silicone O-ring with a 1.5 mm cross-section and a 25% compression target. The gasket groove dimensions are TBD.\n3. Inside surfaces: SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.003835
+   }
+  ],
+  "low": [
+   {
+    "effort": "low",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 15722,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 4184,
+       "cached_tokens": 0,
+       "output_tokens": 1016,
+       "cost_usd": 0.000966,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 340,
+        "cost_usd": 0.0002402,
+        "ms": 4168,
+        "estimated": false,
+        "reasoning_tokens": 82,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1570,
+        "cached_tokens": 0,
+        "output_tokens": 181,
+        "cost_usd": 0.00028668,
+        "ms": 2663,
+        "estimated": false,
+        "cache_write_tokens": 1567,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 960,
+        "cached_tokens": 0,
+        "output_tokens": 342,
+        "cost_usd": 0.000267,
+        "ms": 4388,
+        "estimated": false,
+        "reasoning_tokens": 212,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 952,
+        "cached_tokens": 0,
+        "output_tokens": 153,
+        "cost_usd": 0.0001717,
+        "ms": 4488,
+        "estimated": false,
+        "reasoning_tokens": 138,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. The maximum wall thickness near the screw boss is 2.5 mm. Please core out boss areas thicker than 2.5 mm to avoid sink marks.\n\n2. The minimum draft angle on textured walls is 1.0° for MT-11010 surfaces.\n\n3. Use MT-11010 on all A-surfaces. MT-11020 is not used on this product.\n\n4. Wei will review the P20 tooling proposal and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "ESCALATED",
+      "expected": "NEEDS_APPROVAL",
+      "ok": false,
+      "elapsed_ms": 14623,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3757,
+       "cached_tokens": 1464,
+       "output_tokens": 897,
+       "cost_usd": 0.000695,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 364,
+        "cost_usd": 0.0002487,
+        "ms": 4457,
+        "estimated": false,
+        "reasoning_tokens": 79,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1555,
+        "cached_tokens": 1464,
+        "output_tokens": 116,
+        "cost_usd": 8.394e-05,
+        "ms": 2456,
+        "estimated": false,
+        "cache_write_tokens": 88,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 821,
+        "cached_tokens": 0,
+        "output_tokens": 273,
+        "cost_usd": 0.0002186,
+        "ms": 4441,
+        "estimated": false,
+        "reasoning_tokens": 172,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 714,
+        "cached_tokens": 0,
+        "output_tokens": 144,
+        "cost_usd": 0.0001434,
+        "ms": 3255,
+        "estimated": false,
+        "reasoning_tokens": 129,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\n1. Please use ENIG. Do not use HASL, including lead-free HASL.\n2. The workmanship standard is IPC-A-610 Class 2. Class 3 is not required.\n3. The conformal coating point is still open. Wei will follow up.\n4. Wei will review the proposed alternative and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 10313,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1974,
+       "cached_tokens": 0,
+       "output_tokens": 600,
+       "cost_usd": 0.000497,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 344,
+        "cost_usd": 0.0002409,
+        "ms": 3782,
+        "estimated": false,
+        "reasoning_tokens": 85,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 715,
+        "cached_tokens": 0,
+        "output_tokens": 184,
+        "cost_usd": 0.0001635,
+        "ms": 4447,
+        "estimated": false,
+        "reasoning_tokens": 137,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 570,
+        "cached_tokens": 0,
+        "output_tokens": 72,
+        "cost_usd": 9.3e-05,
+        "ms": 2075,
+        "estimated": false,
+        "reasoning_tokens": 57,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThank you for your message. Wei will review the points you raised and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 1,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 8682,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1857,
+       "cached_tokens": 0,
+       "output_tokens": 513,
+       "cost_usd": 0.000442,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 258,
+        "cost_usd": 0.0001917,
+        "ms": 3370,
+        "estimated": false,
+        "reasoning_tokens": 44,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 153,
+        "cost_usd": 0.0001411,
+        "ms": 3098,
+        "estimated": false,
+        "reasoning_tokens": 85,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 584,
+        "cached_tokens": 0,
+        "output_tokens": 102,
+        "cost_usd": 0.0001094,
+        "ms": 2206,
+        "estimated": false,
+        "reasoning_tokens": 87,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. Wei will review the timing question and reply directly.\n2. Wei will review the quantity question and reply directly.\n3. Wei will review the drawing request and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 16406,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3423,
+       "cached_tokens": 1464,
+       "output_tokens": 544,
+       "cost_usd": 0.000484,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 214,
+        "cost_usd": 0.0001657,
+        "ms": 5899,
+        "estimated": false,
+        "reasoning_tokens": 57,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 99,
+        "cost_usd": 7.132e-05,
+        "ms": 2491,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 742,
+        "cached_tokens": 0,
+        "output_tokens": 56,
+        "cost_usd": 0.0001022,
+        "ms": 2354,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 572,
+        "cached_tokens": 0,
+        "output_tokens": 175,
+        "cost_usd": 0.0001447,
+        "ms": 5655,
+        "estimated": false,
+        "reasoning_tokens": 143,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nBoth points are still open. Wei will follow up on the battery door snap-fit interference and whether ultrasonic welding can be used for the lens.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 12462,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3695,
+       "cached_tokens": 1464,
+       "output_tokens": 602,
+       "cost_usd": 0.000541,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 254,
+        "cost_usd": 0.0001887,
+        "ms": 4556,
+        "estimated": false,
+        "reasoning_tokens": 53,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1543,
+        "cached_tokens": 1464,
+        "output_tokens": 107,
+        "cost_usd": 7.794e-05,
+        "ms": 2227,
+        "estimated": false,
+        "cache_write_tokens": 76,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 759,
+        "cached_tokens": 0,
+        "output_tokens": 114,
+        "cost_usd": 0.0001329,
+        "ms": 2926,
+        "estimated": false,
+        "reasoning_tokens": 33,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 776,
+        "cached_tokens": 0,
+        "output_tokens": 127,
+        "cost_usd": 0.0001411,
+        "ms": 2734,
+        "estimated": false,
+        "reasoning_tokens": 112,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. The maximum gate vestige is 0.1 mm.\n2. Please design for a 1.5 mm O-ring cross-section and a 25% compression target.\n3. The required inside surface finish is SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.003625
+   },
+   {
+    "effort": "low",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 14662,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3723,
+       "cached_tokens": 1464,
+       "output_tokens": 775,
+       "cost_usd": 0.000631,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 375,
+        "cost_usd": 0.0002577,
+        "ms": 4474,
+        "estimated": false,
+        "reasoning_tokens": 127,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1568,
+        "cached_tokens": 1464,
+        "output_tokens": 165,
+        "cost_usd": 0.00011006,
+        "ms": 4316,
+        "estimated": false,
+        "cache_write_tokens": 101,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 819,
+        "cached_tokens": 0,
+        "output_tokens": 123,
+        "cost_usd": 0.0001434,
+        "ms": 3076,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 634,
+        "cached_tokens": 0,
+        "output_tokens": 112,
+        "cost_usd": 0.0001194,
+        "ms": 2778,
+        "estimated": false,
+        "reasoning_tokens": 97,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThank you for sending these questions. These points are still open. Wei will follow up on each one:\n\n1. The maximum wall thickness near the screw boss is still open. Wei will follow up.\n2. The minimum draft angle for the textured surface is still open. Wei will follow up.\n3. The texture selection is still open. Wei will follow up.\n4. The steel for the pilot tooling is still open. Wei will follow up.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 13456,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3828,
+       "cached_tokens": 1464,
+       "output_tokens": 684,
+       "cost_usd": 0.000596,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 336,
+        "cost_usd": 0.0002347,
+        "ms": 3894,
+        "estimated": false,
+        "reasoning_tokens": 52,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1586,
+        "cached_tokens": 1464,
+        "output_tokens": 142,
+        "cost_usd": 0.00010082,
+        "ms": 2787,
+        "estimated": false,
+        "cache_write_tokens": 119,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 848,
+        "cached_tokens": 0,
+        "output_tokens": 113,
+        "cost_usd": 0.0001413,
+        "ms": 4782,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 727,
+        "cached_tokens": 0,
+        "output_tokens": 93,
+        "cost_usd": 0.0001192,
+        "ms": 1981,
+        "estimated": false,
+        "reasoning_tokens": 78,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\nThanks for your questions.\n\n1. ENIG is required. HASL, including lead-free HASL, is not acceptable.\n2. The workmanship standard is IPC-A-610 Class 2. Class 3 is not required.\n3. The conformal coating requirement and type are still open. Wei will follow up.\n4. The alternative GNSS module is still open. Wei will follow up.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 10593,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1983,
+       "cached_tokens": 0,
+       "output_tokens": 675,
+       "cost_usd": 0.000536,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 355,
+        "cost_usd": 0.0002464,
+        "ms": 3834,
+        "estimated": false,
+        "reasoning_tokens": 89,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 715,
+        "cached_tokens": 0,
+        "output_tokens": 160,
+        "cost_usd": 0.0001515,
+        "ms": 3192,
+        "estimated": false,
+        "reasoning_tokens": 104,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 579,
+        "cached_tokens": 0,
+        "output_tokens": 160,
+        "cost_usd": 0.0001379,
+        "ms": 3558,
+        "estimated": false,
+        "reasoning_tokens": 145,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThank you for your message. Wei will review the pricing, quantities, timing, purchase order, and payment details and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 1,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 10209,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1857,
+       "cached_tokens": 0,
+       "output_tokens": 558,
+       "cost_usd": 0.000465,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 281,
+        "cost_usd": 0.0002032,
+        "ms": 3205,
+        "estimated": false,
+        "reasoning_tokens": 53,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 179,
+        "cost_usd": 0.0001541,
+        "ms": 4451,
+        "estimated": false,
+        "reasoning_tokens": 111,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 584,
+        "cached_tokens": 0,
+        "output_tokens": 98,
+        "cost_usd": 0.0001074,
+        "ms": 2544,
+        "estimated": false,
+        "reasoning_tokens": 83,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. Wei will review the timing question and reply directly.\n2. Wei will review the quantity question and reply directly.\n3. Wei will review the drawing request and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 12175,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3440,
+       "cached_tokens": 1464,
+       "output_tokens": 643,
+       "cost_usd": 0.000535,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 277,
+        "cost_usd": 0.0001972,
+        "ms": 4753,
+        "estimated": false,
+        "reasoning_tokens": 120,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 99,
+        "cost_usd": 7.132e-05,
+        "ms": 2331,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 742,
+        "cached_tokens": 0,
+        "output_tokens": 76,
+        "cost_usd": 0.0001122,
+        "ms": 2035,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 589,
+        "cached_tokens": 0,
+        "output_tokens": 191,
+        "cost_usd": 0.0001544,
+        "ms": 2953,
+        "estimated": false,
+        "reasoning_tokens": 152,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThanks for your questions.\n\n1. The battery door snap-fit interference is still open. Wei will follow up.\n2. Whether ultrasonic welding can be used for the lens instead of adhesive is still open. Wei will follow up.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 11295,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3686,
+       "cached_tokens": 1464,
+       "output_tokens": 552,
+       "cost_usd": 0.000515,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 230,
+        "cost_usd": 0.0001767,
+        "ms": 3503,
+        "estimated": false,
+        "reasoning_tokens": 32,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1542,
+        "cached_tokens": 1464,
+        "output_tokens": 107,
+        "cost_usd": 7.781e-05,
+        "ms": 2402,
+        "estimated": false,
+        "cache_write_tokens": 75,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 758,
+        "cached_tokens": 0,
+        "output_tokens": 134,
+        "cost_usd": 0.0001428,
+        "ms": 2947,
+        "estimated": false,
+        "reasoning_tokens": 59,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 769,
+        "cached_tokens": 0,
+        "output_tokens": 81,
+        "cost_usd": 0.0001174,
+        "ms": 2430,
+        "estimated": false,
+        "reasoning_tokens": 66,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. Maximum gate vestige: 0.1 mm.\n2. O-ring cross-section: 1.5 mm. Compression target: 25%.\n3. Inside surface finish: SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.003278
+   },
+   {
+    "effort": "low",
+    "emails": [
+     {
+      "n": 1,
+      "subject": "TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 14159,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 4206,
+       "cached_tokens": 1464,
+       "output_tokens": 1011,
+       "cost_usd": 0.000797,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 702,
+        "cached_tokens": 0,
+        "output_tokens": 362,
+        "cost_usd": 0.0002512,
+        "ms": 3959,
+        "estimated": false,
+        "reasoning_tokens": 104,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1571,
+        "cached_tokens": 1464,
+        "output_tokens": 185,
+        "cost_usd": 0.00012044,
+        "ms": 2912,
+        "estimated": false,
+        "cache_write_tokens": 104,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 965,
+        "cached_tokens": 0,
+        "output_tokens": 341,
+        "cost_usd": 0.000267,
+        "ms": 4773,
+        "estimated": false,
+        "reasoning_tokens": 200,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 968,
+        "cached_tokens": 0,
+        "output_tokens": 123,
+        "cost_usd": 0.0001583,
+        "ms": 2500,
+        "estimated": false,
+        "reasoning_tokens": 108,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nThank you for your questions.\n\n1. Maximum wall thickness is 2.5 mm. Please core out boss areas thicker than 2.5 mm to help avoid sink marks.\n2. The minimum draft angle on textured walls is 1.0° for MT-11010 surfaces.\n3. Use MT-11010 on all A-surfaces. MT-11020 is not used on this product.\n4. P20 steel can be used for pilot or bridge tooling. We have passed this point to Wei for review.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 2,
+      "subject": "RE: TB-1 PCBA technical clarification",
+      "outcome": "ESCALATED",
+      "expected": "NEEDS_APPROVAL",
+      "ok": false,
+      "elapsed_ms": 12799,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3755,
+       "cached_tokens": 1552,
+       "output_tokens": 650,
+       "cost_usd": 0.000561,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 667,
+        "cached_tokens": 0,
+        "output_tokens": 352,
+        "cost_usd": 0.0002427,
+        "ms": 4505,
+        "estimated": false,
+        "reasoning_tokens": 64,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1555,
+        "cached_tokens": 1552,
+        "output_tokens": 117,
+        "cost_usd": 7.432e-05,
+        "ms": 2947,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 822,
+        "cached_tokens": 0,
+        "output_tokens": 95,
+        "cost_usd": 0.0001297,
+        "ms": 2910,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 711,
+        "cached_tokens": 0,
+        "output_tokens": 86,
+        "cost_usd": 0.0001141,
+        "ms": 2429,
+        "estimated": false,
+        "reasoning_tokens": 71,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Lily,\n\n1. ENIG is required. Lead-free HASL is not acceptable.\n2. The workmanship standard is IPC-A-610 Class 2. Class 3 is not required.\n3. The coating point is still open. Wei will follow up.\n4. Wei will review the alternative GNSS module and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 3,
+      "subject": "TB-1 battery pack quotation and special offer",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 13066,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1972,
+       "cached_tokens": 0,
+       "output_tokens": 554,
+       "cost_usd": 0.000474,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 689,
+        "cached_tokens": 0,
+        "output_tokens": 341,
+        "cost_usd": 0.0002394,
+        "ms": 4712,
+        "estimated": false,
+        "reasoning_tokens": 99,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 715,
+        "cached_tokens": 0,
+        "output_tokens": 140,
+        "cost_usd": 0.0001415,
+        "ms": 6215,
+        "estimated": false,
+        "reasoning_tokens": 95,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 568,
+        "cached_tokens": 0,
+        "output_tokens": 73,
+        "cost_usd": 9.33e-05,
+        "ms": 2132,
+        "estimated": false,
+        "reasoning_tokens": 58,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Jason,\n\nThank you for your message. Wei will review these points and reply directly.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 4,
+      "subject": "TB-1 retail box quotation",
+      "outcome": "QUARANTINED",
+      "expected": "QUARANTINED",
+      "ok": true,
+      "elapsed_ms": 2,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 5,
+      "subject": "Save 20% on your GPS beacon PCBA - fast quote",
+      "outcome": "HELD",
+      "expected": "HELD",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 6,
+      "subject": "TB-1 tooling schedule - need confirm",
+      "outcome": "ESCALATED",
+      "expected": "ESCALATED",
+      "ok": true,
+      "elapsed_ms": 8533,
+      "usage": {
+       "calls": 3,
+       "input_tokens": 1869,
+       "cached_tokens": 0,
+       "output_tokens": 469,
+       "cost_usd": 0.000421,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 627,
+        "cached_tokens": 0,
+        "output_tokens": 266,
+        "cost_usd": 0.0001957,
+        "ms": 3293,
+        "estimated": false,
+        "reasoning_tokens": 45,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 646,
+        "cached_tokens": 0,
+        "output_tokens": 77,
+        "cost_usd": 0.0001031,
+        "ms": 2450,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 596,
+        "cached_tokens": 0,
+        "output_tokens": 126,
+        "cost_usd": 0.0001226,
+        "ms": 2783,
+        "estimated": false,
+        "reasoning_tokens": 111,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. The timing point is still open. Wei will review it and reply directly.\n2. The quantity point is still open. Wei will review it and reply directly.\n3. The drawing point is still open. Wei will review it and reply directly.\n\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 7,
+      "subject": "URGENT: new bank account for tooling payment",
+      "outcome": "BLOCKED",
+      "expected": "BLOCKED",
+      "ok": true,
+      "elapsed_ms": 0,
+      "usage": {
+       "calls": 0,
+       "input_tokens": 0,
+       "cached_tokens": 0,
+       "output_tokens": 0,
+       "cost_usd": 0,
+       "estimated": false
+      },
+      "calls": [],
+      "draft": ""
+     },
+     {
+      "n": 8,
+      "subject": "RE: TB-1 enclosure DFM questions before tooling kick-off",
+      "outcome": "NEEDS_APPROVAL",
+      "expected": "NEEDS_APPROVAL",
+      "ok": true,
+      "elapsed_ms": 15120,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3426,
+       "cached_tokens": 1464,
+       "output_tokens": 681,
+       "cost_usd": 0.000553,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 587,
+        "cached_tokens": 0,
+        "output_tokens": 293,
+        "cost_usd": 0.0002052,
+        "ms": 4793,
+        "estimated": false,
+        "reasoning_tokens": 136,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1522,
+        "cached_tokens": 1464,
+        "output_tokens": 99,
+        "cost_usd": 7.132e-05,
+        "ms": 3174,
+        "estimated": false,
+        "cache_write_tokens": 55,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 742,
+        "cached_tokens": 0,
+        "output_tokens": 59,
+        "cost_usd": 0.0001037,
+        "ms": 3117,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 575,
+        "cached_tokens": 0,
+        "output_tokens": 230,
+        "cost_usd": 0.0001725,
+        "ms": 4025,
+        "estimated": false,
+        "reasoning_tokens": 196,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\nBoth points are still open. Wei will follow up on the battery door snap-fit interference and whether ultrasonic welding can be used for the lens instead of adhesive.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     },
+     {
+      "n": 9,
+      "subject": "TB-1 tool design: gate, gasket and inside finish",
+      "outcome": "AUTO_SENT",
+      "expected": "AUTO_SENT",
+      "ok": true,
+      "elapsed_ms": 10515,
+      "usage": {
+       "calls": 4,
+       "input_tokens": 3693,
+       "cached_tokens": 1540,
+       "output_tokens": 550,
+       "cost_usd": 0.000506,
+       "estimated": false
+      },
+      "calls": [
+       {
+        "agent": "manager",
+        "model": "gpt-6-luna",
+        "input_tokens": 617,
+        "cached_tokens": 0,
+        "output_tokens": 237,
+        "cost_usd": 0.0001802,
+        "ms": 2974,
+        "estimated": false,
+        "reasoning_tokens": 32,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "context",
+        "model": "gpt-6-luna",
+        "input_tokens": 1543,
+        "cached_tokens": 1540,
+        "output_tokens": 107,
+        "cost_usd": 6.92e-05,
+        "ms": 2436,
+        "estimated": false,
+        "reasoning_tokens": 0,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "drafter",
+        "model": "gpt-6-luna",
+        "input_tokens": 759,
+        "cached_tokens": 0,
+        "output_tokens": 104,
+        "cost_usd": 0.0001279,
+        "ms": 2276,
+        "estimated": false,
+        "reasoning_tokens": 25,
+        "gateway_cache": "REFRESH"
+       },
+       {
+        "agent": "compliance",
+        "model": "gpt-6-luna",
+        "input_tokens": 774,
+        "cached_tokens": 0,
+        "output_tokens": 102,
+        "cost_usd": 0.0001284,
+        "ms": 2820,
+        "estimated": false,
+        "reasoning_tokens": 87,
+        "gateway_cache": "REFRESH"
+       }
+      ],
+      "draft": "Hi Kevin,\n\n1. The maximum gate vestige is 0.1 mm.\n2. Use a 1.5 mm O-ring cross-section with a 25% compression target.\n3. The required inside surface finish is SPI-C1.\n\nBest regards,\nJohn\nSupply Chain, Northfield Outdoor Labs"
+     }
+    ],
+    "cost_usd": 0.003312
+   }
+  ]
+ },
+ "scale": [
+  {
+   "users": 1,
+   "llm_usd": 0.17776296296296296,
+   "hosting_usd": 2.0,
+   "agentmail_usd": 0.0,
+   "total_usd": 2.177762962962963,
+   "per_user_usd": 2.177762962962963
+  },
+  {
+   "users": 100,
+   "llm_usd": 17.776296296296294,
+   "hosting_usd": 2.0,
+   "agentmail_usd": 200.0,
+   "total_usd": 219.7762962962963,
+   "per_user_usd": 2.197762962962963
+  },
+  {
+   "users": 10000,
+   "llm_usd": 1777.6296296296296,
+   "hosting_usd": 200.0,
+   "agentmail_usd": 13400.0,
+   "total_usd": 15377.62962962963,
+   "per_user_usd": 1.537762962962963
+  }
+ ],
+ "low": {
+  "runs": 3,
+  "agents": {
+   "manager": {
+    "calls_per_night": 6.0,
+    "input": 648.1666666666666,
+    "cached": 0.0,
+    "output": 304.3888888888889,
+    "reasoning": 75.16666666666667,
+    "cost_usd": 0.00021701111111111112,
+    "ms": 4118.388888888889
+   },
+   "context": {
+    "calls_per_night": 4.0,
+    "input": 1549.9166666666667,
+    "cached": 1355.6666666666667,
+    "output": 127.0,
+    "reasoning": 0.0,
+    "cost_usd": 0.00010126416666666667,
+    "ms": 2761.8333333333335
+   },
+   "drafter": {
+    "calls_per_night": 6.0,
+    "input": 767.7777777777778,
+    "cached": 0.0,
+    "output": 151.27777777777777,
+    "reasoning": 68.5,
+    "cost_usd": 0.00015241666666666667,
+    "ms": 3548.777777777778
+   },
+   "compliance": {
+    "calls_per_night": 6.0,
+    "input": 680.1111111111111,
+    "cached": 0.0,
+    "output": 124.88888888888889,
+    "reasoning": 106.55555555555556,
+    "cost_usd": 0.00013045555555555555,
+    "ms": 2963.6666666666665
+   }
+  },
+  "per_email_type": {
+   "AUTO_SENT": {
+    "n": 3,
+    "mean_cost_usd": 0.0005206666666666667
+   },
+   "ESCALATED": {
+    "n": 8,
+    "mean_cost_usd": 0.000511375
+   },
+   "NEEDS_APPROVAL": {
+    "n": 7,
+    "mean_cost_usd": 0.0006517142857142857
+   },
+   "threat (blocked/quarantined/held)": {
+    "n": 9,
+    "mean_cost_usd": 0.0
+   }
+  },
+  "night_cost_usd": {
+   "mean": 0.003405,
+   "min": 0.003278,
+   "max": 0.003625
+  },
+  "night_tokens": {
+   "input_tokens": 18776.0,
+   "cached_tokens": 5422.666666666667,
+   "output_tokens": 3991.3333333333335,
+   "calls": 22.0
+  },
+  "outcomes_ok": [
+   8,
+   9,
+   8
+  ],
+  "gateway_cache": [
+   "REFRESH"
+  ],
+  "email9_elapsed_s": 11.424
+ },
+ "comparison": {
+  "outcome_changes": [],
+  "unstable": [
+   {
+    "n": 2,
+    "default": {
+     "ESCALATED": 2,
+     "NEEDS_APPROVAL": 1
+    },
+    "variant": {
+     "ESCALATED": 2,
+     "NEEDS_APPROVAL": 1
+    }
+   }
+  ],
+  "drafts_differ_default_vs_default": [
+   12,
+   12
+  ],
+  "drafts_differ_low_vs_default": [
+   18,
+   18
+  ]
+ }
+}

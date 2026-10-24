@@ -49,7 +49,8 @@ class Trace:
         self._t = now
         if call:
             step["usage"] = {k: call.get(k) for k in
-                             ("model", "input_tokens", "cached_tokens", "output_tokens", "cost_usd", "ms", "estimated")}
+                             ("model", "input_tokens", "cached_tokens", "output_tokens", "cost_usd", "ms", "estimated",
+                              "gateway_cache") if k in call}
         if data is not None:
             step["data"] = data
         self.steps.append(step)

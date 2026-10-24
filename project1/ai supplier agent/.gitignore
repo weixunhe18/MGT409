@@ -1,0 +1,23 @@
+# secrets
+.env
+*.env
+!.env.example
+
+# runtime data (local SQLite, mock outbox)
+data/runtime/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# personal Claude Code permissions (launch.json is fine to share)
+.claude/settings.local.json
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

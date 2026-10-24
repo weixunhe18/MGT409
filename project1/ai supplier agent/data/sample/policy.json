@@ -1,0 +1,53 @@
+{
+  "owner": {
+    "name": "Wei He",
+    "first_name": "Wei",
+    "title": "Hardware Engineering Lead",
+    "company": "Northfield Outdoor Labs",
+    "inbox": "wei@northfield-labs.example"
+  },
+  "product_name": "TB-1",
+  "persona": {"name": "John", "title": "Supply Chain"},
+  "assistant_signature": "John\nSupply Chain, Northfield Outdoor Labs",
+  "allowlist": [
+    {"address": "kevin.zhang@hongyuan-mold.example", "name": "Kevin Zhang", "company": "Shenzhen Hongyuan Precision Mold Co., Ltd.", "role": "Enclosure tooling and molding"},
+    {"address": "lily.chen@everbright-pcba.example", "name": "Lily Chen", "company": "Dongguan Everbright Electronics Co., Ltd.", "role": "PCBA"},
+    {"address": "jason.wu@powercell-nb.example", "name": "Jason Wu", "company": "Ningbo PowerCell Battery Technology Co., Ltd.", "role": "Battery pack"},
+    {"address": "amy.lin@bluepeak-pack.example", "name": "Amy Lin", "company": "Xiamen BluePeak Packaging Co., Ltd.", "role": "Retail packaging"}
+  ],
+  "blocklist": [
+    "@bluepeak-archive.example",
+    "@free-sourcing-leads.example",
+    "procurement-bot@spam-supplier.example"
+  ],
+  "sensitive_terms": [
+    "OSPREY",
+    "GreenVolt",
+    "target cost",
+    "BOM target",
+    "retail price",
+    "tooling budget",
+    "launch date",
+    "TB1-ENC-001",
+    "TB1-PCB-002"
+  ],
+  "defaults": {
+    "risk_tolerance": "medium",
+    "schedule_mode": "autonomous",
+    "llm_mode": "auto",
+    "daily_budget_usd": 1.0,
+    "paused": false
+  },
+  "supervised_hours": {
+    "days": [0, 1, 2, 3, 4],
+    "start": "09:00",
+    "end": "17:00"
+  },
+  "limits": {
+    "per_email_budget_usd": 0.05,
+    "max_llm_calls_per_email": 6,
+    "max_agent_replies_per_thread_per_day": 3
+  },
+  "injection_threshold": 1.0,
+  "suspicious_threshold": 0.4
+}

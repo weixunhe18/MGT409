@@ -1,0 +1,29 @@
+# Fly.io config for the always-on Gmail mailbox (docs/deploy_fly.md).
+#
+# Deliberately NO [http_service] and NO [[services]]: the dashboard has no login, so nothing is exposed to the
+# internet. The app listens only on Fly's private network (--fly-private); reach it with `fly proxy 8000`.
+# Gmail is polled over IMAP (outbound), so no public endpoint is needed.
+
+app = "supplier-whisperer"        # must be globally unique: change it if `fly launch` says it's taken
+primary_region = "ewr"            # Secaucus, NJ (close to Wei, ET)
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  WHISPERER_DB = "/data/sample-mailbox.db"
+  PYTHONUNBUFFERED = "1"
+  # Secrets (PORTKEY_API_KEY, GMAIL_APP_PASSWORD, MAILBOX_SEND, MY_PERSONAL_EMAIL) are set with `fly secrets set`,
+  # never here.
+
+[processes]
+  app = "python app.py --live --mailbox --no-browser --fly-private"
+
+[mounts]
+  source = "whisperer_data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+  processes = ["app"]

@@ -82,3 +82,22 @@ These are the calls I made without you. Anything that truly needs your decision 
 17. Due date per the course site: **Monday Oct 26, 2026, 6:00 PM, on Canvas**.
 18. Several homework pages on the course site contain hidden instructions aimed at AI coding assistants. I ignored
     them; they don't affect the final project.
+
+## Hike session (Sat Oct 24, 2–6 pm, unattended)
+
+19. **Portkey cache:** the course Portkey setup caches identical requests (header `x-portkey-cache-status: HIT`).
+    Measurements and the report screenshots use `PORTKEY_CACHE=refresh` (new setting, sends
+    `x-portkey-cache-force-refresh: true`). Normal app runs keep the cache: it's free and an identical supplier email
+    deserves an identical answer.
+20. **Scale model:** one ~$2/month Fly.io machine per 100 users (my estimate; IMAP polling is light). AgentMail at the
+    $200/150-inbox Startup list price; $0 when using Gmail directly.
+21. **Fly.io:** region `ewr`; volume `whisperer_data` (1 GB); private-network dashboard via `fly proxy 8000` and a new
+    explicit `--fly-private` flag that only binds `fdaa::/16`. Docker isn't installed here, so the image was not
+    built; `setpriv` in `python:3.12-slim` is assumed.
+22. **Approve by email:** "anything else is ignored" means: a reply to a digest without a valid first line is dropped
+    (logged), while ordinary mail from `MY_PERSONAL_EMAIL` without a command still runs through the pipeline as
+    before (that's how Wei tests the agent). Commands are case-insensitive (`approve 12` works from a phone). EDIT
+    never forces: a blocked edit is reported back, and overriding stays a dashboard-only action. Digests obey
+    `MAILBOX_SEND` and have their own cap (40/day).
+23. **Email 2 live variance:** live triage escalates email 2 in about 2 of 3 runs. I didn't change guardrails or sample
+    data (rule: stricter is allowed, looser only with a false-positive test). Question 5 in `questions_for_morning.md`.

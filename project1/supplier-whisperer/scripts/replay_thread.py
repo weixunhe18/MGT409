@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None) -> int:
         if not config.live_available:
             sys.exit("--live needs PORTKEY_API_KEY")
         live = PortkeyLLM(config.portkey_api_key, config.portkey_base_url, config.model, config.portkey_provider,
-                          config.reasoning_effort)
+                          config.reasoning_effort, cache=config.portkey_cache)
     policy = load_policy(config.dataset_dir)
     store = Store(":memory:")
     pipe = Pipeline(store=store, kb=KnowledgeBase.load(config.dataset_dir / "product_spec.md"), policy=policy,

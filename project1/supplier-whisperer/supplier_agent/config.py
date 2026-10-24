@@ -175,9 +175,11 @@ class AppConfig:
     model: str = "gpt-6-luna"
     llm_mode: str = "auto"  # auto | live | mock
     reasoning_effort: str = ""
+    portkey_cache: str = ""  # "refresh" bypasses Portkey's response cache (fresh answers, real token counts)
     webhook_secret: str = DEV_WEBHOOK_SECRET
     prices: dict = field(default_factory=lambda: dict(DEFAULT_PRICES))
     env_files: list = field(default_factory=list)
+    fly_private: bool = False  # bound to Fly.io's private network (--fly-private), reached only via `fly proxy`
 
     @property
     def live_available(self) -> bool:
@@ -222,6 +224,7 @@ class AppConfig:
             model=os.getenv("MODEL_NAME", "gpt-6-luna").strip() or "gpt-6-luna",
             llm_mode=(llm_mode or os.getenv("LLM_MODE", "auto")).strip().lower(),
             reasoning_effort=os.getenv("REASONING_EFFORT", "").strip(),
+            portkey_cache=os.getenv("PORTKEY_CACHE", "").strip().lower(),
             webhook_secret=os.getenv("WEBHOOK_SECRET", "").strip() or DEV_WEBHOOK_SECRET,
             prices=prices,
             env_files=env_files,

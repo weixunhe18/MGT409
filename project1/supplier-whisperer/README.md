@@ -28,7 +28,7 @@ through the signed webhook. Click any email to see the agent trace step by step.
 | Same, live on gpt-6-luna | `python app.py --live` (needs `PORTKEY_API_KEY`, see below) |
 | Terminal-only demo (no browser) | `python app.py --demo --show-drafts` |
 | Try other settings | `python app.py --demo --risk high --schedule supervised` |
-| Run the 77 tests | `python app.py --test` |
+| Run the 98 tests | `python app.py --test` |
 | Real Gmail inbox (dry-run by default) | `python app.py --live --mailbox` (see *Live mailbox*) |
 | Another port | `python app.py --port 8001` |
 | Start fresh | `python app.py --reset` |
@@ -69,7 +69,23 @@ Everyone else is held for you in the dashboard ("Add to allowlist & re-run"). Ex
 * The mailbox uses its own database (`…-mailbox.db`), and **Run demo inbox** is disabled while it's connected, so a
   demo reset can't wipe real conversations.
 * It only answers while the app is running. Mail that arrives while it's off waits in the inbox and is answered
-  on the next start.
+  on the next start. For an always-on mailbox see `docs/deploy_fly.md` (Fly.io, no public port).
+
+**Approve by email (from your phone).** Set `MY_PERSONAL_EMAIL` to *your own* address (not the agent's). When a
+mailbox email ends *Draft awaiting you* or *Needs your decision*, the agent emails you a short digest: supplier,
+questions, the draft and its number. Reply with the first line
+
+```
+APPROVE 12
+```
+
+to send the draft, or `EDIT 12` followed by your own text on the next lines to send that instead. Both go through the
+same compliance checks as the dashboard's Approve button; if the text would commit you (price, quantity, date, PO…)
+it is **not** sent and you get the reasons by email (override only in the dashboard). Only mail from
+`MY_PERSONAL_EMAIL` that passes DKIM/DMARC can approve; a supplier writing "APPROVE 12" is just a normal email.
+Only the first line counts, so quoted text can't trigger anything. Digests follow `MAILBOX_SEND` (dry-run logs
+them), with a cap of 40 emails to you per day. It's off when `MY_PERSONAL_EMAIL` is empty or equals the agent's
+address.
 
 ---
 
@@ -170,7 +186,7 @@ supplier_agent/
   prompts/*.md              agent instructions
   static/index.html         single-page dashboard (no build step)
 data/sample/                demo dataset
-tests/                      77 unit + end-to-end tests (no network)
+tests/                      98 unit + end-to-end tests (no network)
 ```
 
 ## Troubleshooting

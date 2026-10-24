@@ -157,3 +157,19 @@ LLM tokens.
   verbs). It is never sent if any soft warning fired (injection suspicion, reviewer flag, loop guard), or for
   "are you a bot?" questions. Low risk and business hours still make everything wait.
 - **Trade-off:** a supplier may read a quick holding reply as "yes is coming". The wording promises only a review.
+
+---
+
+## D7. Always-on hosting: Fly.io, IMAP polling, no public endpoint (decided Sat)
+
+- **Why always-on:** the mailbox only answers while the app runs. A laptop sleeps; a ~$2/month Fly.io machine doesn't,
+  so suppliers really get answers at 3 am ET.
+- **Why polling, not webhooks:** Gmail push needs a Google Cloud Pub/Sub topic, a `users.watch` call renewed at
+  least every 7 days, and a public HTTPS endpoint that has to authenticate Google's pushes. IMAP polling every 60 s
+  is one outbound connection: no public endpoint, nothing to renew, and it costs zero tokens while idle. A 60 s delay
+  doesn't matter against a 12 h time-zone gap.
+- **Why no public port:** the dashboard has no login. `fly.toml` defines no `[http_service]`/`[[services]]`, and the
+  new `--fly-private` flag binds only Fly's private `fdaa::/16` address (refused anywhere else). Wei opens the
+  dashboard with `fly proxy 8000`. Steps: `docs/deploy_fly.md`.
+- **Trade-off:** no public link for graders (they use the mock inbox from a fresh clone, as before), and a second
+  poller (laptop + Fly) would double-reply, so only one may run at a time.

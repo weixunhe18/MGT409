@@ -1,0 +1,17 @@
+# Never ship secrets, employer data, local databases or the dev environment into the image.
+.env
+*.env
+.venv/
+venv/
+.git/
+.gitignore
+data/raw_private/
+data/real_anonymized/
+data/runtime/
+__pycache__/
+*.pyc
+.claude/
+docs/
+research/
+*.db
+.DS_Store

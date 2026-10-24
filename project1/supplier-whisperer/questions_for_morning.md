@@ -76,3 +76,20 @@ Ordered by urgency. Each has my recommendation so you can just say "yes" or "no"
 13. ~~PydanticAI~~ **Recommendation changed (Sat): yes, for the 4 live model calls only.** The course's PydanticAI +
     Portkey path is proven with gpt-6-luna, while my urllib client is unverified. It's hike STEP 1, with urllib kept as a
     fallback. See `decisions.md` D1.
+
+## Saturday evening (from the hike session)
+
+1. **`MY_PERSONAL_EMAIL` is currently the agent's own address** (weideals25@gmail.com). Approve-by-email is
+   therefore **off** (the agent never reads its own mail). To use it, set `MY_PERSONAL_EMAIL` to the address on your
+   phone (e.g. your Yale address). Note this also allowlists that address as a "supplier" for testing, which is how it
+   works today. **Recommended:** your Yale address.
+2. **Fly.io:** ready to deploy when you have an account (`docs/deploy_fly.md`). Decide whether TAs may email the live
+   agent (ask the professor first, course rule on extra keys). Never run the laptop mailbox and Fly at the same time.
+3. **Report TODOs** need you: baseline numbers, the real-user quote, and the before/after turnaround
+   (`docs/user_evidence.md`). They're marked as yellow TODO boxes in `docs/report_src.html`.
+4. **REASONING_EFFORT=low?** Measured live: −15% cost per night, −22% output tokens, same outcome distribution
+   (`docs/tokenomics.md`). Not switched on by default. **Recommended:** turn it on (`REASONING_EFFORT=low` in `.env`)
+   after you read a few low-effort drafts.
+5. **Email 2 (Lily, PCBA)** escalates in about 2 of 3 live runs (the live manager reads a timing question) but the demo
+   script expects NEEDS_APPROVAL. Mock stays 9/9. Either accept it (it errs on the strict side) and say so in the
+   demo, or reword sample email 2. I didn't change guardrails or sample data.

@@ -45,7 +45,7 @@ def run_demo(config: AppConfig, risk: str, schedule: str, show_drafts: bool) -> 
     live = None
     if config.live_available and config.llm_mode != "mock":
         live = PortkeyLLM(config.portkey_api_key, config.portkey_base_url, config.model, config.portkey_provider,
-                          config.reasoning_effort)
+                          config.reasoning_effort, cache=config.portkey_cache)
     pipeline = Pipeline(store=store, kb=kb, policy=policy, config=config, live_llm=live)
     store.set_settings({"risk_tolerance": risk, "schedule_mode": schedule})
     events = load_sample_events(config.dataset_dir)
@@ -54,7 +54,7 @@ def run_demo(config: AppConfig, risk: str, schedule: str, show_drafts: bool) -> 
     print(f"risk tolerance = {risk} · schedule = {schedule}\n")
     print(f"{'#':>2}  {'from':<22} {'outcome':<15} {'calls':>5} {'in':>6} {'cached':>6} {'out':>5} {'cost $':>9}  check")
     print("-" * 96)
-    mismatches = 0
+    mismatches = hits = 0
     totals = {"input_tokens": 0, "cached_tokens": 0, "output_tokens": 0, "cost_usd": 0.0, "calls": 0}
     for i, event in enumerate(events, 1):
         body = dumps(event)
@@ -64,6 +64,7 @@ def run_demo(config: AppConfig, risk: str, schedule: str, show_drafts: bool) -> 
             continue
         run = pipeline.process(json.loads(body.decode("utf-8")), signature_note="Svix signature verified")
         usage = run.get("usage", {})
+        hits += sum(c.get("gateway_cache") == "HIT" for c in run.get("calls") or [])
         for key in totals:
             totals[key] += usage.get(key, 0)
         expected = (event.get("_demo") or {}).get("expected")
@@ -83,6 +84,9 @@ def run_demo(config: AppConfig, risk: str, schedule: str, show_drafts: bool) -> 
           f"{totals['output_tokens']} output tokens · ${totals['cost_usd']:.6f}"
           + ("  (estimated: mock engine)" if not live else ""))
     outbox = store.list_outbox()
+    if hits:
+        print(f"Note: {hits} call(s) were answered from Portkey's response cache (same answer and token counts as an "
+              "earlier identical call). Set PORTKEY_CACHE=refresh for fresh answers.")
     print(f"Mock outbox: {len(outbox)} repl{'y' if len(outbox) == 1 else 'ies'} 'sent' (nothing leaves this computer).")
     if mismatches:
         print(f"\n{mismatches} outcome(s) differ from the expected demo script.")
@@ -104,6 +108,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--host", default=None,
                         help="host to bind (default 127.0.0.1). Non-local hosts are refused unless WEBHOOK_SECRET "
                              "and ALLOW_REMOTE=1 are set: the dashboard has no login.")
+    parser.add_argument("--fly-private", action="store_true",
+                        help="Fly.io only: listen on the machine's private network address (fdaa::/16), reachable "
+                             "only through `fly proxy` from your own Fly account. Never a public interface.")
     engine = parser.add_mutually_exclusive_group()
     engine.add_argument("--live", action="store_true", help="force gpt-6-luna via Portkey (needs PORTKEY_API_KEY)")
     engine.add_argument("--mock", action="store_true", help="force the offline mock engine (no key, no cost)")
@@ -124,6 +131,12 @@ def main(argv: list[str] | None = None) -> int:
 
     llm_mode = "live" if args.live else "mock" if args.mock else None
     config = AppConfig.from_env(dataset=args.dataset, host=args.host, port=args.port, llm_mode=llm_mode)
+    if args.fly_private:
+        if args.host:
+            parser.error("--fly-private and --host can't be combined")
+        from supplier_agent.server import resolve_fly_private
+
+        config.host, config.fly_private = resolve_fly_private(), True
     if args.live and not config.live_available:
         print("--live needs PORTKEY_API_KEY in .env (this folder or the folder above). Falling back to mock.")
         config.llm_mode = "mock"

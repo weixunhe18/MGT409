@@ -9,10 +9,12 @@ POST /api/...             human-in-the-loop actions (require header X-Requested-
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import os
 import queue
 import re
+import socket
 import threading
 import time
 import traceback
@@ -32,6 +34,9 @@ from .webhook import dumps, make_event, signed_headers, verify
 MAX_BODY = 1_000_000
 CSRF_HEADER = "supplier-whisperer"
 LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1", "[::1]")
+# Fly.io's private WireGuard network (6PN). Only machines and `fly proxy` peers of the same org can reach it.
+FLY_6PN_HOSTNAME = "fly-local-6pn"
+FLY_6PN_NETWORK = ipaddress.ip_network("fdaa::/16")
 # Calls to our own webhook must never go through a corporate HTTP proxy.
 _LOCAL_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 HARD_RULES = [
@@ -53,7 +58,7 @@ class App:
         live = None
         if config.live_available and config.llm_mode != "mock":
             live = PortkeyLLM(config.portkey_api_key, config.portkey_base_url, config.model,
-                              config.portkey_provider, config.reasoning_effort)
+                              config.portkey_provider, config.reasoning_effort, cache=config.portkey_cache)
         self.pipeline = Pipeline(store=self.store, kb=self.kb, policy=self.policy, config=config, live_llm=live)
         if config.llm_mode in ("live", "mock"):  # an explicit --live/--mock (or LLM_MODE) beats the saved UI toggle
             self.store.set_settings({"llm_mode": "live" if (config.llm_mode == "live" and live) else "mock"})
@@ -62,6 +67,8 @@ class App:
         self.replay_running = False
         self.webhook_log: deque = deque(maxlen=60)
         loop_host = "127.0.0.1" if config.host in LOOPBACK_HOSTS + ("0.0.0.0", "", "::") else config.host
+        if ":" in loop_host:
+            loop_host = f"[{loop_host}]"
         self.base_url = f"http://{loop_host}:{config.port}"
         threading.Thread(target=self._worker, name="agent-worker", daemon=True).start()
 
@@ -113,6 +120,7 @@ class App:
 
         def deliver() -> None:
             mailbox.deliver_pending()
+            mailbox.send_digests()  # approve-by-email (only when MY_PERSONAL_EMAIL is a separate address)
 
         def loop() -> None:
             while True:
@@ -125,6 +133,8 @@ class App:
                         auth = "DKIM/DMARC pass" if msg["auth"]["verified"] else "DKIM/DMARC FAILED"
                         self.log(f"Gmail: new mail from {msg['from']} ({auth})")
                         self.enqueue_event(event, f"received via Gmail IMAP · {auth}")
+                    for command in mailbox.take_commands():  # APPROVE/EDIT from Wei's own, authenticated address
+                        self.jobs.put(lambda c=command: mailbox.handle_command(c, self.pipeline))
                     self.jobs.put(deliver)  # also picks up replies Wei approved in the dashboard
                 except Exception as exc:  # noqa: BLE001  keep polling; the next round retries
                     self.log(f"Gmail poll failed ({type(exc).__name__}: {exc}). Retrying next round.")
@@ -232,8 +242,9 @@ class Handler(BaseHTTPRequestHandler):
         return
 
     def _host_ok(self) -> bool:
-        """When bound to loopback, only accept Host: localhost/127.0.0.1 (blocks DNS-rebinding attacks)."""
-        if self.app.config.host not in LOOPBACK_HOSTS:
+        """When bound to loopback (or Fly's private network, reached through `fly proxy` on localhost), only accept
+        Host: localhost/127.0.0.1 (blocks DNS-rebinding attacks)."""
+        if self.app.config.host not in LOOPBACK_HOSTS and not self.app.config.fly_private:
             return True
         host = (self.headers.get("Host") or "").strip().lower()
         if host.startswith("["):
@@ -408,21 +419,51 @@ class _Server(ThreadingHTTPServer):
     allow_reuse_address = os.name != "nt"
 
 
+class _Server6(_Server):
+    address_family = socket.AF_INET6
+
+
+def resolve_fly_private(resolver=socket.getaddrinfo) -> str:
+    """The machine's Fly.io private (6PN) address, for `--fly-private`.
+
+    Refuses anything outside fdaa::/16, so this flag can never bind a public interface: on a laptop, or on a
+    host where the name resolves elsewhere, the app stops instead of listening."""
+    try:
+        infos = resolver(FLY_6PN_HOSTNAME, None, socket.AF_INET6)
+    except (OSError, UnicodeError):
+        infos = []
+    for info in infos:
+        address = str(info[4][0]).split("%", 1)[0]
+        try:
+            if ipaddress.ip_address(address) in FLY_6PN_NETWORK:
+                return address
+        except ValueError:
+            continue
+    raise SystemExit(f"--fly-private: '{FLY_6PN_HOSTNAME}' does not resolve to a Fly.io private address (fdaa::/16). "
+                     "This flag only works inside a Fly.io machine; locally, run without it.")
+
+
 def run_server(config: AppConfig, open_browser: bool = True, replay: bool = False, mailbox_cfg=None) -> None:
-    if config.host not in LOOPBACK_HOSTS and (config.using_dev_secret or os.getenv("ALLOW_REMOTE") != "1"):
+    if config.fly_private:
+        if ipaddress.ip_address(config.host) not in FLY_6PN_NETWORK:
+            raise SystemExit(f"Refusing to listen on {config.host}: --fly-private only binds fdaa::/16 addresses.")
+    elif config.host not in LOOPBACK_HOSTS and (config.using_dev_secret or os.getenv("ALLOW_REMOTE") != "1"):
         raise SystemExit(
             f"Refusing to listen on {config.host}: the dashboard API has no login, so it must stay on 127.0.0.1.\n"
             "To expose the webhook anyway (e.g. for hosting), set a real WEBHOOK_SECRET and ALLOW_REMOTE=1, and put the "
             "app behind an authenticating proxy.")
     app = App(config)
     try:
-        httpd = _Server((config.host, config.port), Handler)
+        httpd = (_Server6 if ":" in config.host else _Server)((config.host, config.port), Handler)
     except OSError as exc:
         raise SystemExit(f"Could not start on port {config.port} ({exc}). Try: python app.py --port {config.port + 1}")
     httpd.app = app  # type: ignore[attr-defined]
     port = httpd.server_address[1]
     app.base_url = app.base_url.rsplit(":", 1)[0] + f":{port}"
     url = f"http://127.0.0.1:{port}" if config.host in LOOPBACK_HOSTS else app.base_url
+    if config.fly_private:
+        print(f"\n  Private network only ({config.host}). From your laptop: fly proxy {port}, then open "
+              f"http://127.0.0.1:{port}")
     mode = (f"LIVE ({config.model} via Portkey)" if app.pipeline.settings()["llm_mode"] == "live"
             else "MOCK (offline; add PORTKEY_API_KEY to .env for gpt-6-luna)")
     print("\n  Supplier Whisperer is running")
@@ -437,6 +478,8 @@ def run_server(config: AppConfig, open_browser: bool = True, replay: bool = Fals
         print(f"  Mailbox:    {mailbox_cfg.display_name} <{mailbox_cfg.address}> · every {mailbox_cfg.poll_seconds} s"
               f" · {sending}")
         print(f"  Also allowed (DKIM/DMARC required): {', '.join(mailbox_cfg.extra_allow) or 'none'}")
+        print("  Approve by email: " + (f"digests to {mailbox_cfg.owner_email}" if mailbox_cfg.approve_by_email else
+                                         "off (MY_PERSONAL_EMAIL unset or the agent's own address)"))
         app.start_mailbox(GmailMailbox(mailbox_cfg, app.store, log=lambda t: (print("  " + t), app.log(t))))
     print("  Press Ctrl+C to stop.\n")
     if replay and mailbox_cfg is None:

@@ -11,6 +11,12 @@ Safety on top of the pipeline's own guardrails:
 - Per-sender and global daily send caps.
 - MAILBOX_SEND defaults to "dry-run": replies show in the dashboard outbox but are never transmitted.
 - Proper In-Reply-To / References headers so replies stay in the sender's thread.
+
+Approve by email (so Wei can decide from his phone): runs that end NEEDS_APPROVAL or ESCALATED trigger a short
+digest to MY_PERSONAL_EMAIL. A reply whose FIRST line is "APPROVE <id>" (or "EDIT <id>" followed by new text)
+goes through Pipeline.approve, with the same compliance checks as the dashboard: a blocked draft is NOT sent
+(no force by email) and Wei gets the reasons. Only mail from MY_PERSONAL_EMAIL that passes DKIM/DMARC can
+approve; supplier mail never can, whatever it says.
 """
 
 from __future__ import annotations
@@ -33,6 +39,10 @@ from .guardrails import domain_of, parse_address, strip_quoted
 from .llm import ssl_context
 
 _MSGID_RE = re.compile(r"<[^<>\s]+>")
+DIGEST_TAG = "[Whisperer #"
+_COMMAND_RE = re.compile(r"^(APPROVE|EDIT)\s+#?(\d+)\b[ \t:]*(.*)$", re.IGNORECASE)
+_PHONE_SIGNATURE_RE = re.compile(r"^(sent from my \w+|get outlook for \w+)", re.IGNORECASE)
+DIGEST_OUTCOMES = ("NEEDS_APPROVAL", "ESCALATED")
 NET_TIMEOUT = 30  # seconds per IMAP/SMTP network operation
 SENT_FOLDER = '"[Gmail]/Sent Mail"'  # Gmail's name in an English-language account
 
@@ -50,10 +60,17 @@ class MailboxConfig:
     per_sender_daily_cap: int = 10
     global_daily_cap: int = 50
     grace_hours: float = 2.0  # mail up to this long before the first connection is still handled
+    owner_email: str = ""  # MY_PERSONAL_EMAIL: gets digests, and the only address whose replies can approve
+    owner_daily_cap: int = 40  # digests + confirmations per 24 h
 
     @property
     def sending(self) -> bool:
         return self.send_mode == "on"
+
+    @property
+    def approve_by_email(self) -> bool:
+        """Off when MY_PERSONAL_EMAIL is unset or is the agent's own address (we never read our own mail)."""
+        return bool(self.owner_email) and self.owner_email != self.address
 
     @classmethod
     def from_env(cls, policy: dict) -> "MailboxConfig":
@@ -74,7 +91,8 @@ class MailboxConfig:
                    poll_seconds=max(15, int(os.getenv("MAILBOX_POLL_SECONDS", "60"))),
                    extra_allow=extra,
                    per_sender_daily_cap=int(box.get("per_sender_daily_cap", 10)),
-                   global_daily_cap=int(box.get("global_daily_cap", 50)))
+                   global_daily_cap=int(box.get("global_daily_cap", 50)),
+                   owner_email=personal)
 
 
 # ------------------------------------------------------------------ inbound
@@ -176,6 +194,25 @@ def to_event(raw: bytes, inbox: str, known: Callable[[str], str | None]) -> dict
     }
 
 
+def parse_command(text: str) -> dict | None:
+    """'APPROVE 12' or 'EDIT 12' + new text, on the FIRST non-empty line only (quoted digests below can't count)."""
+    lines = (text or "").splitlines()
+    for i, line in enumerate(lines):
+        if not line.strip():
+            continue
+        match = _COMMAND_RE.match(line.strip())
+        if not match:
+            return None
+        rest = strip_quoted("\n".join([match.group(3)] + lines[i + 1:]))
+        kept = []
+        for row in rest.splitlines():
+            if _PHONE_SIGNATURE_RE.match(row.strip()):
+                break
+            kept.append(row)
+        return {"verb": match.group(1).upper(), "run_id": int(match.group(2)), "text": "\n".join(kept).strip()}
+    return None
+
+
 # ----------------------------------------------------------------- outbound
 def build_reply(cfg: MailboxConfig, *, to_addr: str, subject: str, body: str, original: dict) -> EmailMessage:
     msg = EmailMessage()
@@ -202,6 +239,8 @@ class GmailMailbox:
                                                                              timeout=NET_TIMEOUT))
         self.smtp_factory = smtp_factory or (lambda host: smtplib.SMTP_SSL(host, 465, context=ssl_context(),
                                                                            timeout=NET_TIMEOUT))
+        self.commands: list[dict] = []  # approval commands from Wei, collected by fetch_new
+        self._owner_sent: list[float] = []
 
     def cutoff(self) -> datetime:
         """Only mail that arrived after the mailbox was first connected (minus a grace window) is handled.
@@ -236,6 +275,9 @@ class GmailMailbox:
                     continue
                 event = to_event(raw, self.cfg.address, self.store.thread_for_message)
                 msg = event["message"]
+                if self._owner_message(msg):
+                    imap.uid("STORE", uid, "+FLAGS", "\\Seen")
+                    continue
                 if parse_address(msg["from"])[1] == self.cfg.address:
                     imap.uid("STORE", uid, "+FLAGS", "\\Seen")  # our own mail (e.g. a copy): never answer ourselves
                     continue
@@ -249,6 +291,109 @@ class GmailMailbox:
             except Exception:  # noqa: BLE001
                 pass
         return events
+
+    def _owner_message(self, msg: dict) -> bool:
+        """True if this is Wei answering a digest (a command, or a reply to one): it is never a supplier email.
+
+        Only MY_PERSONAL_EMAIL with DKIM/DMARC pass can approve. Anyone else writing "APPROVE 12" is just a
+        normal email and goes through the pipeline like any other."""
+        if not self.cfg.approve_by_email or parse_address(msg["from"])[1] != self.cfg.owner_email:
+            return False
+        command = parse_command(msg.get("text") or "")
+        if not command and DIGEST_TAG not in (msg.get("subject") or ""):
+            return False  # Wei writing to the agent like a supplier would (testing): normal path
+        if not msg["auth"]["verified"]:
+            self.log(f"Approval email from {self.cfg.owner_email} IGNORED: DKIM/DMARC did not pass")
+        elif not command:
+            self.log("Reply to a digest without APPROVE/EDIT on the first line: ignored")
+        else:
+            command["message_id"] = msg["message_id"]
+            self.commands.append(command)
+        return True
+
+    def take_commands(self) -> list[dict]:
+        commands, self.commands = self.commands, []
+        return commands
+
+    def handle_command(self, command: dict, pipeline) -> dict:
+        """Apply one APPROVE/EDIT through Pipeline.approve (same compliance checks, never forced)."""
+        run_id, verb = command["run_id"], command["verb"]
+        row = self.store.get_run(run_id)
+        result = (row or {}).get("result") or {}
+        if not row or row["email"].get("source") != "gmail":
+            outcome = {"ok": False, "error": f"No mailbox email #{run_id}."}
+        elif result.get("outcome") not in DIGEST_OUTCOMES or result.get("human_status") != "pending":
+            outcome = {"ok": False, "error": f"#{run_id} isn't waiting for approval "
+                                             f"({result.get('outcome')}, {result.get('human_status')})."}
+        elif verb == "EDIT" and not command.get("text"):
+            outcome = {"ok": False, "error": "EDIT needs your new text on the lines below the first line."}
+        else:
+            outcome = pipeline.approve(run_id, body=command.get("text") if verb == "EDIT" else None, force=False)
+        subject = f"{DIGEST_TAG}{run_id}] {verb} "
+        if outcome.get("ok"):
+            subject += "done"
+            body = (f"{verb} #{run_id} accepted. The reply to {row['email'].get('from_addr')} is queued and goes out "
+                    f"on the next poll ({'really sent' if self.cfg.sending else 'DRY-RUN: not transmitted'}).")
+        elif outcome.get("needs_force"):
+            subject += "NOT sent"
+            reasons = "\n".join(f"- {b.get('label', b)}: {b.get('detail', '')}".rstrip(": ")
+                                 for b in outcome.get("blocking") or [])
+            body = (f"#{run_id} was NOT sent: the text fails the compliance checks.\n{reasons}\n\n"
+                    "Change the text and send EDIT again, or override in the dashboard if you're sure.")
+        else:
+            subject += "NOT sent"
+            body = f"#{run_id} was NOT sent: {outcome.get('error')}"
+        self.log(f"Email approval {verb} #{run_id}: {'ok' if outcome.get('ok') else 'refused'}")
+        self.send_owner(subject, body)
+        return outcome
+
+    def send_digests(self) -> int:
+        """One short digest per mailbox email that ended NEEDS_APPROVAL or ESCALATED (once per email)."""
+        if not self.cfg.approve_by_email:
+            return 0
+        done = set(self.store.get_settings().get("digested_runs") or [])
+        count = 0
+        for summary in reversed(self.store.list_runs(limit=50)):
+            if summary["id"] in done or summary["outcome"] not in DIGEST_OUTCOMES or summary["human_status"] != "pending":
+                continue
+            row = self.store.get_run(summary["id"])
+            if not row or row["email"].get("source") != "gmail":
+                continue
+            if self.send_owner(*digest(row)):
+                done.add(summary["id"])
+                count += 1
+        self.store.set_settings({"digested_runs": sorted(done)[-500:]})
+        return count
+
+    def send_owner(self, subject: str, body: str) -> bool:
+        """Mail Wei (digests, confirmations). Same dry-run switch as replies, plus its own daily cap."""
+        if not self.cfg.sending:
+            self.log(f"[dry-run] email to {self.cfg.owner_email} NOT sent: {subject}")
+            return True
+        now = time.time()
+        self._owner_sent = [t for t in self._owner_sent if now - t < 86400]
+        if len(self._owner_sent) >= self.cfg.owner_daily_cap:
+            self.log("daily cap for emails to Wei reached: NOT sent")
+            return False
+        msg = EmailMessage()
+        msg["From"] = email.utils.formataddr((self.cfg.display_name, self.cfg.address))
+        msg["To"] = self.cfg.owner_email
+        msg["Subject"] = subject
+        msg["Date"] = email.utils.formatdate(localtime=True)
+        msg["Message-ID"] = email.utils.make_msgid(domain=self.cfg.address.split("@")[-1])
+        msg["Auto-Submitted"] = "auto-generated"
+        msg.set_content(body)
+        smtp = self.smtp_factory(self.cfg.smtp_host)
+        try:
+            smtp.login(self.cfg.address, self.cfg.app_password)
+            smtp.send_message(msg, from_addr=self.cfg.address, to_addrs=[self.cfg.owner_email])
+        finally:
+            try:
+                smtp.quit()
+            except Exception:  # noqa: BLE001
+                pass
+        self._owner_sent.append(now)
+        return True
 
     def _load_sent_history(self, imap, events: list[dict]) -> None:
         """The usual workflow: Wei emails a supplier first, the agent handles the replies. Gmail keeps Wei's
@@ -330,6 +475,33 @@ class GmailMailbox:
                 except Exception:  # noqa: BLE001
                     pass
         return results
+
+
+def digest(row: dict) -> tuple[str, str]:
+    """Subject and body of the approval digest for one run."""
+    result, mail = row["result"], row["email"]
+    run_id = row["id"]
+    draft = result.get("draft") or {}
+    questions = (result.get("triage") or {}).get("questions") or []
+    lines = [
+        f"Supplier: {mail.get('from_name') or ''} <{mail.get('from_addr')}>".strip(),
+        f"Subject:  {mail.get('subject')}",
+        f"Status:   {result.get('outcome_label') or result.get('outcome')}",
+        f"Why:      {result.get('headline', '')}",
+        "",
+        "Questions:" if questions else "Questions: none found",
+    ]
+    lines += [f"  {i}. {str(q.get('text', q) if isinstance(q, dict) else q)[:200]}" for i, q in enumerate(questions, 1)]
+    if draft.get("body") and not result.get("sent"):
+        lines += ["", f"Draft reply (#{run_id}):", "-" * 40, draft["body"], "-" * 40, "",
+                  "Reply with ONE of these on the first line:",
+                  f"  APPROVE {run_id}      send the draft as is",
+                  f"  EDIT {run_id}         then your own text on the next lines (sent instead of the draft)",
+                  "Same compliance checks as the dashboard: if it would commit you, it is NOT sent and I tell you why."]
+    else:
+        sent = " (a holding reply was already sent)" if result.get("sent") else ""
+        lines += ["", f"No draft to approve{sent}. This one needs your own reply or the dashboard."]
+    return f"{DIGEST_TAG}{run_id}] {result.get('outcome')}: {mail.get('subject')}"[:180], "\n".join(lines)
 
 
 def check_login(cfg: MailboxConfig) -> None:

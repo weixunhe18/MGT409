@@ -21,3 +21,6 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+
+# real supplier conversations, unredacted: never commit (only data/real_anonymized/ is shared)
+data/raw_private/

@@ -2,6 +2,7 @@
 
 import copy
 import unittest
+from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from email import message_from_bytes, policy as email_policy
 
@@ -33,10 +34,23 @@ def raw_mail(*, sender=f"TA Person <{TA}>", subject="TB-1 question", body="What 
     return msg.as_bytes()
 
 
+def imap_date(dt: datetime) -> bytes:
+    return dt.strftime('"%d-%b-%Y %H:%M:%S +0000"').encode()
+
+
 class FakeIMAP:
+    """Speaks the UID commands the connector uses. Messages arrive 'now' unless an arrival time is given."""
+
     def __init__(self, messages):
-        self.messages = {str(i + 1).encode(): m for i, m in enumerate(messages)}
-        self.seen = set()
+        self.messages, self.arrived, self.seen = {}, {}, set()
+        for m in messages:
+            self.add(m)
+
+    def add(self, raw, arrived=None):
+        uid = str(len(self.messages) + 1).encode()
+        self.messages[uid] = raw
+        self.arrived[uid] = arrived or datetime.now(timezone.utc)
+        return uid
 
     def login(self, user, password):
         return "OK", [b""]
@@ -44,14 +58,18 @@ class FakeIMAP:
     def select(self, box):
         return "OK", [b""]
 
-    def search(self, charset, criterion):
-        return "OK", [b" ".join(n for n in self.messages if n not in self.seen)]
-
-    def fetch(self, num, what):
-        return "OK", [(b"1 (BODY[] {n}", self.messages[num]), b")"]
-
-    def store(self, num, op, flag):
-        self.seen.add(num)
+    def uid(self, command, *args):
+        if command == "SEARCH":
+            return "OK", [b" ".join(u for u in self.messages if u not in self.seen)]
+        if command == "FETCH":
+            uid, what = args
+            if "INTERNALDATE" in what:
+                return "OK", [b"1 (UID " + uid + b" INTERNALDATE " + imap_date(self.arrived[uid]) + b")"]
+            return "OK", [(b"1 (UID " + uid + b" BODY[] {n}", self.messages[uid]), b")"]
+        if command == "STORE":
+            self.seen.add(args[0])
+            return "OK", [b""]
+        raise AssertionError(command)
 
     def logout(self):
         pass
@@ -113,8 +131,8 @@ class MailboxTests(unittest.TestCase):
         first, _ = poll(pipeline, box)
         our_id = smtp.sent[0][0]["Message-ID"]
         # The TA's client only sets In-Reply-To (no References): still the same conversation.
-        imap.messages[b"2"] = raw_mail(msgid="<q2@mail.yale.edu>", in_reply_to=our_id,
-                                       subject="Re: TB-1 question", body="Thanks. And what O-ring cross-section?")
+        imap.add(raw_mail(msgid="<q2@mail.yale.edu>", in_reply_to=our_id,
+                                       subject="Re: TB-1 question", body="Thanks. And what O-ring cross-section?"))
         second, _ = poll(pipeline, box)
         self.assertEqual(second[0]["email"]["thread_id"], first[0]["email"]["thread_id"])
         memory = next(s for s in second[0]["trace"] if s["key"] == "memory")
@@ -170,6 +188,17 @@ class MailboxTests(unittest.TestCase):
         self.assertEqual(pipeline.process(copy.deepcopy(ROUTINE))["outcome"], "AUTO_SENT")
         self.assertEqual(box.deliver_pending(), [])
         self.assertEqual(smtp.sent, [])
+
+    def test_old_unread_mail_is_left_alone(self):
+        old = datetime.now(timezone.utc) - timedelta(days=30)
+        pipeline, store, box, imap, smtp = connect([], send_mode="on")
+        stale = imap.add(raw_mail(msgid="<old@mail.yale.edu>"), arrived=old)
+        fresh = imap.add(raw_mail(msgid="<new@mail.yale.edu>"))
+        runs, _ = poll(pipeline, box)
+        self.assertEqual([r["email"]["message_id"] for r in runs], ["<new@mail.yale.edu>"])
+        self.assertNotIn(stale, imap.seen)  # stays unread in the real inbox
+        self.assertIn(fresh, imap.seen)
+        self.assertEqual(len(smtp.sent), 1)
 
     def test_build_reply_keeps_reference_chain(self):
         cfg = MailboxConfig(address=GMAIL, app_password="x")

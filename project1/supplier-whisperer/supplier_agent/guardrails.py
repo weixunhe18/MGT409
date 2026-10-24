@@ -322,6 +322,9 @@ DATE_RE = re.compile(
     re.I,
 )
 QTY_RE = re.compile(r"\b\d[\d,.]*\s?k?\s?(?:pcs|pc|pieces|units|sets|kpcs)\b|\b\d+k\b", re.I)
+_QTY_CONTEXT_RE = re.compile(
+    r"\?|\$|\b(?:usd|rmb|price|prices|cost|quote|quotation|order|orders|po|purchase|buy|moq|need|needs|require|want|"
+    r"forecast|batch|book|reserve|capacity|confirm|commit|deposit|pay)\b", re.I)
 
 TOPIC_PATTERNS: dict[str, re.Pattern] = {
     "price": re.compile(
@@ -335,7 +338,9 @@ TOPIC_PATTERNS: dict[str, re.Pattern] = {
         r"\bpo\b|\bp\.o\.|\bpurchase\s+orders?\b|\border\s+confirmation\b|\bplace\s+(?:an?\s+|the\s+)?orders?\b",
         re.I),
     "payment": re.compile(
-        r"\b(payment|deposit|invoice|bank|account\s+number|swift|iban|wire|t/t|remit|remittance|pay)\b", re.I),
+        # Not bare "wire": hardware suppliers say "wire" for cables and pins all the time (real-thread replay).
+        r"\b(payment|deposit|invoice|bank|account\s+number|swift|iban|wire\s+transfer|wire\s+(?:the\s+)?(?:money|funds)|"
+        r"t/t|remit|remittance|pay)\b", re.I),
     "drawing": re.compile(
         r"\b(drawings?|step\s+files?|stp|igs|iges|dwg|dxf|gerbers?|cad|3d\s+(?:data|files?|model)|2d|schematics?|firmware|source\s+code)\b",
         re.I),
@@ -368,8 +373,12 @@ def detect_topics(text: str) -> dict[str, list[str]]:
             note(topic, m.group(0))
     for m in MONEY_RE.finditer(text or ""):
         note("price", m.group(0))
-    for m in QTY_RE.finditer(text or ""):
-        note("quantity", m.group(0))
+    # A number of pieces is a quantity *decision* only when it is asked about or tied to buying. Status updates
+    # ("10 pcs shipped by DHL", "the 5 pcs sample") are not (real-thread replay).
+    for sentence in _SENTENCE_RE.findall(text or ""):
+        if _QTY_CONTEXT_RE.search(sentence):
+            for m in QTY_RE.finditer(sentence):
+                note("quantity", m.group(0))
     for m in DATE_RE.finditer(text or ""):
         note("date", m.group(0))
     return found
@@ -461,7 +470,10 @@ def is_auto_reply(subject: str, headers: dict | None) -> bool:
 
 # ---------------------------------------------------------------- outbound
 _LINK_RE = re.compile(r"(?:https?://|www\.)\S+|\b[\w-]+\.(?:com|cn|net|org|io|ly|co|me|info|biz|example)/\S*", re.I)
-_ATTACH_CLAIM_RE = re.compile(r"\b(attached|attachments?|enclosed)\b", re.I)
+# "attached" as in a file, not "factory-attached cable" or "attached to the sensor" (real-thread replay);
+# "attached to this email" still counts.
+_ATTACH_CLAIM_RE = re.compile(
+    r"(?<!-)\battached\b(?!\s+to\s+(?!this\b|the\s+(?:e-?mail|message|mail)\b))|\battachments?\b|\benclosed\b", re.I)
 _COMMIT_VERB_RE = re.compile(
     r"\b(accept(?:s|ed|ing)?|agree(?:s|d|ing)?|approve(?:s|d)?|approving|confirm(?:s|ed|ing)?|commit(?:s|ted|ting)?|"
     r"place(?:s|d)?|issue(?:s|d)?|guarantee(?:s|d)?|promise(?:s|d)?|authori[sz]e(?:s|d)?|book(?:s|ed)?|"

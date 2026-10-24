@@ -25,6 +25,7 @@ import smtplib
 import ssl
 import time
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from typing import Callable
 
@@ -32,6 +33,7 @@ from .guardrails import domain_of, parse_address
 from .llm import ssl_context
 
 _MSGID_RE = re.compile(r"<[^<>\s]+>")
+NET_TIMEOUT = 30  # seconds per IMAP/SMTP network operation
 
 
 @dataclass
@@ -46,6 +48,7 @@ class MailboxConfig:
     extra_allow: list = field(default_factory=list)
     per_sender_daily_cap: int = 10
     global_daily_cap: int = 50
+    grace_hours: float = 2.0  # mail up to this long before the first connection is still handled
 
     @property
     def sending(self) -> bool:
@@ -74,6 +77,17 @@ class MailboxConfig:
 
 
 # ------------------------------------------------------------------ inbound
+def _internaldate(parts) -> datetime | None:
+    """Arrival time from a FETCH (INTERNALDATE) response, timezone-aware."""
+    for p in parts or []:
+        line = p[0] if isinstance(p, tuple) else p
+        if isinstance(line, bytes):
+            hit = imaplib.Internaldate2tuple(line)
+            if hit:
+                return datetime.fromtimestamp(time.mktime(hit), tz=timezone.utc)
+    return None
+
+
 def authentication(msg: email.message.Message, from_addr: str) -> dict:
     """DKIM/DMARC verdict from the topmost Authentication-Results header written by Gmail (mx.google.com).
 
@@ -182,30 +196,51 @@ def build_reply(cfg: MailboxConfig, *, to_addr: str, subject: str, body: str, or
 class GmailMailbox:
     def __init__(self, cfg: MailboxConfig, store, *, imap_factory=None, smtp_factory=None, log=print):
         self.cfg, self.store, self.log = cfg, store, log
-        self.imap_factory = imap_factory or (lambda host: imaplib.IMAP4_SSL(host, ssl_context=ssl_context()))
-        self.smtp_factory = smtp_factory or (lambda host: smtplib.SMTP_SSL(host, 465, context=ssl_context()))
+        # Timeouts matter: without one, a single stalled read froze the poller forever (seen in the first live test).
+        self.imap_factory = imap_factory or (lambda host: imaplib.IMAP4_SSL(host, ssl_context=ssl_context(),
+                                                                             timeout=NET_TIMEOUT))
+        self.smtp_factory = smtp_factory or (lambda host: smtplib.SMTP_SSL(host, 465, context=ssl_context(),
+                                                                           timeout=NET_TIMEOUT))
+
+    def cutoff(self) -> datetime:
+        """Only mail that arrived after the mailbox was first connected (minus a grace window) is handled.
+
+        A real inbox can hold thousands of old unread emails; answering those would be wrong (and slow), so they
+        are left untouched and unread. The first-connect time is saved in the mailbox's own database."""
+        saved = self.store.get_settings().get("mailbox_connected_at")
+        if not saved:
+            saved = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            self.store.set_settings({"mailbox_connected_at": saved})
+        return datetime.fromisoformat(saved) - timedelta(hours=self.cfg.grace_hours)
 
     def fetch_new(self) -> list[dict]:
-        """Unseen inbox messages as events. Each is marked \\Seen only after it is converted."""
+        """Unread inbox mail newer than the cutoff, as events. Each is marked \\Seen only after it is converted."""
         events: list[dict] = []
+        cutoff = self.cutoff()
         imap = self.imap_factory(self.cfg.imap_host)
         try:
             imap.login(self.cfg.address, self.cfg.app_password)
             imap.select("INBOX")
-            status, data = imap.search(None, "UNSEEN")
-            for num in (data[0].split() if status == "OK" and data and data[0] else []):
-                status, parts = imap.fetch(num, "(BODY.PEEK[])")
+            # SINCE is day-granular on the server; the exact cutoff is checked per message below.
+            since = (cutoff - timedelta(days=1)).strftime("%d-%b-%Y")
+            status, data = imap.uid("SEARCH", None, "UNSEEN", "SINCE", since)
+            for uid in (data[0].split() if status == "OK" and data and data[0] else []):
+                status, parts = imap.uid("FETCH", uid, "(INTERNALDATE)")
+                arrived = _internaldate(parts)
+                if status != "OK" or arrived is None or arrived < cutoff:
+                    continue  # older than the mailbox connection: leave it alone (stays unread)
+                status, parts = imap.uid("FETCH", uid, "(BODY.PEEK[])")
                 raw = next((p[1] for p in parts or [] if isinstance(p, tuple)), None)
                 if status != "OK" or not raw:
                     continue
                 event = to_event(raw, self.cfg.address, self.store.thread_for_message)
                 msg = event["message"]
                 if parse_address(msg["from"])[1] == self.cfg.address:
-                    imap.store(num, "+FLAGS", "\\Seen")  # our own mail (e.g. a copy): never answer ourselves
+                    imap.uid("STORE", uid, "+FLAGS", "\\Seen")  # our own mail (e.g. a copy): never answer ourselves
                     continue
                 self.store.remember_message(msg["message_id"], msg["thread_id"])
                 events.append(event)
-                imap.store(num, "+FLAGS", "\\Seen")
+                imap.uid("STORE", uid, "+FLAGS", "\\Seen")
         finally:
             try:
                 imap.logout()
@@ -259,7 +294,7 @@ class GmailMailbox:
 
 def check_login(cfg: MailboxConfig) -> None:
     """Fail fast with a readable message if the app password is wrong."""
-    imap = imaplib.IMAP4_SSL(cfg.imap_host, ssl_context=ssl_context())
+    imap = imaplib.IMAP4_SSL(cfg.imap_host, ssl_context=ssl_context(), timeout=NET_TIMEOUT)
     try:
         imap.login(cfg.address, cfg.app_password)
     except imaplib.IMAP4.error as exc:

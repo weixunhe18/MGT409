@@ -83,6 +83,20 @@ class TopicTests(unittest.TestCase):
         for eid in ("evt_sample_01", "evt_sample_02", "evt_sample_08"):
             self.assertEqual(g.hard_topics_in(EVENTS[eid]["text"]), [], eid)
 
+    def test_wiring_talk_is_not_payment(self):
+        for text in ("Which 2 wire pins connect to the sensor?", "Does this wire pin layout match?"):
+            self.assertNotIn("payment", g.detect_topics(text), text)
+        for text in ("Please wire transfer the deposit.", "We will wire the money today."):
+            self.assertIn("payment", g.detect_topics(text), text)
+
+    def test_status_quantities_are_not_quantity_decisions(self):
+        for text in ("For now 10 pcs sample's package have been shipped out by DHL.",
+                     "If all is ok, we will arrange to ship out the 5 pcs sample for you."):
+            self.assertNotIn("quantity", g.detect_topics(text), text)
+        for text in ("Can you order 5000 pcs?", "MOQ is 3000 pcs.", "Please confirm 20k pcs by Friday.",
+                     "200 pcs unit price 8$"):
+            self.assertIn("quantity", g.detect_topics(text), text)
+
     def test_identity_questions_are_detected(self):
         for text in ("Are you a real person?", "Am I talking to a bot?", "Is this an AI?", "r u human?"):
             self.assertIn("identity", g.detect_topics(text), text)
@@ -137,6 +151,12 @@ class OutboundTests(unittest.TestCase):
         r = self.failed(self.check("Please see the attached drawing at https://files.example/tb1.step"))
         self.assertIn("no_attachments", r)
         self.assertIn("no_links_or_addresses", r)
+
+    def test_attached_as_in_assembly_is_not_a_file(self):
+        for body in ("The cable must be factory-attached to the sensor.", "The lens is attached to the housing."):
+            self.assertNotIn("no_attachments", self.failed(self.check(body)), body)
+        for body in ("The drawing is attached to this email.", "Please see attached.", "Report enclosed."):
+            self.assertIn("no_attachments", self.failed(self.check(body)), body)
 
     def test_blocks_wrong_recipient(self):
         r = self.check("Thanks.", to=["docs@bluepeak-archive.example"])

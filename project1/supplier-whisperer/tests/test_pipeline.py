@@ -124,6 +124,17 @@ class PipelineTests(unittest.TestCase):
             for forbidden in ("4.20", "3.85", "20k", "Nov 15", "deposit"):
                 self.assertNotIn(forbidden, run["draft"]["body"])
 
+    def test_no_holding_reply_when_the_supplier_asked_nothing(self):
+        pipeline, store = make()
+        event = copy.deepcopy(ROUTINE)
+        event["message"]["message_id"] = "<status@hongyuan-mold.example>"
+        event["message"]["text"] = "Hi Wei,\n\nThe new quotation for 5000 pcs is in the system.\n\nKevin"
+        run = pipeline.process(event)
+        self.assertEqual(run["outcome"], "ESCALATED")  # Wei still has to see a quotation
+        self.assertFalse(run.get("sent"))
+        self.assertIn("No question was asked", run["headline"])
+        self.assertEqual(store.list_outbox(), [])
+
     def test_threats_cost_zero_model_calls(self):
         pipeline, _ = make()
         runs = run_all(pipeline)

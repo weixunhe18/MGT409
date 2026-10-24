@@ -405,10 +405,14 @@ class Pipeline:
         if triage["hard_topics"]:
             labels = ", ".join(TOPIC_LABELS[t] for t in triage["hard_topics"])
             # "Are you a bot?" never gets an automatic reply, not even a holding one: Wei answers that personally.
-            # At Medium and High the supplier gets a no-commitment holding reply so they know Wei is on it.
-            holding_ok = (autonomous and risk in ("medium", "high") and not soft
+            # At Medium and High the supplier gets a no-commitment holding reply so they know Wei is on it,
+            # but only if they asked or requested something: never in answer to a pure status update.
+            asked = triage.get("supplier_asked", True)
+            holding_ok = (autonomous and risk in ("medium", "high") and not soft and asked
                           and "identity" not in triage["hard_topics"])
-            note = "Holding reply sent (no commitments)." if holding_ok else "Holding reply drafted for your approval."
+            note = ("Holding reply sent (no commitments)." if holding_ok else
+                    "Holding reply drafted for your approval." if asked else
+                    "No question was asked, so no holding reply was sent; a draft is ready if you want one.")
             return done("ESCALATED", f"{labels[0].upper() + labels[1:]}: needs your decision. {note}",
                         ["commitment"] + list(triage["hard_topics"]), send=holding_ok, status="warn")
         if soft:

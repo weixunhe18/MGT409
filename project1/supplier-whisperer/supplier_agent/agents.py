@@ -156,6 +156,9 @@ def merge_deterministic(triage: dict, email: dict) -> dict:
     triage["topic_evidence"] = {t: email_topics.get(t, []) for t in triage["hard_topics"]}
     triage["engineering_change"] = bool(any(q["engineering_change"] for q in triage["questions"])
                                         or "engineering_change" in email_topics)
+    # Did the supplier actually ask or request something? Kept separately because a hard topic forces
+    # reply_needed below, and a holding reply to a pure status update is just noise (real-thread replay).
+    triage["supplier_asked"] = bool(triage["questions"]) and bool(triage.get("reply_needed", True))
     if triage["hard_topics"]:
         triage["reply_needed"] = True
     return triage

@@ -8,7 +8,7 @@
 | 2 | Move off the employer OneDrive | Done | Repo lives in personal `MGT409` |
 | 3 | Live test with the course key | Works | 9/9 live outcomes, about $0.004 per 9-email night |
 | 4 | AI disclosure | Done (D3) | |
-| 5 | Real-user evidence | Real Alibaba supplier threads coming next | Will be **anonymized** before committing (the repo is public) → `data/real_anonymized/` |
+| 5 | Real-user evidence | Real Alibaba supplier thread received (supplier 01, 166 messages) | It was employer work, so it stays **local only**: anonymized into git-ignored `data/raw_private/`, never committed. Usable for private evaluation and aggregate numbers in the report |
 | 6 | Baseline numbers | Later | Open |
 | 7 | GitHub | `weixunhe18/MGT409` (public), folder `project1/supplier-whisperer` | Done |
 | 8 | Hosting | Local for now | |

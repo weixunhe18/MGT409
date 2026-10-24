@@ -117,7 +117,10 @@ class App:
         def loop() -> None:
             while True:
                 try:
-                    for event in mailbox.fetch_new():
+                    events = mailbox.fetch_new()
+                    if events:
+                        self.log(f"Gmail: {len(events)} new message(s)")
+                    for event in events:
                         msg = event["message"]
                         auth = "DKIM/DMARC pass" if msg["auth"]["verified"] else "DKIM/DMARC FAILED"
                         self.log(f"Gmail: new mail from {msg['from']} ({auth})")

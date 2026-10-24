@@ -29,11 +29,12 @@ from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from typing import Callable
 
-from .guardrails import domain_of, parse_address
+from .guardrails import domain_of, parse_address, strip_quoted
 from .llm import ssl_context
 
 _MSGID_RE = re.compile(r"<[^<>\s]+>")
 NET_TIMEOUT = 30  # seconds per IMAP/SMTP network operation
+SENT_FOLDER = '"[Gmail]/Sent Mail"'  # Gmail's name in an English-language account
 
 
 @dataclass
@@ -241,12 +242,51 @@ class GmailMailbox:
                 self.store.remember_message(msg["message_id"], msg["thread_id"])
                 events.append(event)
                 imap.uid("STORE", uid, "+FLAGS", "\\Seen")
+            self._load_sent_history(imap, events)
         finally:
             try:
                 imap.logout()
             except Exception:  # noqa: BLE001
                 pass
         return events
+
+    def _load_sent_history(self, imap, events: list[dict]) -> None:
+        """The usual workflow: Wei emails a supplier first, the agent handles the replies. Gmail keeps Wei's
+        email in Sent Mail, not the inbox, so fetch the ones a reply refers to and add them to thread memory."""
+        wanted: dict[str, str] = {}
+        for event in events:
+            msg = event["message"]
+            refs = _MSGID_RE.findall(str((msg.get("headers") or {}).get("References") or ""))
+            for mid in refs + ([msg["in_reply_to"]] if msg.get("in_reply_to") else []):
+                if not self.store.thread_for_message(mid):
+                    wanted[mid] = msg["thread_id"]
+        if not wanted:
+            return
+        status, _ = imap.select(SENT_FOLDER, readonly=True)  # read-only: never touches flags
+        if status != "OK":
+            self.log(f"Gmail: could not open {SENT_FOLDER}; thread memory lacks Wei's own emails")
+            return
+        for mid, thread in wanted.items():
+            status, data = imap.uid("SEARCH", None, "HEADER", "Message-ID", mid)
+            uids = data[0].split() if status == "OK" and data and data[0] else []
+            if not uids:
+                continue
+            status, parts = imap.uid("FETCH", uids[0], "(BODY.PEEK[])")
+            raw = next((p[1] for p in parts or [] if isinstance(p, tuple)), None)
+            if status != "OK" or not raw:
+                continue
+            sent = email.message_from_bytes(raw, policy=email.policy.default)
+            if parse_address(str(sent.get("From") or ""))[1] != self.cfg.address:
+                continue
+            text, _, _ = _body_parts(sent)
+            try:
+                when = email.utils.parsedate_to_datetime(str(sent.get("Date"))).astimezone()
+                sent_at = when.replace(tzinfo=None).isoformat(timespec="seconds")
+            except (TypeError, ValueError):
+                sent_at = time.strftime("%Y-%m-%dT%H:%M:%S")
+            if self.store.add_history(thread, str(sent.get("To") or ""), str(sent.get("Subject") or ""),
+                                      strip_quoted(text) or "(no text)", sent_at, mid):
+                self.log(f"Gmail: added Wei's sent email '{sent.get('Subject')}' to thread memory")
 
     def deliver_pending(self) -> list[dict]:
         """Send outbox replies for Gmail threads (agent auto-sends and Wei's approvals), within the caps."""

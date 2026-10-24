@@ -179,7 +179,11 @@ class PipelineTests(unittest.TestCase):
         pipeline, _ = make()
         run = run_all(pipeline)["evt_sample_08"]
         memory = next(s for s in run["trace"] if s["key"] == "memory")
-        self.assertIn("Loaded 1", memory["detail"])  # email 1 (its reply waits for approval, so nothing sent yet)
+        # Wei's opening email + Kevin's email 1 (its reply waits for approval, so nothing sent yet)
+        self.assertIn("Loaded 2", memory["detail"])
+        history = pipeline.store.thread_history(run["email"]["thread_id"])
+        self.assertTrue(history[0]["from"].startswith("Wei"))
+        self.assertNotIn("wei", [o["sent_by"] for o in pipeline.store.list_outbox()])  # not shown as "sent"
 
     def test_loop_guard_stops_endless_auto_replies(self):
         pipeline, _ = make()

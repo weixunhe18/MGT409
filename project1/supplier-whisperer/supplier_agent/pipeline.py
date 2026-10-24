@@ -138,7 +138,13 @@ class Pipeline:
 
     # --------------------------------------------------------------- process
     def process(self, event: dict, *, signature_note: str = "signature verified") -> dict:
-        return self.process_email(normalize_event(event), signature_note=signature_note)
+        email = normalize_event(event)
+        # Demo threads start the way real ones do: with Wei's own email to the supplier (thread memory only).
+        for prior in event.get("_prior_outbound") or []:
+            self.store.add_history(email["thread_id"], email["from_addr"], str(prior.get("subject", "")),
+                                   str(prior.get("text", "")), str(prior.get("sent_at", "")),
+                                   str(prior.get("message_id", "")))
+        return self.process_email(email, signature_note=signature_note)
 
     def process_email(self, email: dict, *, signature_note: str = "signature verified", run_id: int | None = None,
                       override_injection: bool = False) -> dict:

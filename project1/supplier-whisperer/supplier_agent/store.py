@@ -170,7 +170,8 @@ class Store:
         # Replies a send cap stopped never reached the sender, so they are not part of the conversation.
         for r in self._query("SELECT * FROM outbox WHERE thread_id = ? AND (delivery IS NULL OR delivery "
                              "NOT LIKE 'capped%')", (thread_id,)):
-            items.append({"direction": "outbound", "at": r["sent_at"], "from": f"us ({r['sent_by']})",
+            who = "Wei (his own email)" if r["sent_by"] == "wei" else f"us ({r['sent_by']})"
+            items.append({"direction": "outbound", "at": r["sent_at"], "from": who,
                           "subject": r["subject"], "body": (r["body"] or "")[:800]})
         items.sort(key=lambda x: x["at"] or "")
         return items[-limit:]
@@ -183,7 +184,9 @@ class Store:
         )
 
     def list_outbox(self, limit: int = 100) -> list[dict]:
-        return [dict(r) for r in self._query("SELECT * FROM outbox ORDER BY id DESC LIMIT ?", (limit,))]
+        # Wei's own emails (history only) are not replies the agent or an approval sent.
+        return [dict(r) for r in self._query("SELECT * FROM outbox WHERE delivery IS NOT 'external' "
+                                             "ORDER BY id DESC LIMIT ?", (limit,))]
 
     def agent_replies_in_thread(self, thread_id: str, hours: int = 24) -> int:
         since = (datetime.now() - timedelta(hours=hours)).isoformat(timespec="seconds")
@@ -234,6 +237,18 @@ class Store:
     # ------------------------------------------------------- real mailbox
     def remember_message(self, message_id: str, thread_id: str) -> None:
         self._write("INSERT OR IGNORE INTO mail_ids (message_id, thread_id) VALUES (?, ?)", (message_id, thread_id))
+
+    def add_history(self, thread_id: str, to_addr: str, subject: str, body: str, sent_at: str,
+                    message_id: str = "") -> bool:
+        """Record an email Wei sent himself (e.g. the opening RFQ) as thread history. Never delivered by us.
+        Returns False if this message was already recorded."""
+        if message_id and self.thread_for_message(message_id):
+            return False
+        self._write("INSERT INTO outbox (run_id, thread_id, to_addr, subject, body, sent_by, sent_at, delivery) "
+                    "VALUES (0, ?, ?, ?, ?, 'wei', ?, 'external')", (thread_id, to_addr, subject, body, sent_at))
+        if message_id:
+            self.remember_message(message_id, thread_id)
+        return True
 
     def thread_for_message(self, message_id: str) -> str | None:
         rows = self._query("SELECT thread_id FROM mail_ids WHERE message_id = ?", (message_id,))

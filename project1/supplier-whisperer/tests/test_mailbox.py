@@ -43,8 +43,15 @@ class FakeIMAP:
 
     def __init__(self, messages):
         self.messages, self.arrived, self.seen = {}, {}, set()
+        self.sent: dict[bytes, bytes] = {}  # "[Gmail]/Sent Mail"
+        self.box = "INBOX"
         for m in messages:
             self.add(m)
+
+    def add_sent(self, raw):
+        uid = str(len(self.sent) + 101).encode()
+        self.sent[uid] = raw
+        return uid
 
     def add(self, raw, arrived=None):
         uid = str(len(self.messages) + 1).encode()
@@ -55,12 +62,19 @@ class FakeIMAP:
     def login(self, user, password):
         return "OK", [b""]
 
-    def select(self, box):
+    def select(self, box, readonly=False):
+        self.box = box
         return "OK", [b""]
 
     def uid(self, command, *args):
+        if command == "SEARCH" and "HEADER" in args:
+            wanted = args[-1]
+            hits = [u for u, raw in self.sent.items() if message_from_bytes(raw)["Message-ID"] == wanted]
+            return "OK", [b" ".join(hits)]
         if command == "SEARCH":
             return "OK", [b" ".join(u for u in self.messages if u not in self.seen)]
+        if command == "FETCH" and "Sent" in self.box:
+            return "OK", [(b"1 (UID " + args[0] + b" BODY[] {n}", self.sent[args[0]]), b")"]
         if command == "FETCH":
             uid, what = args
             if "INTERNALDATE" in what:
@@ -188,6 +202,23 @@ class MailboxTests(unittest.TestCase):
         self.assertEqual(pipeline.process(copy.deepcopy(ROUTINE))["outcome"], "AUTO_SENT")
         self.assertEqual(box.deliver_pending(), [])
         self.assertEqual(smtp.sent, [])
+
+    def test_weis_opening_email_from_sent_mail_becomes_thread_memory(self):
+        # The real workflow: Wei emails the supplier first; the agent handles the supplier's reply.
+        opening = raw_mail(sender=f"Wei He <{GMAIL}>", msgid="<rfq1@gmail.com>", auth=None,
+                           subject="TB-1 RFQ", body="Hi, please review the TB-1 tooling package and send questions.")
+        reply = raw_mail(msgid="<r1@mail.yale.edu>", in_reply_to="<rfq1@gmail.com>", references="<rfq1@gmail.com>",
+                         subject="Re: TB-1 RFQ", body="What is the maximum gate vestige?")
+        pipeline, store, box, imap, smtp = connect([reply], send_mode="on")
+        imap.add_sent(opening)
+        runs, _ = poll(pipeline, box)
+        memory = next(s for s in runs[0]["trace"] if s["key"] == "memory")
+        self.assertIn("Loaded 1", memory["detail"])
+        history = store.thread_history(runs[0]["email"]["thread_id"])
+        self.assertTrue(any("tooling package" in h["body"] and h["from"].startswith("Wei") for h in history))
+        self.assertEqual(len(smtp.sent), 1)  # only the agent's reply; Wei's own email is never re-sent
+        self.assertEqual([o["sent_by"] for o in store.list_outbox()], ["agent"])
+        self.assertNotIn(b"101", imap.seen)  # Sent Mail is opened read-only
 
     def test_old_unread_mail_is_left_alone(self):
         old = datetime.now(timezone.utc) - timedelta(days=30)

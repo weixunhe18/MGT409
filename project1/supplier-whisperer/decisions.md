@@ -133,7 +133,7 @@ LLM tokens.
 
 ---
 
-## D5. Every engineering-change proposal waits for Wei, even when the spec already settles it (decided Sat)
+## D5. Every engineering-change proposal waits for Wei, even when the spec already settles it (decided Sat; replaced by D8)
 
 - **What happened:** the first live run held emails 1 ("can we use P20 steel?") and 8 ("ultrasonic welding instead of
   adhesive?") for approval, while the demo script expected them to auto-send. The spec answers both, but each is a
@@ -173,3 +173,21 @@ LLM tokens.
   dashboard with `fly proxy 8000`. Steps: `docs/deploy_fly.md`.
 - **Trade-off:** no public link for graders (they use the mock inbox from a fresh clone, as before), and a second
   poller (laptop + Fly) would double-reply, so only one may run at a time.
+
+---
+
+## D8. Ask the supplier, don't just hold (decided Sat evening; replaces D5's "hold the reply")
+
+- **Why:** with D5, every proposed change, price question and open item sat in Wei's queue. On real supplier
+  threads that meant almost every message waited, so the tool wasn't saving a round trip.
+- **Now (Medium and High risk, at night):** the agent replies right away. It answers what the shareable spec covers,
+  says "Wei will review" for anything that is Wei's decision, and **asks the supplier the questions Wei needs
+  answered to decide**: the reason for a proposed change and its effect on cost, lead time, quality and reliability
+  (plus test data); a cost breakdown, price breaks, Incoterm and validity for prices; MOQ drivers; lead-time drivers;
+  which features a drawing request is about. Open items ("still open, Wei will follow up") also send at Medium.
+- **Unchanged:** the decision always stays with Wei (the outcome is still "needs your decision"); every reply passes
+  the same compliance checks (no prices, quantities, dates or commitment words); payment and "are you a bot?" get
+  no questions; any warning (injection suspicion, reviewer flag, unsupported numbers, low confidence, loop guard)
+  holds the reply; Low risk and business hours still hold everything.
+- **Trade-off:** the supplier sees "Wei will review" plus questions, which may read as interest in the proposal. The
+  wording never says it is acceptable, and the compliance reviewer checks for implied agreement.

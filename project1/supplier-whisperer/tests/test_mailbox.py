@@ -253,8 +253,11 @@ class ApproveByEmailTests(unittest.TestCase):
     def setup_pending(self, send_mode="on"):
         pipeline, store, box, imap, smtp = connect([raw_mail(body=CHANGE_QUESTION)], send_mode=send_mode,
                                                    owner_email=OWNER)
+        # At Medium a proposed change now gets an answer-and-ask reply (D8); Low keeps every reply for Wei.
+        store.set_settings({"risk_tolerance": "low"})
         runs, _ = poll(pipeline, box)
-        self.assertEqual(runs[0]["outcome"], "NEEDS_APPROVAL")
+        self.assertEqual(runs[0]["outcome"], "ESCALATED")  # a proposed change is Wei's decision
+        self.assertFalse(runs[0].get("sent"))  # and at Low the reply waits for him
         return pipeline, store, box, imap, smtp, runs[0]["id"]
 
     def apply_commands(self, pipeline, box):
@@ -327,6 +330,7 @@ class ApproveByEmailTests(unittest.TestCase):
     def test_off_when_personal_email_is_the_agent_itself(self):
         pipeline, store, box, imap, smtp = connect([raw_mail(body=CHANGE_QUESTION)], send_mode="on",
                                                    owner_email=GMAIL)
+        store.set_settings({"risk_tolerance": "low"})
         poll(pipeline, box)
         self.assertEqual(box.send_digests(), 0)
         self.assertEqual(smtp.sent, [])

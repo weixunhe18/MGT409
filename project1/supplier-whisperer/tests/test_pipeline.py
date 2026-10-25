@@ -78,7 +78,7 @@ class PipelineTests(unittest.TestCase):
             expected = event["_demo"]["expected"]
             self.assertEqual(runs[event["event_id"]]["outcome"], expected,
                              f"{event['event_id']}: {runs[event['event_id']].get('headline')}")
-        self.assertEqual(len(store.list_outbox()), 3)  # email 9 answered + holding replies to emails 3 and 6
+        self.assertEqual(len(store.list_outbox()), 6)  # 9 answered; 1, 2, 8 answer-and-ask; 3, 6 holding + questions
 
     def test_auto_sent_reply_is_locked_to_sender_and_compliant(self):
         pipeline, _ = make()
@@ -135,6 +135,21 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("No question was asked", run["headline"])
         self.assertEqual(store.list_outbox(), [])
 
+    def test_change_proposal_gets_answer_and_questions_but_decision_stays_with_wei(self):
+        pipeline, store = make()
+        run = run_all(pipeline)["evt_sample_01"]
+        self.assertEqual(run["outcome"], "ESCALATED")  # Wei still decides on the P20 proposal
+        self.assertTrue(run.get("sent"))
+        body = run["draft"]["body"]
+        self.assertIn("2.5 mm", body)  # spec answers still go out
+        self.assertIn("reason for this proposal", body)  # and the supplier is asked what Wei needs
+        for word in ("approved", "accepted", "agreed"):
+            self.assertNotIn(word, body.lower())
+
+    def test_low_risk_still_holds_change_proposals(self):
+        pipeline, store = make(risk_tolerance="low")
+        self.assertFalse(run_all(pipeline)["evt_sample_01"].get("sent"))
+
     def test_threats_cost_zero_model_calls(self):
         pipeline, _ = make()
         runs = run_all(pipeline)
@@ -179,8 +194,8 @@ class PipelineTests(unittest.TestCase):
         pipeline, _ = make()
         run = run_all(pipeline)["evt_sample_08"]
         memory = next(s for s in run["trace"] if s["key"] == "memory")
-        # Wei's opening email + Kevin's email 1 (its reply waits for approval, so nothing sent yet)
-        self.assertIn("Loaded 2", memory["detail"])
+        # Wei's opening email, Kevin's email 1, and the agent's answer-and-ask reply to it
+        self.assertIn("Loaded 3", memory["detail"])
         history = pipeline.store.thread_history(run["email"]["thread_id"])
         self.assertTrue(history[0]["from"].startswith("Wei"))
         self.assertNotIn("wei", [o["sent_by"] for o in pipeline.store.list_outbox()])  # not shown as "sent"
@@ -248,7 +263,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(store.list_outbox(), [])
 
     def test_double_approve_sends_once(self):
-        pipeline, store = make()
+        pipeline, store = make(risk_tolerance="low")
         run = run_all(pipeline)["evt_sample_02"]
         self.assertTrue(pipeline.approve(run["id"])["ok"])
         self.assertFalse(pipeline.approve(run["id"])["ok"])
@@ -258,11 +273,14 @@ class PipelineTests(unittest.TestCase):
         pipeline, store = make()
         runs = run_all(pipeline)
         self.assertFalse(pipeline.reprocess(runs["evt_sample_09"]["id"])["ok"])  # already auto-sent
+        self.assertFalse(pipeline.reprocess(runs["evt_sample_02"]["id"])["ok"])  # answer-and-ask reply was sent
         held = runs["evt_sample_05"]
         pipeline.update_sender_lists("david.li@quicktek-sourcing.example", "allow")
-        before = store.get_run(runs["evt_sample_02"]["id"])["cost_usd"]
-        self.assertTrue(pipeline.reprocess(runs["evt_sample_02"]["id"])["ok"])
-        self.assertGreater(store.get_run(runs["evt_sample_02"]["id"])["cost_usd"], before)
+        low, low_store = make(risk_tolerance="low")  # a draft that is still waiting can be re-run
+        waiting = run_all(low)["evt_sample_02"]
+        before = low_store.get_run(waiting["id"])["cost_usd"]
+        self.assertTrue(low.reprocess(waiting["id"])["ok"])
+        self.assertGreater(low_store.get_run(waiting["id"])["cost_usd"], before)
         self.assertTrue(pipeline.reprocess(held["id"])["ok"])
         self.assertNotEqual(store.get_run(held["id"])["outcome"], "HELD")
 

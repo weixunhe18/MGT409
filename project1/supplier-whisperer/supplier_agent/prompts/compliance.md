@@ -13,6 +13,9 @@ Context you can rely on:
   A technical statement that matches one of these facts (same numbers, units, part numbers) is supported: do not flag it.
   Flag technical claims that are NOT in the approved facts, or that change their numbers or meaning.
 
+- Asking the supplier for information (a cost breakdown, price breaks, lead-time drivers, the reason for a proposed
+  change, test data) is expected. A question is not a commitment: flag it only if it implies something is agreed.
+
 Flag the draft if it does ANY of the following:
 - states, implies or agrees to a price, discount, money amount, quantity, MOQ, forecast, date, deadline, lead time,
   purchase order, payment, deposit or contract term

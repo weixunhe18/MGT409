@@ -4,8 +4,8 @@
     "event_type": "message.received",
     "event_id": "evt_sample_01",
     "_demo": {
-      "label": "DFM questions (enclosure) + a tooling-steel proposal",
-      "expected": "NEEDS_APPROVAL"
+      "label": "DFM questions + a tooling-steel proposal: answered, asked for the reason and impact",
+      "expected": "ESCALATED"
     },
     "message": {
       "inbox_id": "wei@northfield-labs.example",
@@ -41,8 +41,8 @@
     "event_type": "message.received",
     "event_id": "evt_sample_02",
     "_demo": {
-      "label": "PCBA questions, one open item + part substitution",
-      "expected": "NEEDS_APPROVAL"
+      "label": "PCBA questions, one open item + part substitution: answered, asked for the reason and impact",
+      "expected": "ESCALATED"
     },
     "message": {
       "inbox_id": "wei@northfield-labs.example",
@@ -261,8 +261,8 @@
     "event_type": "message.received",
     "event_id": "evt_sample_08",
     "_demo": {
-      "label": "Follow-up in email 1's thread (persistent conversation) + a joining-process proposal",
-      "expected": "NEEDS_APPROVAL"
+      "label": "Follow-up in email 1's thread + a joining-process proposal: answered, asked for data",
+      "expected": "ESCALATED"
     },
     "message": {
       "inbox_id": "wei@northfield-labs.example",

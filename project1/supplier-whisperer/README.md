@@ -133,8 +133,8 @@ flowchart LR
 | | Low | Medium | High |
 |---|---|---|---|
 | Fully grounded technical answers at night | approve | **auto-send** | auto-send |
-| Replies with open items ("Wei will follow up") | approve | approve | auto-send |
-| Holding reply on price/qty/date/PO topics ("Wei will reply directly") | approve | **auto-send** (never commits) | auto-send (never commits) |
+| Replies with open items ("Wei will follow up") | approve | **auto-send** | auto-send |
+| Decisions for Wei (price, quantity, dates, POs, drawings, proposed changes): answer what the spec covers, say "Wei will review", and **ask the supplier for what Wei needs** (cost breakdown, lead-time drivers, reason and impact of a change, test data) | approve | **auto-send** (never commits) | auto-send (never commits) |
 | Price, quantity, dates, POs, drawings | **always escalated: hard rule** | same | same |
 | Injection, impersonation, unknown senders | **always blocked: hard rule** | same | same |
 

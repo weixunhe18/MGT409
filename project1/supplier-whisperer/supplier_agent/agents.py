@@ -239,6 +239,26 @@ def run_context(ctx: AgentContext, questions: list[dict]) -> tuple[dict, dict | 
 
 
 # ------------------------------------------------------------------ drafter
+# What Wei usually needs to know before he decides. The agent asks the supplier for it instead of only
+# saying "Wei will reply", so Wei's decision is better informed and nobody waits a round trip (D8).
+# Payment and identity get no questions: asking a supplier about bank details invites fraud.
+SUPPLIER_QUESTIONS = {
+    "engineering_change": "What is the reason for this proposal, and how would it affect cost, lead time, quality "
+                          "and reliability? Do you have test data or samples that show the result?",
+    "price": "Could you share a cost breakdown (part, tooling, packaging and freight), price breaks by quantity, "
+             "the Incoterm, and how long this price is valid?",
+    "quantity": "What minimum quantity applies, and what drives it (material lots, line setup or tooling)?",
+    "date": "What is the earliest date you can support, and what are the main drivers of the lead time?",
+    "po": "What information do you need from us for an order, and what are the next steps on your side?",
+    "drawing": "Which features or dimensions are unclear, and which process step do they affect?",
+}
+
+
+def supplier_questions(triage: dict, limit: int = 3) -> list[str]:
+    keys = (["engineering_change"] if triage.get("engineering_change") else []) + list(triage.get("hard_topics", []))
+    return [SUPPLIER_QUESTIONS[k] for k in keys if k in SUPPLIER_QUESTIONS][:limit]
+
+
 def build_plan(triage: dict, answers: dict) -> dict:
     answered, open_items, decisions = [], [], []
     for q in triage["questions"]:
@@ -249,7 +269,7 @@ def build_plan(triage: dict, answers: dict) -> dict:
         else:
             open_items.append(q)
     return {"answered": answered, "open": open_items, "decisions": decisions,
-            "decision_topics": triage.get("hard_topics", [])}
+            "decision_topics": triage.get("hard_topics", []), "ask": supplier_questions(triage)}
 
 
 def heuristic_draft(ctx: AgentContext, triage: dict, answers: dict) -> str:
@@ -287,6 +307,9 @@ def heuristic_draft(ctx: AgentContext, triage: dict, answers: dict) -> str:
         else:
             sentence = f"Your questions on {labels} need {first}'s decision"
         lines += ["", f"{sentence}, so I have flagged them and {first} will reply to you directly."]
+    if plan["ask"]:
+        lines += ["", f"To help {first} review this, could you please share:"]
+        lines += [f"- {q}" for q in plan["ask"]]
     lines += ["", "Best regards,", ctx.signature]
     return "\n".join(lines).strip()
 
@@ -323,6 +346,8 @@ def run_drafter(ctx: AgentContext, triage: dict, answers: dict) -> tuple[str, di
         + "\n\nNEEDS DECISION (engineer will reply directly; do not answer):\n"
         + json.dumps({"question_ids": [q["id"] for q in plan["decisions"]],
                       "topics": [TOPIC_LABELS[t] for t in plan["decision_topics"]]}, ensure_ascii=False)
+        + "\n\nQUESTIONS TO ASK THE SUPPLIER (so the engineer can decide; ask them, adapted to this email):\n"
+        + json.dumps(plan["ask"], ensure_ascii=False)
     )
     if ctx.llm.live:
         raw, call = ctx.llm.complete_json(agent="drafter", instructions=instructions, input_text=input_text,

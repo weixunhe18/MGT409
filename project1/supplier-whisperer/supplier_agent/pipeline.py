@@ -13,7 +13,8 @@ import traceback
 from datetime import datetime
 from datetime import time as dtime
 
-from .agents import AgentContext, run_compliance_review, run_context, run_drafter, run_manager
+from .agents import (AgentContext, run_compliance_review, run_context, run_drafter, run_manager,
+                     supplier_questions)
 from .config import AppConfig
 from .guardrails import (TOPIC_LABELS, check_outbound, check_sender, domain_of, is_auto_reply, scan_html,
                          scan_injection, strip_quoted)
@@ -381,8 +382,6 @@ class Pipeline:
         open_count = sum(1 for q in triage["questions"]
                          if not q["topics"] and not answers.get(q["id"], {}).get("answerable"))
         soft: list[str] = []
-        if triage.get("engineering_change"):
-            soft.append("supplier proposed a part, material or process change")
         if inj["verdict"] == "suspicious":
             soft.append(f"injection scan score {inj['score']} (suspicious)")
         if override_injection:
@@ -409,24 +408,27 @@ class Pipeline:
             why = "; ".join(f"{c['label']} ({c['detail']})" if c["detail"] else c["label"] for c in det["blocking"])
             return done("ESCALATED", f"Compliance blocked the draft: {why}. Nothing sent.",
                         ["compliance_block"], status="stop")
-        if triage["hard_topics"]:
-            labels = ", ".join(TOPIC_LABELS[t] for t in triage["hard_topics"])
-            # "Are you a bot?" never gets an automatic reply, not even a holding one: Wei answers that personally.
-            # At Medium and High the supplier gets a no-commitment holding reply so they know Wei is on it,
-            # but only if they asked or requested something: never in answer to a pure status update.
+        decision_keys = list(triage["hard_topics"]) + (["engineering_change"] if triage.get("engineering_change") else [])
+        if decision_keys:
+            labels = ", ".join(TOPIC_LABELS[t] for t in decision_keys)
+            # The decision always stays with Wei. At Medium and High the supplier still gets a reply right away:
+            # what the spec covers, "Wei will review", and the questions Wei needs answered to decide (D8).
+            # Never for "are you a bot?" (Wei answers that personally), never in answer to a pure status update.
             asked = triage.get("supplier_asked", True)
-            holding_ok = (autonomous and risk in ("medium", "high") and not soft and asked
-                          and "identity" not in triage["hard_topics"])
-            note = ("Holding reply sent (no commitments)." if holding_ok else
-                    "Holding reply drafted for your approval." if asked else
-                    "No question was asked, so no holding reply was sent; a draft is ready if you want one.")
+            reply_ok = (autonomous and risk in ("medium", "high") and not soft and asked
+                        and "identity" not in triage["hard_topics"])
+            asking = bool(supplier_questions(triage))
+            note = ("Reply sent: no commitments" + (", and it asked the supplier for the details you need." if asking
+                                                    else ".") if reply_ok else
+                    "Reply drafted for your approval" + (f" ({'; '.join(soft[:2])})." if soft else ".") if asked else
+                    "No question was asked, so no reply was sent; a draft is ready if you want one.")
             return done("ESCALATED", f"{labels[0].upper() + labels[1:]}: needs your decision. {note}",
-                        ["commitment"] + list(triage["hard_topics"]), send=holding_ok, status="warn")
+                        ["commitment"] + decision_keys, send=reply_ok, status="warn")
         if soft:
             return done("NEEDS_APPROVAL", "Draft ready for review: " + "; ".join(soft[:2]) +
                         (f"; {open_count} open item(s)" if open_count else "") + ".", ["review"], status="warn")
         if open_count:
-            if autonomous and risk == "high":
+            if autonomous and risk in ("medium", "high"):  # "still open, Wei will follow up" commits to nothing
                 return done("AUTO_SENT", f"Answered {len(answered)} question(s); {open_count} open item(s) flagged "
                                          f"for {first} in the reply.", ["auto"], send=True)
             return done("NEEDS_APPROVAL", f"Draft ready: answered {len(answered)}, {open_count} open item(s) need "

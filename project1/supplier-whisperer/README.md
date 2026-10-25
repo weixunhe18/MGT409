@@ -10,6 +10,8 @@ model reads them.
 
 ---
 
+**Demo video:** [`docs/demo_video.mp4`](docs/demo_video.mp4) (2.5 min, narrated, recorded from the real app with `scripts/record_demo.py`). **Report:** [`report.html`](report.html) · **Slides:** [`slides.html`](slides.html)
+
 ## Run it (one command)
 
 Requires **Python 3.10+**. Mock mode needs **nothing installed**: the app uses only the standard library. For live

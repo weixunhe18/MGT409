@@ -11,6 +11,7 @@ needs, catches statements that contradict the spec, and never commits to price, 
 | Report | [`project1/supplier-whisperer/report.html`](project1/supplier-whisperer/report.html) (download and double-click) |
 | Slides | [`project1/supplier-whisperer/slides.html`](project1/supplier-whisperer/slides.html) |
 | How to run | [`project1/supplier-whisperer/README.md`](project1/supplier-whisperer/README.md) |
+| Demo video | [`project1/supplier-whisperer/docs/demo_video.mp4`](project1/supplier-whisperer/docs/demo_video.mp4) (2.5 min, narrated) |
 
 ### Run it (about 2 minutes)
 

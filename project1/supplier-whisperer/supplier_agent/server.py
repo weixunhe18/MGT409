@@ -94,6 +94,11 @@ class App:
             event["seq"] = self.activity_seq
             self.activity.append(event)
 
+    def clear_activity(self) -> None:
+        with self._activity_lock:
+            self.activity.clear()
+            self.activity_seq = 0  # browsers see the counter go backwards and start over
+
     def activity_since(self, since: int) -> dict:
         with self._activity_lock:
             events = [e for e in self.activity if e["seq"] > since]
@@ -176,8 +181,7 @@ class App:
             return False  # never wipe a live mailbox's conversations with the demo inbox
         if reset:
             self.store.reset()
-            with self._activity_lock:  # a fresh demo starts with a clean "Agents at work" history
-                self.activity.clear()
+            self.clear_activity()  # a fresh demo starts with a clean "Agents at work" history
         events = load_sample_events(self.config.dataset_dir)
         self.replay_running = True
         mode = "live" if self.pipeline.settings()["llm_mode"] == "live" else "mock"
@@ -390,6 +394,7 @@ class Handler(BaseHTTPRequestHandler):
             if not app.idle:
                 return self._json({"ok": False, "message": "The agent is still working. Try again in a few seconds."})
             app.store.reset()
+            app.clear_activity()
             return self._json({"ok": True})
         if path == "/api/compose":
             return self._compose(data)

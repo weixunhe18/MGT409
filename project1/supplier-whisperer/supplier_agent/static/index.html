@@ -344,6 +344,13 @@ function renderBrief() {
     todo.style.display = '';
     todo.innerHTML = '<b>Your to-do (most important first)</b>' + pending.sort((a, b) => (a.outcome === 'ESCALATED' ? 0 : 1) - (b.outcome === 'ESCALATED' ? 0 : 1))
       .map(r => `<div onclick="openRun(${r.id})">${r.outcome === 'ESCALATED' ? '🔶' : '📝'} <b>${esc(r.from_name || r.from_addr)}</b>: ${esc(r.headline)}</div>`).join('');
+  } else if (!runs.length) {
+    // First visit: a 3-step guide so a first-time user knows where to start.
+    todo.style.display = '';
+    todo.innerHTML = '<b>New here? Three steps</b>' +
+      '<div style="cursor:default">1️⃣ Click <b>▶ Run demo inbox</b> (left): 13 realistic supplier emails arrive overnight.</div>' +
+      '<div style="cursor:default">2️⃣ Watch <b>🧠 Agents at work</b> (top): which agent is active, what it decides, who it hands off to.</div>' +
+      '<div style="cursor:default">3️⃣ Click any email below to see its reply and every step with tokens and cost. Decisions wait for you under <b>Needs you</b>.</div>';
   } else todo.style.display = 'none';
 }
 
@@ -523,6 +530,15 @@ const AG_NODES = [
 const AG_NODE_OF = {webhook: 'inbox', start: 'inbox', kill_switch: 'guard', loop_guard: 'guard', sender: 'guard',
   injection: 'guard', memory: 'guard', budget: 'guard', manager: 'manager', spec_check: 'spec', context: 'context',
   drafter: 'drafter', compliance: 'compliance', decision: 'decision', last_check: 'decision', error: 'decision', end: 'decision'};
+const AG_HELP = {
+  inbox: 'Signed webhook (or Gmail): the email arrives and is checked for tampering and duplicates.',
+  guard: 'Code, no AI: allowlist, lookalike-domain fraud, prompt-injection scan, budget. Threats stop here at $0.',
+  manager: 'AI agent: reads the email, lists the questions, flags anything that needs Wei (price, dates, orders, changes).',
+  spec: 'Code, no AI: does the supplier state something that contradicts the spec (material, number)?',
+  context: 'AI agent: answers each question only from the shareable part of the spec.',
+  drafter: 'AI agent: writes the reply as John, in Wei\'s style, and asks the supplier for what Wei needs.',
+  compliance: 'Code + AI: 11 hard checks (no prices, dates, commitments, links, files, secrets) plus a second-opinion reviewer.',
+  decision: 'Code: send, draft for approval, or escalate, based on the risk setting and every check above.'};
 const AG_NEXT = {inbox: 'Guardrails', guard: 'Manager', manager: 'Context', spec: 'Context', context: 'Email agent',
   drafter: 'Compliance', compliance: 'Decision'};
 const AG = {seq: 0, live: false, wasLive: false, open: false, userToggled: false, email: null, nodes: {}, log: [], done: [], think: null, collapseTimer: null};
@@ -572,7 +588,7 @@ function renderAgents() {
   document.getElementById('ag-flow').innerHTML = AG_NODES.map(([k, i, n], idx) => {
     const st = AG.nodes[k]; const cls = !st ? 'skip' : st;
     const sub = st === 'active' ? 'thinking' : st === 'ok' ? 'done' : st === 'warn' ? 'flagged' : st === 'stop' ? 'stopped' : '';
-    return (idx ? '<span class="ag-arrow">→</span>' : '') + `<div class="ag-node ${cls}"><div class="i">${i}</div><div class="n">${n}</div><div class="s">${sub}</div></div>`;
+    return (idx ? '<span class="ag-arrow">→</span>' : '') + `<div class="ag-node ${cls}" title="${esc(AG_HELP[k])}"><div class="i">${i}</div><div class="n">${n}</div><div class="s">${sub}</div></div>`;
   }).join('');
   const th = AG.think;
   document.getElementById('ag-think').innerHTML = th ? `<span class="who">${esc(th.who)}</span> ${th.working ? '<span class="dots">is working</span>' : ''}<div>${esc(th.text)}</div>` : '';
@@ -584,6 +600,10 @@ function renderAgents() {
 async function pollActivity() {
   try {
     const a = await (await fetch('/api/activity?since=' + AG.seq)).json();
+    if ((a.seq || 0) < AG.seq) {  // the history was reset (Reset button or a new demo): start over
+      Object.assign(AG, {seq: 0, done: [], log: [], email: null, nodes: {}, think: null});
+      renderAgents(); return;
+    }
     (a.events || []).forEach(agHandle);
     AG.seq = a.seq || AG.seq; AG.live = !!a.live;
     // A demo starting while we watch resets the tally; a page opened mid-run keeps what already finished.

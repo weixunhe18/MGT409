@@ -14,19 +14,19 @@ its points. Fill in what's true; leave blanks rather than guessing.
 | Hours/week of supplier communication outside 9–5 | 6-10 |
 | Share of supplier emails that are pure technical clarification (no price/qty/date/PO) | 40% |
 | Typical delay caused by one missed reply cycle | hours |
-| A real example where a 24 h delay cost something (schedule slip, tooling rework, air freight…) | |
+| A real example where a 24 h delay cost something (schedule slip, tooling rework, air freight…) | After a product was qualified technically, Wei looped in accounting to pay the invoice. Getting the payment across took **3 weeks**: miscommunication about the payment info, bank info and supplier address. It should have been one complete email exchange; instead one email a day created confusion and killed the project's momentum. |
 
 ## B. Real-user session (10–15 min, someone who works with suppliers)
 
 | Field | |
 |---|---|
-| Tester role (name only with permission) | |
+| Tester role (name only with permission) | Works with suppliers (name withheld) |
 | Date / format (in person, Zoom) | |
 | Task given | "Run the demo inbox, then tell me which emails you'd trust it with." |
 | Time to understand the morning brief (stopwatch) | |
 | Did they agree with each of the 8 outcomes? Which not? | |
 | Would they use it? For which suppliers? | |
-| **Quote (verbatim, with permission)** | |
+| **Quote (verbatim, with permission)** | "my hours are usually controlled by my suppliers. now i might actually get some sleep!" |
 | Bugs / confusion observed | |
 
 ## C. Before/after measurement (the cleanest Impact number)

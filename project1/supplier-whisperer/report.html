@@ -120,8 +120,14 @@ after Nov 1</b> (China is UTC+8 with no daylight saving), so the supplier's work
   <tr><td>Frustration</td><td>Chronic 7 am / 9 pm calls during build phases. This is the personal reason the project exists.</td></tr>
 </table>
 
-<div class="todo">One real example where a 24 h delay cost something (schedule slip, tooling rework, air freight),
-from <code>docs/user_evidence.md</code> §A.</div>
+<div class="box"><b>A real example: one email a day for three weeks.</b> At my previous job we had qualified a product
+technically, and I looped in accounting to pay the supplier's invoice. Getting the payment across took <b>3 weeks</b>:
+the payment details, the bank information and the supplier's address each needed clarifying, one email per day,
+and every round trip lost another day across the 12-hour gap. It should have been one complete exchange; instead the
+confusion killed the project's momentum (Wei's experience). Supplier Whisperer deliberately does <i>not</i> exchange
+bank details, because that is exactly where supplier fraud happens (email 7), so a payment thread still goes to a
+human. What it removes is the pattern: clarifications that cost a day each now get a same-night reply that asks for
+everything missing at once, and anything that needs a human is on Wei's screen first thing with the evidence.</div>
 
 <p><b>What the agent does about it.</b></p>
 <table>
@@ -545,11 +551,15 @@ never sent if any warning fired. Cost: a supplier may read a quick holding reply
   <tr><td>Model cost per supplier email</td><td>n/a</td><td>$0.00044</td><td>Measured (§5)</td></tr>
   <tr><td>Attacks stopped in the demo</td><td>n/a</td><td>3 of 3 (injection, lookalike fraud, unknown sender), $0 each</td><td>Fig. 6, 8; tests</td></tr>
   <tr><td>Commitments sent, real-thread replay</td><td>n/a</td><td><b>0</b> of 8 replies that would have gone out</td><td>Aggregate replay (below)</td></tr>
-  <tr><td>Engineer time outside 9–5</td><td>6–10 h/week at peak, 3–5 early/late calls a week (Wei's baseline)</td><td>~2.4–4 h/week back if the 40% of pure technical emails are answered overnight: <b>$6.2k–10.4k per engineer per year</b> at $50/h</td><td>Derived from Wei's baseline; not yet timed with a real user</td></tr>
+  <tr><td>Engineer time outside 9–5</td><td>6–10 h/week at peak, 3–5 early/late calls a week (Wei's baseline)</td><td>~2.4–4 h/week back if the 40% of pure technical emails are answered overnight: <b>$6.2k–10.4k per engineer per year</b> at $50/h</td><td>Derived from Wei's baseline; a tester confirmed the pain ("my hours are usually controlled by my suppliers")</td></tr>
 </table>
 
-<div class="todo">Real-user session (§B): tester role, whether they agreed with each outcome, and one verbatim quote
-<b>with permission</b>. This is the strongest Impact evidence the rubric asks for.</div>
+<div class="box"><b>A real user tried it.</b> A tester who works with suppliers tried the app. Their reaction,
+quoted with permission:
+<p style="font-size:1.15em; margin:8px 0 4px"><i>"My hours are usually controlled by my suppliers. Now I might actually get
+some sleep!"</i></p>
+That is the problem in one line: today the supplier's clock sets the engineer's hours. The before/after for a
+technical question is measured above (hours, or a lost day, vs. 13 s at night).</div>
 
 <h3>Two real supplier threads, replayed (aggregate numbers only)</h3>
 <p>To test the idea on real data, I replayed two real sourcing conversations for the same part from my previous job:

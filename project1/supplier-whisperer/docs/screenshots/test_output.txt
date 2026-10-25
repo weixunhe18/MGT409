@@ -1,3 +1,9 @@
+test_conflict_gets_a_reconcile_question_even_without_a_question (tests.test_conflicts.ConflictTests.test_conflict_gets_a_reconcile_question_even_without_a_question) ... ok
+test_matches_the_part_the_sentence_is_about (tests.test_conflicts.ConflictTests.test_matches_the_part_the_sentence_is_about) ... ok
+test_matching_statements_and_proposals_are_not_conflicts (tests.test_conflicts.ConflictTests.test_matching_statements_and_proposals_are_not_conflicts) ... ok
+test_number_outside_the_spec (tests.test_conflicts.ConflictTests.test_number_outside_the_spec) ... ok
+test_scorecard_counts_conflicts_against_knowledge (tests.test_conflicts.ConflictTests.test_scorecard_counts_conflicts_against_knowledge) ... ok
+test_wrong_material_for_a_part (tests.test_conflicts.ConflictTests.test_wrong_material_for_a_part) ... ok
 test_hidden_html_injection_is_caught (tests.test_guardrails.InjectionTests.test_hidden_html_injection_is_caught) ... ok
 test_hidden_text_is_separated_from_visible_text (tests.test_guardrails.InjectionTests.test_hidden_text_is_separated_from_visible_text) ... ok
 test_invisible_unicode_is_suspicious (tests.test_guardrails.InjectionTests.test_invisible_unicode_is_suspicious) ... ok
@@ -46,6 +52,7 @@ test_non_json_output_fails_closed (tests.test_llm_config.ResponsesApiTests.test_
 test_parses_text_and_usage (tests.test_llm_config.ResponsesApiTests.test_parses_text_and_usage) ... ok
 test_portkey_cache_refresh_option_sets_the_force_refresh_header (tests.test_llm_config.ResponsesApiTests.test_portkey_cache_refresh_option_sets_the_force_refresh_header) ... ok
 test_reasoning_and_cache_write_tokens_are_recorded_and_billed (tests.test_llm_config.ResponsesApiTests.test_reasoning_and_cache_write_tokens_are_recorded_and_billed) ... ok
+test_env_one_level_above_the_cloned_course_repo_is_found (tests.test_llm_config.StaffLayoutTests.test_env_one_level_above_the_cloned_course_repo_is_found) ... ok
 test_approve_from_wei_sends_the_draft_to_the_supplier (tests.test_mailbox.ApproveByEmailTests.test_approve_from_wei_sends_the_draft_to_the_supplier) ... ok
 test_command_must_be_on_the_first_line (tests.test_mailbox.ApproveByEmailTests.test_command_must_be_on_the_first_line) ... ok
 test_digest_goes_to_wei_once_with_the_draft_and_run_id (tests.test_mailbox.ApproveByEmailTests.test_digest_goes_to_wei_once_with_the_draft_and_run_id) ... ok
@@ -70,6 +77,7 @@ test_weis_opening_email_from_sent_mail_becomes_thread_memory (tests.test_mailbox
 test_are_you_a_bot_always_goes_to_wei (tests.test_pipeline.PipelineTests.test_are_you_a_bot_always_goes_to_wei) ... ok
 test_auto_sent_reply_is_locked_to_sender_and_compliant (tests.test_pipeline.PipelineTests.test_auto_sent_reply_is_locked_to_sender_and_compliant) ... ok
 test_business_hours_never_auto_send (tests.test_pipeline.PipelineTests.test_business_hours_never_auto_send) ... ok
+test_change_proposal_gets_answer_and_questions_but_decision_stays_with_wei (tests.test_pipeline.PipelineTests.test_change_proposal_gets_answer_and_questions_but_decision_stays_with_wei) ... ok
 test_confidential_spec_never_reaches_a_model (tests.test_pipeline.PipelineTests.test_confidential_spec_never_reaches_a_model) ... ok
 test_demo_inbox_matches_the_script (tests.test_pipeline.PipelineTests.test_demo_inbox_matches_the_script) ... ok
 test_double_approve_sends_once (tests.test_pipeline.PipelineTests.test_double_approve_sends_once) ... ok
@@ -81,6 +89,7 @@ test_kill_switch_pressed_mid_run_stops_the_send (tests.test_pipeline.PipelineTes
 test_live_happy_path_auto_sends_and_counts_cached_tokens (tests.test_pipeline.PipelineTests.test_live_happy_path_auto_sends_and_counts_cached_tokens) ... ok
 test_loop_guard_stops_endless_auto_replies (tests.test_pipeline.PipelineTests.test_loop_guard_stops_endless_auto_replies) ... ok
 test_low_risk_never_auto_sends (tests.test_pipeline.PipelineTests.test_low_risk_never_auto_sends) ... ok
+test_low_risk_still_holds_change_proposals (tests.test_pipeline.PipelineTests.test_low_risk_still_holds_change_proposals) ... ok
 test_medium_and_high_risk_send_holding_reply_without_commitments (tests.test_pipeline.PipelineTests.test_medium_and_high_risk_send_holding_reply_without_commitments) ... ok
 test_model_outage_fails_closed (tests.test_pipeline.PipelineTests.test_model_outage_fails_closed) ... ok
 test_no_holding_reply_when_the_supplier_asked_nothing (tests.test_pipeline.PipelineTests.test_no_holding_reply_when_the_supplier_asked_nothing) ... ok
@@ -89,9 +98,15 @@ test_reset_clears_everything_and_restarts_ids (tests.test_pipeline.PipelineTests
 test_reviewer_flag_downgrades_to_approval (tests.test_pipeline.PipelineTests.test_reviewer_flag_downgrades_to_approval) ... ok
 test_reviewer_gets_the_spec_line_behind_short_answers (tests.test_pipeline.PipelineTests.test_reviewer_gets_the_spec_line_behind_short_answers) ... ok
 test_rogue_model_commitment_is_blocked_by_code (tests.test_pipeline.PipelineTests.test_rogue_model_commitment_is_blocked_by_code) ... ok
+test_silent_supplier_is_asked_again_for_what_wei_requested (tests.test_pipeline.PipelineTests.test_silent_supplier_is_asked_again_for_what_wei_requested) ... ok
 test_thread_memory_loads_earlier_messages (tests.test_pipeline.PipelineTests.test_thread_memory_loads_earlier_messages) ... ok
 test_threats_cost_zero_model_calls (tests.test_pipeline.PipelineTests.test_threats_cost_zero_model_calls) ... ok
 test_zero_budget_stops_before_any_model_call (tests.test_pipeline.PipelineTests.test_zero_budget_stops_before_any_model_call) ... ok
+test_a_question_we_just_sent_is_not_ghosting (tests.test_scorecard.ScorecardTests.test_a_question_we_just_sent_is_not_ghosting) ... ok
+test_counts_gaps_nudges_and_answers (tests.test_scorecard.ScorecardTests.test_counts_gaps_nudges_and_answers) ... ok
+test_empty_conversation_is_neutral (tests.test_scorecard.ScorecardTests.test_empty_conversation_is_neutral) ... ok
+test_substance_beats_speed (tests.test_scorecard.ScorecardTests.test_substance_beats_speed) ... ok
+test_unanswered_question_counts_as_ghosted (tests.test_scorecard.ScorecardTests.test_unanswered_question_counts_as_ghosted) ... ok
 test_private_6pn_address_is_used (tests.test_server.FlyPrivateBindTests.test_private_6pn_address_is_used) ... ok
 test_private_mode_only_accepts_localhost_host_header (tests.test_server.FlyPrivateBindTests.test_private_mode_only_accepts_localhost_host_header)
 `fly proxy 8000` makes the browser send Host: localhost:8000; anything else is DNS rebinding. ... ok
@@ -100,6 +115,6 @@ test_public_or_missing_address_is_refused (tests.test_server.FlyPrivateBindTests
 test_run_server_refuses_a_public_address_even_in_private_mode (tests.test_server.FlyPrivateBindTests.test_run_server_refuses_a_public_address_even_in_private_mode) ... ok
 
 ----------------------------------------------------------------------
-Ran 99 tests in 0.286s
+Ran 114 tests in 1.078s
 
 OK

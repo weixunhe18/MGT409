@@ -287,7 +287,7 @@ recipients.</p>
   <text x="400" y="412" text-anchor="middle">dashboard or "APPROVE 12" email</text>
   <rect x="550" y="378" width="230" height="42" rx="8" fill="#ffedd5" stroke="#c2410c"/>
   <text x="665" y="396" text-anchor="middle" font-weight="700">ESCALATED</text>
-  <text x="665" y="412" text-anchor="middle">price/qty/date/PO + holding reply</text>
+  <text x="665" y="412" text-anchor="middle">decision for Wei + reply that asks</text>
   <line x1="330" y1="354" x2="180" y2="376" stroke="#334155" marker-end="url(#ar)"/>
   <line x1="400" y1="354" x2="400" y2="376" stroke="#334155" marker-end="url(#ar)"/>
   <line x1="470" y1="354" x2="620" y2="376" stroke="#334155" marker-end="url(#ar)"/>
@@ -387,7 +387,9 @@ Supply Chain, Northfield Outdoor Labs</div>
 <p><b>Method.</b> <code>scripts/measure_tokens.py</code> ran the 9-email inbox live three times at the default
 reasoning effort and three times at <code>REASONING_EFFORT=low</code>, each on a fresh database (Night mode, Medium
 risk). Token counts come from the Responses API <code>usage</code> field of every call; cost uses the lecture-11
-formula. Raw data: <code>docs/tokenomics.json</code>.</p>
+formula. Raw data: <code>docs/tokenomics.json</code>. (The demo inbox has since grown to 13 emails; one live
+13-email night with the newer "ask the supplier" replies cost <b>$0.011</b>, 37 calls, Figure 1. The per-call costs
+below still hold.)</p>
 
 <div class="box"><b>A measurement trap we found.</b> Repeated live runs first showed identical token counts. The cause
 was Portkey's response cache: on repeat runs every call returned <code>x-portkey-cache-status: HIT</code>, the stored
@@ -412,7 +414,7 @@ prompt (the spec) is long enough for the provider's automatic prompt cache: 87% 
   <tr><th>Email type</th><th class="n">Measured emails</th><th class="n">Mean cost</th></tr>
   <tr><td>Auto-sent technical answer (4 calls)</td><td class="n">3</td><td class="n">$0.00063</td></tr>
   <tr><td>Needs approval (4 calls)</td><td class="n">7</td><td class="n">$0.00079</td></tr>
-  <tr><td>Escalated + holding reply (3 calls; context agent skipped)</td><td class="n">8</td><td class="n">$0.00058</td></tr>
+  <tr><td>Escalated + reply with no commitments (3 calls; context agent skipped)</td><td class="n">8</td><td class="n">$0.00058</td></tr>
   <tr><td>Threat: quarantined, blocked or held (0 calls)</td><td class="n">9</td><td class="n">$0</td></tr>
   <tr><th>Full 9-email night (22 calls; 18,933 input / 5,397 cached / 5,145 output tokens)</th><th></th><th class="n">$0.0040</th></tr>
   <tr><th>Per email on this mix</th><th></th><th class="n">$0.00044</th></tr>
@@ -441,7 +443,7 @@ engineer at $50/h, the whole system costs less than 3 minutes of their time per 
   <tr><td>Zero-token gates: unknown senders, blocklist, lookalikes and injection are handled in code before any model call</td>
     <td>3 of 9 demo emails cost $0</td><td>A regex gate can miss novel attacks; the outbound checks and the reviewer are a second, independent layer.</td></tr>
   <tr><td>Skip the context agent when every question is a commitment</td><td>1 of 4 calls on escalations</td>
-    <td>A mixed email's technical half waits for Wei too.</td></tr>
+    <td>Only when nothing in the email is answerable from the spec; mixed emails still get the spec answers.</td></tr>
   <tr><td>Spec as a stable cached prefix</td><td>87% of the context agent's input billed at the cached rate (10× cheaper)</td><td>None measured.</td></tr>
   <tr><td><b>Tested live: <code>REASONING_EFFORT=low</code></b></td>
     <td><b>−15% per night</b> ($0.00400 → $0.00341); −22% output tokens; email 9 answered in 11 s instead of 13 s</td>
@@ -482,14 +484,14 @@ escalates to Wei and sends nothing.</p>
   <tr><td>Approval spoofing</td><td>A supplier writes "APPROVE 12"</td><td>Only Wei's own address with DKIM/DMARC pass can approve by email; same compliance checks; never forced by email</td>
     <td><code>test_supplier_mail_can_never_approve</code>, <code>test_forged_approval_is_ignored</code></td></tr>
 </table>
-<p class="src">All 99 tests run offline in under a second (<code>python app.py --test</code>; output in
+<p class="src">All 114 tests run offline in under a second (<code>python app.py --test</code>; output in
 <code>docs/screenshots/test_output.txt</code>).</p>
 
 <div class="two">
   <figure><img src="screenshots/05_quarantine_email4.png" alt="Quarantined injection">
   <figcaption>Figure 6. The injection in email 4, revealed and quarantined with score 6.9. Zero model calls: no model
   ever read it.</figcaption></figure>
-  <figure><img src="screenshots/04_escalation_email3.png" alt="Escalation with holding reply">
+  <figure><img src="screenshots/04_escalation_email3.png" alt="Escalation with a reply that asks for details">
   <figcaption>Figure 7. "Confirm 20k pcs at $3.85 by Nov 15": escalated with the evidence (price, quantity, date,
   PO, payment). The supplier got a reply with no numbers that asks for a cost breakdown, price breaks and
   lead-time drivers.</figcaption></figure>
@@ -506,10 +508,9 @@ escalates to Wei and sends nothing.</p>
 <table>
   <tr><th></th><th>Low</th><th>Medium (default)</th><th>High</th></tr>
   <tr><td>Fully grounded technical answers at night</td><td>approve</td><td><b>auto-send</b></td><td>auto-send</td></tr>
-  <tr><td>Replies with open items ("Wei will follow up")</td><td>approve</td><td>approve</td><td>auto-send</td></tr>
-  <tr><td>Holding reply on price/qty/date/PO topics</td><td>approve</td><td><b>auto-send</b> (no numbers, D6)</td><td>auto-send</td></tr>
-  <tr><td>Proposed part, material or process change</td><td colspan="3">always waits for Wei (D5)</td></tr>
-  <tr><td>Price, quantity, dates, POs, drawings</td><td colspan="3"><b>always escalated: hard rule</b></td></tr>
+  <tr><td>Replies with open items ("Wei will follow up")</td><td>approve</td><td><b>auto-send</b></td><td>auto-send</td></tr>
+  <tr><td>Reply on a decision (price, quantity, dates, POs, drawings, proposed changes, spec conflicts): spec answers + "Wei will review" + questions for the supplier</td><td>approve</td><td><b>auto-send</b> (no numbers, no commitment words; D6, D8)</td><td>auto-send</td></tr>
+  <tr><td>The decision itself (price, quantity, dates, POs, drawings, changes)</td><td colspan="3"><b>always Wei's: hard rule</b></td></tr>
   <tr><td>Injection, impersonation, unknown senders</td><td colspan="3"><b>always stopped: hard rule</b></td></tr>
 </table>
 <p>Business hours (Mon–Fri 9–5) are supervised: nothing auto-sends while Wei is at work.</p>
@@ -537,9 +538,10 @@ wording never says it is acceptable, and the reviewer checks for implied agreeme
 <b>D10: catch supplier statements that contradict the spec.</b> Code compares what the supplier states with the
 spec line about the same part (materials, numbers with units); a conflict is escalated and the supplier is asked
 which is correct.
-<b>D6: holding replies auto-send at Medium.</b> At night a supplier hears "Wei will review the pricing and reply
-directly" within seconds. The reply must pass every compliance check (no numbers, no commitment verbs) and is
-never sent if any warning fired. Cost: a supplier may read a quick holding reply as a coming "yes".</p>
+<b>D6: these replies auto-send at Medium.</b> At night a supplier hears "Wei will review the pricing and reply
+directly", plus the questions Wei needs answered, within seconds. The reply must pass every compliance check (no
+numbers, no commitment verbs) and is never sent if any warning fired. Cost: a supplier may read a quick reply as a
+coming "yes".</p>
 
 <!-- ============================================================ 7. IMPACT -->
 <h2>7. Impact</h2>

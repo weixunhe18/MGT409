@@ -107,7 +107,7 @@ flowchart LR
     P --> R{Decision<br/>risk tolerance × schedule}
     R --> S[AUTO_SENT]
     R --> N[NEEDS_APPROVAL]
-    R --> E[ESCALATED + holding reply]
+    R --> E[ESCALATED + reply that asks for details]
 ```
 
 * **Orchestration is code, not an LLM.** No model can skip the compliance step, choose a recipient, or attach a file.

@@ -3,7 +3,7 @@
 **One line:** an overnight AI supplier desk that answers overseas suppliers' technical questions from your product
 spec while you sleep, and **escalates every commitment** (price, quantity, dates, POs, drawings) to you.
 
-**Author:** Wei He · MGT 409 Final Project · Repo: *(add GitHub link)* · Status: MVP running on a mock inbox, 66 tests passing.
+**Author:** Wei He · MGT 409 Final Project · Repo: github.com/weixunhe18/MGT409 → project1/supplier-whisperer · Status: final submission; this proposal is the original plan (see report.html for the result).
 
 > Numbers marked **[src]** are sourced (links in `research/competitors_and_impact.md`). Numbers marked **[est]** are
 > my planning estimates; Wei must confirm or replace them before they go into the report. Numbers marked **[mock]**
@@ -92,7 +92,7 @@ commitments. Positioning: **"built on AgentMail, for hardware engineers"**, not 
 | Email | **AgentMail-compatible** webhook (`message.received`, Svix HMAC signatures); mock inbox and mock outbox | Same code path for demo and production; no account needed to grade |
 | Storage | SQLite | Runs, trace, outbox, settings, feedback |
 | UI | One HTML page, vanilla JS, served by `http.server` | No build step; clean dashboard for the look-and-feel points |
-| Tests | `unittest`, 66 tests incl. scripted "rogue model" tests | Safety evidence the rubric asks for |
+| Tests | `unittest`, 114 tests incl. scripted "rogue model" tests | Safety evidence the rubric asks for |
 
 ## 5. Architecture
 

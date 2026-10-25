@@ -1,6 +1,6 @@
 # Start here (updated Sat Oct 24, evening)
 
-**Status:** running on your Mac (Python 3.13, `.venv`). 77/77 tests, and 9/9 demo outcomes in **live gpt-6-luna** and
+**Status:** running on your Mac (Python 3.13, `.venv`). 107 tests, and 13/13 demo outcomes in **live gpt-6-luna** and
 mock mode. Live mode needs no manual setup: the key is read from the repo-root `.env`, and `certifi` handles HTTPS.
 The Gmail connector is built and tested with fake servers, but **not yet run against the real inbox** (it needs the
 app password).
@@ -18,7 +18,7 @@ app password).
 | `criteria.md` | The grading rubric from the course site, condensed, plus how we score on each line |
 | `README.md` | How to run the app (one command), architecture, safety, datasets |
 | `proposal.md` | Problem, solution, stack, architecture, safety, AgentMail stress test, rubric mapping |
-| `demo_plan.md` | 4-minute demo script with the 9 sample emails + screenshot shot list |
+| `demo_plan.md` | 4-minute demo script with the 13 sample emails + screenshot shot list |
 | `weekend_plan.md` | Your checklists + paste-ready prompts for the hike (Sat 2 pm) and dinner (Sun 7 pm) sessions |
 | `project_plan.md` | Ambitious roadmap, recommended technical path, business sketch, kill criteria |
 | `decisions.md` | D1 PydanticAI (yes, live calls only) · D2 real email (Gmail connector, dry-run first) · D3 "John" persona · D4 how webhooks work |
@@ -27,4 +27,4 @@ app password).
 | `research/competitors_and_impact.md` | Sourced competitor and impact research (AgentMail, Didero, Lindy, BLS, …) |
 | `docs/user_evidence.md` | Template for your baseline numbers and the real-user session (needed for Impact points) |
 | `app.py`, `supplier_agent/`, `tests/`, `scripts/` | The app |
-| `data/sample/` | Fictional product spec, 9 supplier emails (AgentMail format), policy (allowlist etc.) |
+| `data/sample/` | Fictional product spec, 13 supplier emails (AgentMail format), policy (allowlist etc.) |

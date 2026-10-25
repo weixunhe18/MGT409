@@ -1,7 +1,7 @@
 """Supplier Whisperer: one command to run.
 
     python app.py                 dashboard at http://127.0.0.1:8000 (opens your browser)
-    python app.py --demo          replay the 9 sample emails in the terminal (no browser)
+    python app.py --demo          replay the 13 sample emails in the terminal (no browser)
     python app.py --test          run the test suite
     python app.py --help          all options
 

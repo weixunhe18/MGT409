@@ -128,6 +128,14 @@ flowchart LR
 | Compliance | Second opinion that sees **only the draft**, so the supplier email can't manipulate it | Draft + list of forbidden topics | gpt-6-luna |
 | Guardrails (code) | Sender gate, injection scan, topic detection, number grounding, outbound checks, budget, loop guard | Regex/HTML parser/HMAC | none |
 
+### Supplier scorecard (Suppliers tab)
+
+Each allowlisted supplier gets a 0–100 score from deterministic code (no model calls): **answers** (did they answer
+your questions with substance), **knowledge** (numbers, standards and documents vs. "don't know / I'll ask the
+factory"), **speed** (median reply time) and **reliability** (no reply within 72 h, times you had to chase). Speed
+counts 20%: a fast "I'll ask the factory" is not an answer. It was calibrated on two real sourcing threads (kept
+private), where the fast-replying trader scored below the slower, knowledgeable supplier we actually chose.
+
 ### What the risk-tolerance slider changes (and what it can't)
 
 | | Low | Medium | High |

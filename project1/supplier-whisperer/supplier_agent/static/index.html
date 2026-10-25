@@ -175,6 +175,7 @@
       <button data-tab="inbox" class="on">Inbox</button>
       <button data-tab="needs">Needs you</button>
       <button data-tab="sent">Sent (mock outbox)</button>
+      <button data-tab="suppliers">Suppliers</button>
       <button data-tab="security">Security log</button>
       <button data-tab="compose">✉️ Try it: send a test email</button>
     </div>
@@ -182,6 +183,7 @@
     <div class="card" id="pane-inbox"></div>
     <div class="card" id="pane-needs" style="display:none"></div>
     <div class="card" id="pane-sent" style="display:none"></div>
+    <div class="card" id="pane-suppliers" style="display:none"></div>
     <div class="card" id="pane-security" style="display:none"></div>
     <div class="card" id="pane-compose" style="display:none">
       <h3>Send a test email through the webhook</h3>
@@ -272,7 +274,7 @@ function render() {
   const db = document.getElementById('dev-banner');
   if (s.paused) { db.style.display = ''; db.innerHTML = '<b>Agent paused (kill switch).</b> New emails are logged but no model reads them and nothing is sent.'; }
   else db.style.display = 'none';
-  renderBrief(); renderInbox(); renderNeeds(); renderSent(); renderSecurity();
+  renderBrief(); renderInbox(); renderNeeds(); renderSent(); renderSuppliers(); renderSecurity();
   document.querySelectorAll('#tabs button').forEach(b => {
     if (b.dataset.tab === 'needs') b.textContent = `Needs you (${S.stats.pending})`;
     if (b.dataset.tab === 'sent') b.textContent = `Sent (mock outbox: ${S.outbox.length})`;
@@ -319,6 +321,16 @@ function renderSecurity() {
   const log = (S.webhook_log || []).slice().reverse().map(l => `<div class="mono small">${hhmm(l.at)} · ${esc(l.text)}</div>`).join('');
   document.getElementById('pane-security').innerHTML = table(sec, 'No threats or held senders.') +
     `<div class="section"><h4>Webhook log</h4>${log || '<div class="small">No webhook deliveries yet.</div>'}</div>`;
+}
+function renderSuppliers() {
+  const rows = S.suppliers || [];
+  const bar = (label, v) => `<div class="small">${label} <b>${v}</b><div class="bar"><div style="width:${Math.max(0, Math.min(100, v))}%"></div></div></div>`;
+  document.getElementById('pane-suppliers').innerHTML = !rows.length ? '<div class="empty">No supplier conversations yet.</div>' :
+    `<div class="small" style="margin-bottom:10px">How each supplier is doing: responsive, knowledgeable, reliable. Speed counts, but a fast "I'll ask the factory" is not an answer, so substance and follow-through weigh more.</div>` +
+    rows.map(r => `<div class="section" style="border-bottom:1px solid var(--line);padding-bottom:10px">
+      <div><b>${esc(r.name || r.address)}</b> <span class="small">${esc(r.company)} · ${esc(r.address)}</span> · <b style="font-size:18px">${r.overall}</b>/100</div>
+      <div class="grid2" style="margin-top:6px">${bar('Answers', r.subscores.answers)}${bar('Knowledge', r.subscores.knowledge)}${bar('Speed', r.subscores.speed)}${bar('Reliability', r.subscores.reliability)}</div>
+      <div class="small" style="margin-top:4px">${(r.notes || []).map(esc).join(' · ')}</div></div>`).join('');
 }
 function renderSent() {
   const o = S.outbox;
@@ -441,7 +453,7 @@ async function compose() {
 function switchTab(t) {
   tab = t;
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
-  ['inbox', 'needs', 'sent', 'security', 'compose'].forEach(x => document.getElementById('pane-' + x).style.display = x === t ? '' : 'none');
+  ['inbox', 'needs', 'sent', 'suppliers', 'security', 'compose'].forEach(x => document.getElementById('pane-' + x).style.display = x === t ? '' : 'none');
 }
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => switchTab(b.dataset.tab));
 document.querySelectorAll('#seg-schedule button').forEach(b => b.onclick = () => setSetting('schedule_mode', b.dataset.v));

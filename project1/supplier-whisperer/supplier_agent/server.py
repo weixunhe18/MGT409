@@ -28,6 +28,7 @@ from .config import STATIC_DIR, AppConfig, load_policy, load_sample_events
 from .knowledge import KnowledgeBase
 from .llm import PortkeyLLM
 from .pipeline import RISK_LEVELS, SCHEDULE_MODES, Pipeline
+from .scorecard import score
 from .store import Store, now_iso
 from .webhook import dumps, make_event, signed_headers, verify
 
@@ -165,6 +166,15 @@ class App:
         return True
 
     # ------------------------------------------------------------- state
+    def supplier_scores(self) -> list[dict]:
+        contacts = {c.get("address"): c for c in self.policy.get("allowlist", []) if isinstance(c, dict)}
+        rows = []
+        for address, messages in self.store.supplier_conversations().items():
+            contact = contacts.get(address) or {}
+            rows.append({"address": address, "name": contact.get("name", ""), "company": contact.get("company", ""),
+                         **score(messages)})
+        return sorted(rows, key=lambda r: -r["overall"])
+
     def state(self) -> dict:
         s = self.pipeline.settings()
         autonomous, label = self.pipeline.schedule_state(s)
@@ -194,6 +204,7 @@ class App:
                       "prices": self.config.prices},
             "runs": runs,
             "outbox": self.store.list_outbox(60),
+            "suppliers": self.supplier_scores(),
             "policy": {"allowlist": allow,
                        "blocklist": list(self.policy.get("blocklist", [])) + list(s.get("extra_block", [])),
                        "hard_rules": HARD_RULES, "limits": self.policy.get("limits", {})},

@@ -156,6 +156,22 @@ class Store:
         rows = self._query(f"SELECT {SUMMARY_COLUMNS} FROM runs ORDER BY id DESC LIMIT ?", (limit,))
         return [dict(r) for r in rows]
 
+    def supplier_conversations(self) -> dict[str, list[dict]]:
+        """Every allowlisted supplier's conversation as scorecard messages: their emails and what we sent them."""
+        out: dict[str, list[dict]] = {}
+        for r in self._query("SELECT from_addr, received_at, outcome, email_json FROM runs"):
+            if r["outcome"] in ("BLOCKED", "QUARANTINED", "HELD", "DUPLICATE"):
+                continue  # not a real supplier conversation
+            email = json.loads(r["email_json"] or "{}")
+            out.setdefault(r["from_addr"], []).append({
+                "role": "supplier", "at": email.get("timestamp") or r["received_at"],
+                "text": email.get("text") or "", "attachment": "file" if email.get("attachments") else None})
+        for r in self._query("SELECT to_addr, sent_at, body FROM outbox WHERE delivery IS NULL OR delivery NOT LIKE "
+                             "'capped%'"):
+            if r["to_addr"] in out:
+                out[r["to_addr"]].append({"role": "buyer", "at": r["sent_at"], "text": r["body"] or ""})
+        return out
+
     def thread_history(self, thread_id: str, before_message_id: str | None = None, limit: int = 6) -> list[dict]:
         items: list[dict] = []
         for r in self._query(

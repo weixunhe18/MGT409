@@ -78,7 +78,7 @@ class PipelineTests(unittest.TestCase):
             expected = event["_demo"]["expected"]
             self.assertEqual(runs[event["event_id"]]["outcome"], expected,
                              f"{event['event_id']}: {runs[event['event_id']].get('headline')}")
-        self.assertEqual(len(store.list_outbox()), 6)  # 9 answered; 1, 2, 8 answer-and-ask; 3, 6 holding + questions
+        self.assertEqual(len(store.list_outbox()), 10)  # 9, 12 answered/re-asked; 1, 2, 8, 10, 11, 13 answer-and-ask; 3, 6 holding + questions
 
     def test_auto_sent_reply_is_locked_to_sender_and_compliant(self):
         pipeline, _ = make()
@@ -149,6 +149,14 @@ class PipelineTests(unittest.TestCase):
     def test_low_risk_still_holds_change_proposals(self):
         pipeline, store = make(risk_tolerance="low")
         self.assertFalse(run_all(pipeline)["evt_sample_01"].get("sent"))
+
+    def test_silent_supplier_is_asked_again_for_what_wei_requested(self):
+        pipeline, _ = make()
+        run = run_all(pipeline)["evt_sample_12"]  # "any update?" after 16 days, nothing delivered
+        body = run["draft"]["body"]
+        for item in ("UN38.3 test summary", "Cycle life test data", "cell datasheet"):
+            self.assertIn(item, body)
+        self.assertTrue(run.get("sent"))
 
     def test_threats_cost_zero_model_calls(self):
         pipeline, _ = make()

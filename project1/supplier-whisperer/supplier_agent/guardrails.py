@@ -355,7 +355,7 @@ TOPIC_PATTERNS: dict[str, re.Pattern] = {
         r"\b(alternative|alternate|substitut\w*|equivalent|replacement|deviation|waiver|"
         r"change\s+(?:the\s+)?(?:material|spec|design|supplier|process)|"
         # Proposals phrased as questions ("can we use P20 steel?", "welding instead of adhesive"), matching the live manager.
-        r"(?:can|could|may)\s+we\s+use|instead\s+of)\b",
+        r"(?:can|could|may)\s+we\s+use|instead)\b",
         re.I),
 }
 

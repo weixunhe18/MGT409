@@ -8,7 +8,7 @@ These are the calls I made without you. Anything that truly needs your decision 
    change system settings. I wrote the MVP to need **only the Python standard library** and verified it in a
    **real CPython 3.12 runtime compiled to WebAssembly (Pyodide)** inside Claude's sandboxed in-app browser:
    - all **66 tests pass** (guardrails, webhook signatures, knowledge base, full pipeline, scripted "rogue model" tests)
-   - the terminal demo reproduces all **9/9 expected outcomes**
+   - the terminal demo reproduces all **13/13 expected outcomes**
    - the dashboard was driven end to end against the real `server.Handler` code: replay, open drawer, approve with
      a risky edit (compliance prompt), release quarantine, allowlist and re-run, compose tests, kill switch, plus 401 on an unsigned
      webhook and 403 without the CSRF header.

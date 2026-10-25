@@ -191,3 +191,29 @@ LLM tokens.
   holds the reply; Low risk and business hours still hold everything.
 - **Trade-off:** the supplier sees "Wei will review" plus questions, which may read as interest in the proposal. The
   wording never says it is acceptable, and the compliance reviewer checks for implied agreement.
+
+---
+
+## D9. "Training" the agent on real supplier threads (decided Sat evening)
+
+The course model can't be fine-tuned, so "train" means three concrete, inspectable changes. Wei's PRD and the two
+real Alibaba threads (supplier A, whom we bought from; supplier B, the runner-up) are employer data: they stay in
+git-ignored `data/raw_private/` and only patterns or aggregate numbers leave it.
+
+1. **Knowledge:** the PRD became a private spec. Its business reasons and current-vendor names went into a
+   CONFIDENTIAL section, which is never sent to the model and is on the leak-detection list.
+2. **Supplier scorecard** (`supplier_agent/scorecard.py`, the dashboard's Suppliers tab): speed, answers with
+   substance, knowledge ("don't know / ask the factory" vs. numbers and documents) and reliability (ghosting,
+   times Wei had to chase). Calibrated on the two threads: the fast trader (replies in minutes, 9 "ask the
+   factory" answers, 11/16 questions answered) scores below the slower, knowledgeable supplier we chose (about
+   10 h median, 24/27 answered, 29 photos and files): 76 vs. 83. Speed counts 20%; substance and follow-through
+   count more.
+3. **Style:** the email agent writes the way Wei writes to suppliers: brief, numbered asks, values with units and
+   limits, the reason behind each request, evidence (datasheets with units and test conditions, photos before
+   shipping) and one clear next step. Only these rules are in the prompt, never Wei's messages.
+
+Plus two behaviors the threads showed were missing: when a supplier replies without delivering anything ("any
+update?"), the agent re-asks for what Wei's last email requested and asks for a date; and "…instead?" now counts
+as a proposed substitution. Four new public demo emails (10–13) reenact the patterns with the fictional TB-1
+product: an unexplained price add-on, a trader passing questions to the factory and offering a substitute, weeks
+of silence then "any update?", and a cheaper material swap.

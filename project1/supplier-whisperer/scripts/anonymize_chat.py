@@ -44,11 +44,13 @@ class _ExportParser(HTMLParser):
         a = dict(attrs)
         classes = (a.get("class") or "").split()
         if tag == "article" and "message" in classes:
-            self._cur = {"role": "buyer" if "buyer" in classes else "supplier", "at": "", "body": "", "quoted": ""}
+            # Two export formats: "buyer"/"supplier" with div.body, and "you"/"supplier" with div.text.
+            role = "buyer" if ("buyer" in classes or "you" in classes) else "supplier"
+            self._cur = {"role": role, "at": "", "body": "", "quoted": ""}
         elif self._cur is not None:
             if tag == "time":
                 self._field = "at"
-            elif tag == "div" and "body" in classes:
+            elif tag == "div" and ("body" in classes or "text" in classes):
                 self._field, self._depth = "body", 1
             elif tag == "blockquote":
                 self._field = "quoted"

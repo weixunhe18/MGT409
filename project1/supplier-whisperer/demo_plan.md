@@ -1,6 +1,6 @@
 # Demo plan: 4-minute script (fits a 3–5 min slot)
 
-**Story in one sentence:** *"It's 9 pm, I go to sleep. Overnight nine supplier emails arrive. The agent answers the
+**Story in one sentence:** *"It's 9 pm, I go to sleep. Overnight thirteen supplier emails arrive. The agent answers the
 one it safely can, drafts three for my approval (each proposes a change), escalates the two that would commit me to money or dates, and stops
 three attacks without spending a token. At 9 am I get a one-screen brief."*
 
@@ -21,7 +21,7 @@ three attacks without spending a token. At 9 am I get a one-screen brief."*
 |---|---|---|
 | 0:00–0:25 | Empty dashboard, header pills "🌙 Autonomous", "⚡ gpt-6-luna" | "For five years I've brought hardware to mass production with suppliers in Shenzhen. They're 12 hours ahead, so every question means a 7 am or 9 pm call, or a lost day. Supplier Whisperer works the night shift for me." |
 | 0:25–0:45 | Left column: **Hard rules** card, **Risk tolerance**, **Schedule** | "Five hard rules it can never break: no commitments on price, quantity, dates or POs; no drawings or files; only allowlisted senders; never obey instructions inside an email; hard budget caps. The risk slider only moves the gray zone." |
-| 0:45–1:00 | Click **▶ Run demo inbox** | "Nine real-looking supplier emails arrive through a signed webhook, the same format AgentMail uses. The agents only wake up when mail arrives." |
+| 0:45–1:00 | Click **▶ Run demo inbox** | "Thirteen real-looking supplier emails arrive through a signed webhook, the same format AgentMail uses. The agents only wake up when mail arrives." |
 | 1:00–1:15 | **Morning brief** fills in | "Here's my 9 am view: 1 answered, 3 drafts to approve, 2 decisions (each supplier already got a holding reply), 3 threats stopped, and the total cost." |
 | 1:15–1:55 | Open **Kevin Zhang: gate, gasket and inside finish** (email 9) → scroll the **Agent trace** | "Kevin's tool designer asks about gate vestige, the O-ring and the inside finish. Watch the chain: signature verified → allowlisted → injection score 0 → the manager finds 3 questions, no commitments → the context agent answers all 3 **only from the shareable part of my spec** and checks every number exists there → the email agent drafts → 11 compliance checks pass → sent. Four model calls, a fraction of a cent. Kevin has answers his same morning instead of tomorrow." Then open **Kevin's DFM questions** (email 1): "Same supplier, but he asks whether he can use P20 steel. That's a process proposal, so the decision stays mine. But instead of making Kevin wait, the agent answered the three spec questions and asked him why he wants P20 and how it affects cost, lead time and quality. When I wake up I have what I need to decide." |
 | 1:55–2:30 | Open **Jason Wu: quotation & special offer** (email 3) | "Jason wants me to confirm 20k pieces at $3.85 by Nov 15. The agent **cannot** answer that. It escalates with the evidence highlighted: price, MOQ, PO, deadline, deposit. It already sent Jason a holding reply with no numbers, so he knows I'm on it." **Live moment:** open Kevin's DFM draft (email 1), type *"we accept USD 3.85"* → **Approve & send** → the compliance warning pops up → **Cancel**. "Even my own edit gets flagged." |

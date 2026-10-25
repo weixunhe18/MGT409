@@ -321,5 +321,153 @@
         "message_id": "<wei.evt_sample_09@northfield-labs.example>"
       }
     ]
+  },
+  {
+    "type": "event",
+    "event_type": "message.received",
+    "event_id": "evt_sample_10",
+    "_demo": {
+      "label": "Pattern: sample price jumps above list with an unexplained add-on",
+      "expected": "ESCALATED"
+    },
+    "_prior_outbound": [
+      {
+        "sent_at": "2026-10-22T09:15:00",
+        "subject": "TB-1 PCBA samples: proforma invoice",
+        "text": "Hi Lily,\n\nPlease send a proforma invoice for 10 TB-1 sample boards built to the current requirements.\n\nThanks,\nWei",
+        "message_id": "<wei.evt_sample_10@northfield-labs.example>"
+      }
+    ],
+    "message": {
+      "inbox_id": "wei@northfield-labs.example",
+      "thread_id": "thr_everbright_sample_pi",
+      "message_id": "<e10.thr_everbright_sample_pi@everbright-pcba.example>",
+      "labels": [
+        "received"
+      ],
+      "timestamp": "2026-10-24T23:20:00-04:00",
+      "from": "Lily Chen <lily.chen@everbright-pcba.example>",
+      "to": [
+        "Wei He <wei@northfield-labs.example>"
+      ],
+      "cc": [],
+      "subject": "RE: TB-1 PCBA samples: proforma invoice",
+      "text": "Hi Wei,\n\nThe proforma invoice for 10 sample boards is ready on the platform. Unit price is USD 14.80 because of conformal coating and OEM work. Please check and make payment, then we start.\n\nBest regards,\nLily",
+      "html": null,
+      "attachments": [],
+      "in_reply_to": "<wei.evt_sample_10@northfield-labs.example>",
+      "headers": {}
+    }
+  },
+  {
+    "type": "event",
+    "event_type": "message.received",
+    "event_id": "evt_sample_11",
+    "_demo": {
+      "label": "Pattern: trader passes questions to the factory, then proposes a substitute",
+      "expected": "ESCALATED"
+    },
+    "_prior_outbound": [
+      {
+        "sent_at": "2026-10-21T10:00:00",
+        "subject": "TB-1 retail box material",
+        "text": "Hi Amy,\n\nBefore samples: which paperboard and coating will you use for the TB-1 retail box, and is the board FSC-certified? Please send the certificate.\n\nThanks,\nWei",
+        "message_id": "<wei.evt_sample_11@northfield-labs.example>"
+      }
+    ],
+    "message": {
+      "inbox_id": "wei@northfield-labs.example",
+      "thread_id": "thr_bluepeak_board",
+      "message_id": "<e11.thr_bluepeak_board@bluepeak-pack.example>",
+      "labels": [
+        "received"
+      ],
+      "timestamp": "2026-10-25T00:40:00-04:00",
+      "from": "Amy Lin <amy.lin@bluepeak-pack.example>",
+      "to": [
+        "Wei He <wei@northfield-labs.example>"
+      ],
+      "cc": [],
+      "subject": "RE: TB-1 retail box material",
+      "text": "Hello Wei,\n\nI don't know if our paperboard is FSC, I will ask the factory tomorrow. The factory is busy this week. Can we make the samples with normal 350 gsm board instead? It is faster.\n\nAmy",
+      "html": null,
+      "attachments": [],
+      "in_reply_to": "<wei.evt_sample_11@northfield-labs.example>",
+      "headers": {}
+    }
+  },
+  {
+    "type": "event",
+    "event_type": "message.received",
+    "event_id": "evt_sample_12",
+    "_demo": {
+      "label": "Pattern: silence for weeks, then 'any update?' with our questions still unanswered",
+      "expected": "AUTO_SENT"
+    },
+    "_prior_outbound": [
+      {
+        "sent_at": "2026-10-08T09:30:00",
+        "subject": "TB-1 battery documents",
+        "text": "Hi Jason,\n\nFor the TB-1 battery pack, please send:\n1. The UN38.3 test summary\n2. Cycle life test data\n3. The cell datasheet\n\nThanks,\nWei",
+        "message_id": "<wei.evt_sample_12@northfield-labs.example>"
+      }
+    ],
+    "message": {
+      "inbox_id": "wei@northfield-labs.example",
+      "thread_id": "thr_powercell_docs",
+      "message_id": "<e12.thr_powercell_docs@powercell-nb.example>",
+      "labels": [
+        "received"
+      ],
+      "timestamp": "2026-10-25T02:15:00-04:00",
+      "from": "Jason Wu <jason.wu@powercell-nb.example>",
+      "to": [
+        "Wei He <wei@northfield-labs.example>"
+      ],
+      "cc": [],
+      "subject": "RE: TB-1 battery documents",
+      "text": "Hi Wei,\n\nSorry for late reply, we were busy with another project. Any update from your side?\n\nJason",
+      "html": null,
+      "attachments": [],
+      "in_reply_to": "<wei.evt_sample_12@northfield-labs.example>",
+      "headers": {}
+    }
+  },
+  {
+    "type": "event",
+    "event_type": "message.received",
+    "event_id": "evt_sample_13",
+    "_demo": {
+      "label": "Pattern: supplier swaps in a cheaper material",
+      "expected": "ESCALATED"
+    },
+    "_prior_outbound": [
+      {
+        "sent_at": "2026-10-23T11:00:00",
+        "subject": "TB-1 gasket groove",
+        "text": "Hi Kevin,\n\nPlease design the gasket groove per the TB-1 requirements and send the groove dimensions.\n\nThanks,\nWei",
+        "message_id": "<wei.evt_sample_13@northfield-labs.example>"
+      }
+    ],
+    "message": {
+      "inbox_id": "wei@northfield-labs.example",
+      "thread_id": "thr_hongyuan_gasket",
+      "message_id": "<e13.thr_hongyuan_gasket@hongyuan-mold.example>",
+      "labels": [
+        "received"
+      ],
+      "timestamp": "2026-10-25T03:05:00-04:00",
+      "from": "Kevin Zhang <kevin.zhang@hongyuan-mold.example>",
+      "to": [
+        "Wei He <wei@northfield-labs.example>"
+      ],
+      "cc": [],
+      "subject": "RE: TB-1 gasket groove",
+      "text": "Hi Wei,\n\nGroove is designed for the 1.5 mm cross-section and 25% compression. To save cost, can we use an EPDM O-ring instead of silicone? Our O-ring supplier has stock.\n\nKevin",
+      "html": null,
+      "attachments": [],
+      "in_reply_to": "<wei.evt_sample_13@northfield-labs.example>",
+      "headers": {}
+    }
   }
 ]

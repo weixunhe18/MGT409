@@ -194,7 +194,7 @@ real threads → Chinese/bilingual drafting → WeChat channel → PLM integrati
 | Rubric line (points) | Covered in | Artifact / evidence to produce |
 |---|---|---|
 | The idea (21) | §1, §2, §3 | Tier-3 framing: real person, practical use, stress-tested novelty |
-| App: It works (15) | §4, §5 | `python app.py` → replay → 9/9 expected outcomes; live run |
+| App: It works (15) | §4, §5 | `python app.py` → replay → 13/13 expected outcomes; live run |
 | App: Staff can run it (5) | §4 | Zero-dependency README; `.env` in repo or parent folder; test from a fresh clone Sunday |
 | App: Look + feel (10) | §2 (morning brief) | Dashboard screenshots: brief, trace drawer, compose panel |
 | Report: Motivation + what's new (8) | §1, §3 | **Named competitors table** (evidence rule) |

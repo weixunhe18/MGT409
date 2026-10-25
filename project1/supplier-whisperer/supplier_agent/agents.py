@@ -259,6 +259,30 @@ def supplier_questions(triage: dict, limit: int = 3) -> list[str]:
     return [SUPPLIER_QUESTIONS[k] for k in keys if k in SUPPLIER_QUESTIONS][:limit]
 
 
+_REQUEST_LINE_RE = re.compile(r"^\s*(?:\d+[.)]|[-*•])\s+(.+)$|^(.*\?)\s*$|^\s*(please (?:send|share|provide) .+)$",
+                              re.I | re.M)
+_SUBSTANCE_RE = re.compile(r"\d+(?:\.\d+)?\s?(?:mm|µm|um|gsm|awg|v\b|mah|%|°|days|pcs)|\b(?:datasheet|report|"
+                           r"certificate|summary|test data|attached|see below)\b", re.I)
+
+
+def still_waiting_for(thread: list[dict], email: dict) -> list[str]:
+    """Wei's requests from his last email in this thread, if the supplier's reply delivers none of it.
+
+    Real pattern: a supplier goes quiet for weeks, then writes "any update?" without answering anything.
+    The useful reply re-asks for what Wei is still waiting for instead of saying "still open"."""
+    if email.get("attachments") or _SUBSTANCE_RE.search(email.get("visible_text") or email.get("text") or ""):
+        return []
+    wei = [h for h in thread if h.get("direction") == "outbound" and str(h.get("from", "")).startswith("Wei")]
+    if not wei:
+        return []
+    asks = []
+    for m in _REQUEST_LINE_RE.finditer(wei[-1].get("body") or ""):
+        text = next(g for g in m.groups() if g).strip().rstrip(".")
+        if len(text) > 8 and not text.lower().startswith(("hi ", "thanks", "thank you")):
+            asks.append(text)
+    return asks[:5]
+
+
 def build_plan(triage: dict, answers: dict) -> dict:
     answered, open_items, decisions = [], [], []
     for q in triage["questions"]:
@@ -276,8 +300,13 @@ def heuristic_draft(ctx: AgentContext, triage: dict, answers: dict) -> str:
     email, first = ctx.email, ctx.owner_first
     supplier_first = (email.get("from_name") or "").split()[0] if email.get("from_name") else ""
     plan = build_plan(triage, answers)
+    waiting = still_waiting_for(ctx.thread, email)
     lines = [f"Hi {supplier_first}," if supplier_first else "Hello,", "", "Thank you for your email."]
-    if plan["answered"] or plan["open"]:
+    if waiting and not plan["answered"]:
+        lines += ["", f"We are still waiting for these items from {first}'s earlier email:", ""]
+        lines += [f"{i}. {w}" for i, w in enumerate(waiting, 1)]
+        lines += ["", "Could you please send them, or tell us when you expect to have them?"]
+    elif plan["answered"] or plan["open"]:
         product = ctx.policy.get("product_name") or "product"
         lines += ["", f"Please see our answers below, based on the current {product} requirements:", ""]
         for q in triage["questions"]:
@@ -348,6 +377,9 @@ def run_drafter(ctx: AgentContext, triage: dict, answers: dict) -> tuple[str, di
                       "topics": [TOPIC_LABELS[t] for t in plan["decision_topics"]]}, ensure_ascii=False)
         + "\n\nQUESTIONS TO ASK THE SUPPLIER (so the engineer can decide; ask them, adapted to this email):\n"
         + json.dumps(plan["ask"], ensure_ascii=False)
+        + "\n\nSTILL WAITING FOR (the engineer asked for these in his last email; the supplier has not delivered them; "
+          "list them and ask again politely, with a request for a date):\n"
+        + json.dumps(still_waiting_for(ctx.thread, ctx.email), ensure_ascii=False)
     )
     if ctx.llm.live:
         raw, call = ctx.llm.complete_json(agent="drafter", instructions=instructions, input_text=input_text,

@@ -76,10 +76,10 @@
   <p>It is <b>not</b> an email summarizer. It takes actions inside an ongoing supplier conversation (answering,
   holding, escalating, blocking) and a deterministic trust layer, not the model, decides what it may say.</p>
   <figure>
-    <img src="screenshots/01_brief.png" alt="Morning brief after the 9-email night">
-    <figcaption>Figure 1. The 9 am morning brief after a live night (gpt-6-luna): 1 answered and sent, 3 drafts to
-    approve, 2 decisions (each supplier already got a holding reply), 2 threats stopped, 1 unknown sender held.
-    Total model spend for the night: $0.004. (Captured on the 9-email version of the demo; the demo inbox now has 13.)</figcaption>
+    <img src="screenshots/01_brief.png" alt="Morning brief after the 13-email night">
+    <figcaption>Figure 1. The 9 am morning brief after a live 13-email night (gpt-6-luna): 8 replies sent (full answers,
+    or "Wei will review" plus the questions Wei needs answered), 8 decisions waiting for Wei, 2 threats stopped, 1
+    unknown sender held. Total model spend for the night: $0.011.</figcaption>
   </figure>
 </header>
 
@@ -289,6 +289,13 @@ recipients.</p>
 runs. Every arrow is fixed in code: no model can skip the compliance step or change the route.</figcaption>
 </figure>
 
+<figure>
+  <img src="screenshots/00_agents_at_work_live.png" alt="Agents at work panel during the live demo">
+  <figcaption>Figure 2b. "Agents at work", live during the demo: Jason's quotation email has passed the inbox and the
+  guardrails, and the Manager agent is thinking. The log shows each handoff ("Sender check → Manager"). The panel
+  opens when mail starts flowing and collapses to a one-line summary after the last email.</figcaption>
+</figure>
+
 <table class="long">
   <tr><th>Agent</th><th>Job</th><th>Inputs / tools</th><th>Output</th></tr>
   <tr><td>Manager</td><td>Triage: intent, numbered questions, commitment topics (price, quantity, date, PO, payment,
@@ -349,13 +356,22 @@ Supply Chain, Northfield Outdoor Labs</div>
 </figure>
 
 <div class="two">
-  <figure><img src="screenshots/03_engineering_change_email1.png" alt="Email 1 draft awaiting approval">
-  <figcaption>Figure 4. Same supplier, but "can we use P20 steel?" is a proposed process change, so the decision
-  stays with Wei (D8). (Captured when such drafts still waited; the agent now replies right away with the spec
-  answers and asks for the reason, the impact and test data.)</figcaption></figure>
+  <figure><img src="screenshots/03_change_and_spec_conflict_email1.png" alt="Email 1: answers, a spec conflict and questions">
+  <figcaption>Figure 4. Same supplier, but "can we use P20 steel?" is a proposed change, and Kevin's "2.8 mm near the
+  boss" exceeds the 2.5 mm maximum (spec check, D10). The decision stays with Wei, but the reply went out right away:
+  spec answers, the 2.8 mm quoted back with a request to confirm, and the reason and impact of P20 (D8).</figcaption></figure>
   <figure><img src="screenshots/07_thread_memory_email8.png" alt="Email 8 thread memory">
   <figcaption>Figure 5. Kevin's follow-up hours later, in the same thread: the agent loads the earlier messages and
   keeps the numbering. It proposes a joining change, so the decision goes to Wei and the supplier is asked for data.</figcaption></figure>
+</div>
+
+<div class="two">
+  <figure><img src="screenshots/12_suppliers.png" alt="Supplier scorecard">
+  <figcaption>Figure 5b. The Suppliers tab: each supplier's score from answers with substance, knowledge (numbers and
+  documents vs. "I'll ask the factory", minus statements that contradict the spec), speed and reliability.</figcaption></figure>
+  <figure><img src="screenshots/14_reask_silent_supplier_email12.png" alt="Re-asking a silent supplier">
+  <figcaption>Figure 5c. After 16 days of silence Jason writes "any update?". The agent re-lists the three documents
+  Wei's last email asked for and asks for a date (email 12).</figcaption></figure>
 </div>
 
 <!-- ============================================================ 5. TOKENOMICS -->
@@ -468,14 +484,15 @@ escalates to Wei and sends nothing.</p>
   ever read it.</figcaption></figure>
   <figure><img src="screenshots/04_escalation_email3.png" alt="Escalation with holding reply">
   <figcaption>Figure 7. "Confirm 20k pcs at $3.85 by Nov 15": escalated with the evidence (price, quantity, date,
-  PO, payment). The supplier got a holding reply with no numbers.</figcaption></figure>
+  PO, payment). The supplier got a reply with no numbers that asks for a cost breakdown, price breaks and
+  lead-time drivers.</figcaption></figure>
 </div>
 <div class="two">
   <figure><img src="screenshots/06_impersonation_email7.png" alt="Impersonation blocked">
   <figcaption>Figure 8. Bank-change fraud from a lookalike domain: blocked, security alert, $0.</figcaption></figure>
   <figure><img src="screenshots/11_risk_low.png" alt="Low risk replay">
-  <figcaption>Figure 9. The same night at Low risk: 0 replies sent, everything waits for Wei. Threats are blocked the
-  same way.</figcaption></figure>
+  <figcaption>Figure 9. The same night at Low risk ("walk first" shadow mode; mock engine): 0 replies sent,
+  everything waits for Wei. Threats are blocked the same way.</figcaption></figure>
 </div>
 
 <h3>Risk tolerance: what the slider can and can't change</h3>

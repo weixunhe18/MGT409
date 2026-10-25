@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supplier Whisperer: slides</title>
+<!-- Build: python scripts/inline_images.py docs/slides_src.html slides.html (embeds the screenshots) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --navy: #0b1f3a; --blue: #2563eb; --green: #15803d; --amber: #b45309; --red: #b91c1c; --muted: #64748b; }
+  .reveal { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #0f172a; }
+  .reveal h1, .reveal h2 { font-family: inherit; color: var(--navy); text-transform: none; letter-spacing: -.01em; }
+  .reveal h1 { font-size: 2.1em; } .reveal h2 { font-size: 1.35em; margin-bottom: .45em; }
+  .reveal p, .reveal li { font-size: .78em; line-height: 1.35; }
+  .reveal .lede { font-size: .95em; color: #334155; }
+  .reveal .small { font-size: .55em; color: var(--muted); }
+  .kpis { display: flex; gap: 14px; justify-content: center; margin-top: 26px; }
+  .kpi { background: #f1f5f9; border-radius: 14px; padding: 14px 16px; width: 23%; text-align: left; }
+  .kpi b { display: block; font-size: 1.25em; color: var(--blue); } .kpi span { font-size: .5em; color: #334155; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; text-align: left; }
+  .two.wide { grid-template-columns: 1.25fr 1fr; }
+  .shot { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 6px 22px rgba(15,23,42,.12); margin: 0; }
+  .cap { font-size: .5em; color: var(--muted); margin-top: 6px; }
+  .flow { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; margin: 8px 0 12px; }
+  .node { border-radius: 10px; padding: 6px 8px; font-size: .4em; font-weight: 700; }
+  .code { background: #f1f5f9; border: 1px solid #94a3b8; } .ai { background: #ede9fe; border: 1px solid #6d28d9; color: #4c1d95; }
+  .arrow { font-size: .45em; color: var(--muted); align-self: center; }
+  table { font-size: .55em !important; margin: 0 auto; } th { background: #f1f5f9; }
+  .reveal table th, .reveal table td { padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
+  .big { font-size: 2.2em; font-weight: 800; color: var(--blue); line-height: 1; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .55em; font-weight: 700; }
+  .g { background: #dcfce7; color: var(--green); } .a { background: #fef3c7; color: var(--amber); } .r { background: #fee2e2; color: var(--red); }
+  .reveal ul { margin-left: .8em; } .tight li { margin-bottom: .25em; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1. Title + pitch -->
+<section>
+  <h1>🌙 Supplier Whisperer</h1>
+  <p class="lede">An AI agent that works the night shift with overseas suppliers: it answers from the spec, asks for
+  what the engineer needs, and never commits to price, quantity, dates or orders.</p>
+  <div class="kpis">
+    <div class="kpi"><b>13 s</b><span>supplier question → answer, vs. hours today</span></div>
+    <div class="kpi"><b>$0.0004</b><span>model cost per supplier email (measured)</span></div>
+    <div class="kpi"><b>3 / 3</b><span>attacks stopped at $0, before any model</span></div>
+    <div class="kpi"><b>0</b><span>commitments in 80 real supplier emails replayed</span></div>
+  </div>
+  <p class="small" style="margin-top:26px">Wei He · MGT 409 · github.com/weixunhe18/MGT409 → project1/supplier-whisperer</p>
+</section>
+
+<!-- 2. Problem -->
+<section>
+  <h2>The problem: the supplier is awake when you are not</h2>
+  <div class="two">
+    <ul class="tight">
+      <li>Hardware engineers bring products to mass production with suppliers <b>12 hours ahead</b>.</li>
+      <li>Every question is a 7 am or 9 pm call, or a <b>lost day</b> per reply cycle.</li>
+      <li>Product delays cost <b>5.25%</b> of market value on average (Hendricks &amp; Singhal).</li>
+    </ul>
+    <div>
+      <p><b>My baseline, 5 years in NPI</b></p>
+      <ul class="tight">
+        <li>3–5 overseas suppliers per program</li>
+        <li>~10 supplier emails a week at peak, <b>40%</b> pure technical questions</li>
+        <li>3–5 early/late calls a week</li>
+        <li><b>6–10 h/week</b> outside 9–5 = <b>$15.6k–26k</b> per engineer per year</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3. What's new -->
+<section>
+  <h2>What's new</h2>
+  <div class="two">
+    <div>
+      <p><b>Today's options</b></p>
+      <ul class="tight">
+        <li><b>Gmail Gemini, Copilot, Superhuman, ChatGPT</b>: draft for a human to send</li>
+        <li><b>Lindy</b>: can send, but can't tell "draft angle" from "agree to a price"</li>
+        <li><b>AgentMail</b>: who may email and injection scanning, not <i>what</i> to say</li>
+        <li><b>Procurement startups</b>: after the PO, for buyers, not engineers</li>
+      </ul>
+    </div>
+    <div>
+      <p><b>What we do differently</b></p>
+      <ul class="tight">
+        <li><b>Commitment-aware:</b> 11 code checks on every reply</li>
+        <li><b>Grounded:</b> answers only from the shareable spec; confidential never reaches a model</li>
+        <li><b>Asks, doesn't stall:</b> "Wei will review" + the questions he needs answered</li>
+        <li><b>Walk first, then run:</b> a week of shadow mode on the user's own data, then autonomy one category at a time</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4. How the agents work -->
+<section>
+  <h2>How the agents work</h2>
+  <div class="flow">
+    <span class="node code">📨 Signed webhook / Gmail</span><span class="arrow">→</span>
+    <span class="node code">🛡️ Sender + injection gates</span><span class="arrow">→</span>
+    <span class="node ai">🧭 Manager</span><span class="arrow">→</span>
+    <span class="node code">📏 Spec check</span><span class="arrow">→</span>
+    <span class="node ai">📚 Context</span><span class="arrow">→</span>
+    <span class="node ai">✍️ Email agent</span><span class="arrow">→</span>
+    <span class="node ai">✅ Compliance</span><span class="arrow">→</span>
+    <span class="node code">⚖️ Decision (code)</span>
+  </div>
+  <img class="shot" src="screenshots/00_agents_at_work_live.png" alt="Agents at work, live" style="max-height:400px; width:auto">
+  <p class="cap" style="font-size:.42em">Purple = gpt-6-luna leaf calls (JSON out, no tools that act). Gray = deterministic code. Live view: the
+  Manager is thinking; each handoff is logged.</p>
+</section>
+
+<!-- 5. Demo: one email -->
+<section>
+  <h2>One email, start to finish</h2>
+  <div class="two wide">
+    <img class="shot" src="screenshots/03_change_and_spec_conflict_email1.png" alt="Email 1 trace">
+    <div>
+      <p>Kevin asks 4 DFM questions, proposes P20 steel, and says some walls are <b>2.8 mm</b>.</p>
+      <ul class="tight">
+        <li>3 answers straight from the spec</li>
+        <li><b>Spec check</b>: 2.8 mm vs. max 2.5 mm, quoted back</li>
+        <li>P20 is a proposed change: <b>Wei decides</b>, Kevin is asked for the reason and impact</li>
+        <li>11/11 checks passed · 4 model calls · <b>$0.002</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Demo: the morning + suppliers -->
+<section>
+  <h2>The 9 am view</h2>
+  <div class="two">
+    <div><img class="shot" src="screenshots/01_brief.png" alt="Morning brief"><p class="cap">13 emails overnight:
+      8 replies sent, 8 decisions waiting, 2 threats stopped, $0.011 total.</p></div>
+    <div><img class="shot" src="screenshots/12_suppliers.png" alt="Supplier scorecard"><p class="cap">Supplier scorecard:
+      answers, knowledge, speed, reliability.</p></div>
+  </div>
+</section>
+
+<!-- 7. Cost -->
+<section>
+  <h2>Cost to run (measured, gpt-6-luna)</h2>
+  <div class="two">
+    <div>
+      <p><span class="big">$0.00044</span><br><span class="small">per supplier email · threats cost $0</span></p>
+      <table>
+        <tr><th>Agent</th><th>In</th><th>Cached</th><th>Out</th><th>$ / call</th></tr>
+        <tr><td>Manager</td><td>648</td><td>0</td><td>323</td><td>$0.00023</td></tr>
+        <tr><td>Context</td><td>1,550</td><td>1,349</td><td>205</td><td>$0.00014</td></tr>
+        <tr><td>Email agent</td><td>777</td><td>0</td><td>266</td><td>$0.00021</td></tr>
+        <tr><td>Compliance</td><td>698</td><td>0</td><td>132</td><td>$0.00014</td></tr>
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr><th>Users</th><th>Model</th><th>Total / month</th><th>Per user</th></tr>
+        <tr><td>1</td><td>$0.18</td><td>$2.18</td><td>$2.18</td></tr>
+        <tr><td>100</td><td>$17.78</td><td>$219.78</td><td>$2.20</td></tr>
+        <tr><td>10,000</td><td>$1,777.63</td><td>$15,377.63</td><td>$1.54</td></tr>
+      </table>
+      <p class="small">400 emails/user/month; Fly.io hosting and AgentMail list price included. Cost cut tested:
+      low reasoning effort = <b>−15%</b> cost, same outcomes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Safety -->
+<section>
+  <h2>Safety: code decides, not the model</h2>
+  <div class="two">
+    <ul class="tight">
+      <li><span class="pill r">$0</span> Hidden prompt injection quarantined before any model reads it</li>
+      <li><span class="pill r">$0</span> Lookalike domain asking for new bank details: blocked</li>
+      <li><span class="pill a">checks</span> 11 code checks on every reply: no prices, quantities, dates, commitment words, links, files, confidential terms</li>
+      <li><span class="pill a">spec</span> "The probe is copper" vs. stainless: caught and asked</li>
+      <li><span class="pill g">limits</span> Budget caps, loop guard, kill switch, DKIM/DMARC on real mail, Low-risk shadow mode</li>
+    </ul>
+    <img class="shot" src="screenshots/05_quarantine_email4.png" alt="Quarantined injection">
+  </div>
+</section>
+
+<!-- 9. Impact -->
+<section>
+  <h2>Impact</h2>
+  <div class="two">
+    <div>
+      <p><span class="big">13 s</span><br><span class="small">to answer a technical question at night, vs. hours (a lost day when it slips)</span></p>
+      <p><span class="big">2.4–4 h</span><br><span class="small">per week back at peak = $6.2k–10.4k per engineer per year (from my baseline)</span></p>
+    </div>
+    <div>
+      <p><b>Two real sourcing threads, replayed</b> (kept private)</p>
+      <ul class="tight">
+        <li>80 supplier emails · 32 safe replies out · <b>0 commitments</b> · 6 spec conflicts caught</li>
+        <li>Scorecard: the supplier we chose <b>79</b> vs. the fast-but-vague runner-up <b>72</b>: speed alone picks wrong</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10. What's next -->
+<section>
+  <h2>What's next</h2>
+  <ul class="tight" style="text-align:left">
+    <li><b>Walk-then-run graduation:</b> autonomy per category once a user's approval rate in shadow mode is high enough</li>
+    <li><b>Eval set from 50 real threads:</b> precision/recall of the commitment checks, true auto-answer share</li>
+    <li><b>Always on:</b> deploy on Fly.io (prepared, no public port) and run it on live supplier threads for two weeks</li>
+    <li><b>Bilingual</b> English/Chinese drafting, checked by the same code layer; WeChat as a second channel</li>
+    <li><b>Wider spec check:</b> tolerances, standards and process claims, synced from PLM</li>
+  </ul>
+  <p class="small" style="margin-top:30px">Run it: <code>python app.py</code> → ▶ Run demo inbox · Code, report and tests on GitHub</p>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  // Arrow keys move between slides; F toggles fullscreen (reveal.js default keyboard bindings).
+  Reveal.initialize({ hash: true, slideNumber: 'c/t', width: 1280, height: 760, margin: 0.04, transition: 'slide' });
+</script>
+</body>
+</html>

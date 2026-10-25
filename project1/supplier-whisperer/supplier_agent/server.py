@@ -176,6 +176,8 @@ class App:
             return False  # never wipe a live mailbox's conversations with the demo inbox
         if reset:
             self.store.reset()
+            with self._activity_lock:  # a fresh demo starts with a clean "Agents at work" history
+                self.activity.clear()
         events = load_sample_events(self.config.dataset_dir)
         self.replay_running = True
         mode = "live" if self.pipeline.settings()["llm_mode"] == "live" else "mock"

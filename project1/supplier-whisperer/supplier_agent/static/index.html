@@ -328,14 +328,16 @@ function renderBrief() {
   const n = k => by[k] || 0;
   const owner = (S.app.owner && S.app.owner.first_name) || 'there';
   const pending = runs.filter(r => r.human_status === 'pending');
+  const sentN = (S.outbox || []).filter(o => o.sent_by === 'agent').length;
   document.getElementById('brief-title').textContent = runs.length ? `While you were away, ${owner}…` : `Good morning, ${owner}`;
   document.getElementById('brief-sub').textContent = runs.length
     ? `${runs.length} supplier emails handled. ${pending.length} need you. Spend today ${money(S.spend.cost_usd)}.`
-    : 'No emails yet. Press "Run demo inbox" to replay 8 overnight supplier emails through the webhook.';
+    : 'No emails yet. Press "Run demo inbox" to replay ' + (S.app.samples || 13) + ' overnight supplier emails through the webhook.';
   const stats = [
-    [n('AUTO_SENT'), 'answered & sent'], [n('NEEDS_APPROVAL'), 'drafts to approve'], [n('ESCALATED'), 'decisions for you'],
+    // Replies that went out: full answers, plus "Wei will review" replies that asked the supplier for details (D8).
+    [sentN, 'replies sent'], [n('NEEDS_APPROVAL'), 'drafts to approve'], [n('ESCALATED'), 'decisions for you'],
     [n('QUARANTINED') + n('BLOCKED'), 'threats stopped'], [n('HELD') + n('FYI'), 'held / no reply'],
-    [n('AUTO_SENT') ? ('~' + (n('AUTO_SENT') * 12) + ' h') : '0 h', 'supplier wait avoided (est.)']];
+    [sentN ? ('~' + (sentN * 12) + ' h') : '0 h', 'supplier wait avoided (est.)']];
   document.getElementById('stats').innerHTML = stats.map(([v, l]) => `<div class="stat"><div class="n">${esc(v)}</div><div class="l">${esc(l)}</div></div>`).join('');
   const todo = document.getElementById('todo');
   if (pending.length) {
@@ -501,11 +503,12 @@ document.querySelectorAll('#seg-schedule button').forEach(b => b.onclick = () =>
 document.querySelectorAll('#seg-risk button').forEach(b => b.onclick = () => setSetting('risk_tolerance', b.dataset.v));
 document.querySelectorAll('#seg-llm button').forEach(b => b.onclick = () => setSetting('llm_mode', b.dataset.v));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
-// Deep links for screenshots/demos: #tab=security, #run=4
+// Deep links for screenshots/demos: #tab=security, #run=4, #agents=open
 function applyHash() {
   const h = new URLSearchParams(location.hash.slice(1));
   if (h.get('tab')) switchTab(h.get('tab'));
   if (h.get('run')) openRun(parseInt(h.get('run'), 10));
+  if (h.get('agents') === 'open') { AG.userToggled = true; setAgentsOpen(true); }
 }
 window.addEventListener('hashchange', applyHash);
 preset('tech');
@@ -583,10 +586,11 @@ async function pollActivity() {
     const a = await (await fetch('/api/activity?since=' + AG.seq)).json();
     (a.events || []).forEach(agHandle);
     AG.seq = a.seq || AG.seq; AG.live = !!a.live;
-    if (AG.live && !AG.wasLive) { AG.done = []; if (!AG.userToggled) setAgentsOpen(true); clearTimeout(AG.collapseTimer); }
+    // A demo starting while we watch resets the tally; a page opened mid-run keeps what already finished.
+    if (AG.live && !AG.wasLive) { if (AG.polled) AG.done = []; if (!AG.userToggled) setAgentsOpen(true); clearTimeout(AG.collapseTimer); }
     if (!AG.live && AG.wasLive && !AG.userToggled) { AG.collapseTimer = setTimeout(() => setAgentsOpen(false), 2500); }
     if (AG.live && !AG.wasLive) AG.userToggled = false;
-    AG.wasLive = AG.live;
+    AG.wasLive = AG.live; AG.polled = true;
     renderAgents();
   } catch (e) { /* server restarting */ }
 }

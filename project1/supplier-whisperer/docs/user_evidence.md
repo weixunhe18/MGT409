@@ -8,11 +8,11 @@ its points. Fill in what's true; leave blanks rather than guessing.
 | Question | Your answer |
 |---|---|
 | Years bringing hardware to mass production | 5 |
-| Typical number of active overseas suppliers during NPI | |
-| Supplier emails per week at peak (DFM / EVT–DVT) | |
-| Early (≤7:30 am) or late (≥8:30 pm) supplier calls per week at peak | |
-| Hours/week of supplier communication outside 9–5 | |
-| Share of supplier emails that are pure technical clarification (no price/qty/date/PO) | % |
+| Typical number of active overseas suppliers during NPI | 3-5, depending on complexity of the project, mix of plastics manufacturer, off the shelf part providers, PCB makers|
+| Supplier emails per week at peak (DFM / EVT–DVT) | 10 |
+| Early (≤7:30 am) or late (≥8:30 pm) supplier calls per week at peak | 3-5 |
+| Hours/week of supplier communication outside 9–5 | 6-10 |
+| Share of supplier emails that are pure technical clarification (no price/qty/date/PO) | 40% |
 | Typical delay caused by one missed reply cycle | hours |
 | A real example where a 24 h delay cost something (schedule slip, tooling rework, air freight…) | |
 

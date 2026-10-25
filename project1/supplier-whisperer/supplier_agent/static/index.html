@@ -191,7 +191,7 @@
   </aside>
 
   <main>
-    <div class="card agents collapsed" id="agents" style="display:none">
+    <div class="card agents collapsed" id="agents">
       <div class="ag-head" onclick="toggleAgents()">
         <h3>🧠 Agents at work</h3><span class="ag-pill" id="ag-pill">Idle</span>
         <span class="ag-summary" id="ag-summary"></span><span class="small" id="ag-toggle">show ▾</span>
@@ -557,12 +557,12 @@ function agBody(e) {
 }
 function renderAgents() {
   const el = document.getElementById('agents');
-  if (!AG.seq && !AG.live) { el.style.display = 'none'; return; }
   el.style.display = ''; el.classList.toggle('live', AG.live);
   document.getElementById('ag-pill').textContent = AG.live ? '● Live' : 'Idle';
   const sent = AG.done.filter(d => ['AUTO_SENT', 'ESCALATED'].includes(d.outcome)).length;
   const stopped = AG.done.filter(d => ['QUARANTINED', 'BLOCKED', 'HELD'].includes(d.outcome)).length;
   document.getElementById('ag-summary').textContent = AG.live ? `Working on email ${AG.done.length + 1}…` :
+    !AG.done.length ? 'Waiting for email. Click ▶ Run demo inbox to watch the agents work, step by step.' :
     `Agents handled ${AG.done.length} email(s) · ${stopped} stopped before any model saw them`;
   const em = AG.email;
   document.getElementById('ag-email').innerHTML = em ? `📨 <b>${esc(em.from)}</b> · ${esc(em.subject)}` : '';

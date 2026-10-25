@@ -35,8 +35,8 @@ through the signed webhook. Click any email to see the agent trace step by step.
 
 ### Live mode (gpt-6-luna via Portkey)
 
-1. Copy `.env.example` to `.env` **in this folder, the folder above it, or the enclosing git repo's root** (checked
-   in that order).
+1. Put `PORTKEY_API_KEY=...` in a `.env` file. The app checks, in order: this folder, the folder above it, the
+   git repo's root, and **the folder above the repo** (where course staff keep their shared `.env`).
 2. Set `PORTKEY_API_KEY=...` (the MGT 409 course key).
 3. Restart. The header shows **⚡ gpt-6-luna (live)**. You can switch between *Mock* and *gpt-6-luna* in the
    "AI engine" card at any time.
@@ -228,6 +228,7 @@ tests/                      98 unit + end-to-end tests (no network)
 
 * Model: `gpt-6-luna` via `PORTKEY_API_KEY` only. No other keys are needed to grade the app. The Gmail connector
   needs its own app password, so graders use the mock inbox; the live mailbox is shown in the demo video.
-* `.env` is read from the project folder, then the folder above, then the git repo root. `.env` is git-ignored, and `.env.example` lists names only.
+* `.env` is read from the project folder, then the folder above, then the git repo root, then the folder above
+  the repo. So `submissions/.env` next to a cloned `MGT409/` works (tested: `test_env_one_level_above_the_cloned_course_repo_is_found`). `.env` is git-ignored, and `.env.example` lists names only.
 * Token counts per agent call (input / cached / output) and the dollar cost per email appear in the dashboard and in
   `python app.py --demo --live`.

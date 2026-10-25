@@ -1,7 +1,8 @@
 """Paths, .env loading, dataset/policy loading, and runtime configuration.
 
 Course rule (MGT 409): look for .env in the project folder first, then one level above
-(staff keep a shared .env in the folder that holds every submission).
+(staff keep a shared .env in the folder that holds every submission). This app sits two folders deep in the course
+repo, so the repo root and the folder above the repo are checked too.
 """
 
 from __future__ import annotations
@@ -84,25 +85,28 @@ def _parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
-def _repo_root() -> Path | None:
-    for folder in PROJECT_ROOT.parents:
+def _repo_root(start: Path = PROJECT_ROOT) -> Path | None:
+    for folder in start.parents:
         if (folder / ".git").exists():
             return folder
     return None
 
 
-def load_env() -> list[Path]:
-    """Load .env from the project folder, then its parent, then the enclosing git repo's root.
+def load_env(project_root: Path = PROJECT_ROOT) -> list[Path]:
+    """Load .env from the project folder, then its parent, then the enclosing git repo's root and the folder above it.
 
     Real environment variables win. Nearer files win over farther ones.
     Empty values never override (so a blank PORTKEY_API_KEY= copied from
     .env.example does not hide the staff key in the folder above).
     """
     loaded: list[Path] = []
-    folders = [PROJECT_ROOT, PROJECT_ROOT.parent]
-    root = _repo_root()
-    if root and root not in folders:
-        folders.append(root)  # e.g. a course repo whose root .env holds the shared key
+    folders = [project_root, project_root.parent]
+    root = _repo_root(project_root)
+    # This app lives in a subfolder of a course repo (MGT409/project1/supplier-whisperer). Staff clone the whole
+    # repo into submissions/ and keep their .env one level ABOVE the repo, so also check the repo root and its parent.
+    for extra in ([root, root.parent] if root else []):
+        if extra not in folders:
+            folders.append(extra)
     for folder in folders:
         path = folder / ".env"
         if not path.is_file():

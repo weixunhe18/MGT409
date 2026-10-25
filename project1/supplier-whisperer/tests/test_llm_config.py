@@ -97,3 +97,28 @@ class EnvFileTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StaffLayoutTests(unittest.TestCase):
+    def test_env_one_level_above_the_cloned_course_repo_is_found(self):
+        # submissions/.env  +  submissions/MGT409/(.git)/project1/supplier-whisperer  (the course's grading layout)
+        import os
+        import tempfile
+        from pathlib import Path
+        from supplier_agent.config import load_env
+        with tempfile.TemporaryDirectory() as tmp:
+            subs = Path(tmp) / "submissions"
+            app_dir = subs / "MGT409" / "project1" / "supplier-whisperer"
+            app_dir.mkdir(parents=True)
+            (subs / "MGT409" / ".git").mkdir()
+            (subs / ".env").write_text("PORTKEY_API_KEY=staff-key\nOPENAI_API_KEY=x\n", encoding="utf-8")
+            saved = os.environ.pop("PORTKEY_API_KEY", None)
+            try:
+                loaded = load_env(app_dir)
+                self.assertEqual(os.environ.get("PORTKEY_API_KEY"), "staff-key")
+                self.assertIn(subs / ".env", loaded)
+            finally:
+                os.environ.pop("PORTKEY_API_KEY", None)
+                if saved is not None:
+                    os.environ["PORTKEY_API_KEY"] = saved
+

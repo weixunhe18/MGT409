@@ -265,6 +265,9 @@ class PortkeyLLM:
                 raise LLMError(last_error) from None
             except (urllib.error.URLError, TimeoutError, OSError) as exc:
                 last_error = f"network error talking to Portkey: {getattr(exc, 'reason', exc)}"
+                if "CERTIFICATE_VERIFY_FAILED" in last_error:  # python.org Python on macOS ships without CA certs
+                    raise LLMError(last_error + ". Fix: run `pip install -r requirements.txt` (installs certifi, "
+                                   "which the app uses automatically), then restart.") from None
                 if attempt < 2:
                     time.sleep(1.5 * (attempt + 1))
                     continue

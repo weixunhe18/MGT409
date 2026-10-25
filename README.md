@@ -19,16 +19,13 @@ Requires Python 3.10+. From the folder you cloned into:
 
 ```bash
 cd MGT409/project1/supplier-whisperer
+pip install -r requirements.txt   # one small package (certifi) so HTTPS works on every Mac/Python
 python3 app.py
 ```
 
-The dashboard opens at http://127.0.0.1:8000. Click **▶ Run demo inbox (13 emails)** and watch the
-**Agents at work** panel. With no key it runs on the offline mock engine. For live **gpt-6-luna**:
-
-```bash
-pip install -r requirements.txt
-python3 app.py --live
-```
+(Windows: `py app.py`.) The dashboard opens at http://127.0.0.1:8000. Click **▶ Run demo inbox (13 emails)** and
+watch the **Agents at work** panel. With `PORTKEY_API_KEY` available it runs live on **gpt-6-luna**; without a key it
+runs the same pipeline on the offline mock engine (switch any time in the "AI engine" card).
 
 The app finds `PORTKEY_API_KEY` in a `.env` placed in the app folder, the folder above it, the repo root, **or one
 level above the repo** (the course staff layout: `submissions/.env` next to `submissions/MGT409/`). No other key is

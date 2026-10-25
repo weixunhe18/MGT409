@@ -314,6 +314,7 @@ function render() {
   document.getElementById('blocklist').innerHTML = S.policy.blocklist.map(b => `<li class="mono">${esc(b)}</li>`).join('');
   const db = document.getElementById('dev-banner');
   if (s.paused) { db.style.display = ''; db.innerHTML = '<b>Agent paused (kill switch).</b> New emails are logged but no model reads them and nothing is sent.'; }
+  else if (S.app.warning) { db.style.display = ''; db.innerHTML = '<b>⚠️ Setup:</b> ' + esc(S.app.warning); }
   else db.style.display = 'none';
   renderBrief(); renderInbox(); renderNeeds(); renderSent(); renderSuppliers(); renderSecurity();
   document.querySelectorAll('#tabs button').forEach(b => {

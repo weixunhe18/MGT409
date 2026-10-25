@@ -94,6 +94,25 @@ class App:
             event["seq"] = self.activity_seq
             self.activity.append(event)
 
+    def preflight(self) -> str:
+        """If live mode is configured, check HTTPS to Portkey once at startup (no tokens). A missing certificate store
+        (python.org Python on macOS without `pip install -r requirements.txt`) would otherwise make every email fail."""
+        if not self.live_available:
+            return ""
+        import socket
+        import ssl as _ssl
+        from .llm import ssl_context
+        host = urlparse(self.config.portkey_base_url).hostname or "api.portkey.ai"
+        try:
+            with socket.create_connection((host, 443), timeout=6) as sock:
+                with ssl_context().wrap_socket(sock, server_hostname=host):
+                    return ""
+        except _ssl.SSLCertVerificationError:
+            return ("Live mode can't verify HTTPS certificates on this Python. Fix: run `pip install -r "
+                    "requirements.txt` (installs certifi) and restart. Until then, switch the AI engine to Mock.")
+        except OSError:
+            return ""  # offline or blocked network: the per-email error message explains it
+
     def clear_activity(self) -> None:
         with self._activity_lock:
             self.activity.clear()
@@ -228,6 +247,7 @@ class App:
                 "queue": self.jobs.qsize() + (1 if self.busy else 0),
                 "replay_running": self.replay_running,
                 "dev_secret": self.config.using_dev_secret,
+                "warning": getattr(self, "startup_warning", ""),
                 "owner": self.policy.get("owner", {}),
                 "product": self.policy.get("product_name", ""),
                 "samples": len(load_sample_events(self.config.dataset_dir)),
@@ -508,6 +528,9 @@ def run_server(config: AppConfig, open_browser: bool = True, replay: bool = Fals
             "To expose the webhook anyway (e.g. for hosting), set a real WEBHOOK_SECRET and ALLOW_REMOTE=1, and put the "
             "app behind an authenticating proxy.")
     app = App(config)
+    app.startup_warning = app.preflight()
+    if app.startup_warning:
+        print("\n  ⚠️  " + app.startup_warning + "\n")
     try:
         httpd = (_Server6 if ":" in config.host else _Server)((config.host, config.port), Handler)
     except OSError as exc:

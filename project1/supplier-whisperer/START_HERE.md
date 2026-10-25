@@ -38,6 +38,4 @@ numbers appear in the report.
 
 ## If you have 10 more minutes
 
-- Ask the tester whether you may name their role (e.g. "a sourcing manager at a hardware startup"); the report says
-  "a tester who works with suppliers".
 - Optional live-email demo for TAs: ask the professor first (course rule on extra keys), then see README "Live mailbox".

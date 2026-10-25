@@ -20,7 +20,7 @@ its points. Fill in what's true; leave blanks rather than guessing.
 
 | Field | |
 |---|---|
-| Tester role (name only with permission) | Works with suppliers (name withheld) |
+| Tester role (name only with permission) | Procurement Associate at a Series A startup in Boston (name withheld) |
 | Date / format (in person, Zoom) | |
 | Task given | "Run the demo inbox, then tell me which emails you'd trust it with." |
 | Time to understand the morning brief (stopwatch) | |

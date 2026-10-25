@@ -13,6 +13,7 @@ import traceback
 from datetime import datetime
 from datetime import time as dtime
 
+from .conflicts import find_conflicts
 from .agents import (AgentContext, run_compliance_review, run_context, run_drafter, run_manager,
                      supplier_questions)
 from .config import AppConfig
@@ -38,9 +39,19 @@ MIN_CONFIDENCE = {"low": 2.0, "medium": 0.75, "high": 0.6}
 
 
 class Trace:
-    def __init__(self) -> None:
+    """The agent trace for one email. `on_step` (optional) streams each step live to the dashboard's
+    "Agents at work" panel; `delay` slows steps down during the demo replay so people can follow along."""
+
+    def __init__(self, on_step=None, delay: float = 0.0) -> None:
         self.steps: list[dict] = []
         self._t = time.perf_counter()
+        self.on_step = on_step
+        self.delay = delay
+
+    def working(self, key: str, title: str, detail: str) -> None:
+        """An agent has started (shown live while a model call runs; not stored in the trace)."""
+        if self.on_step:
+            self.on_step({"key": key, "title": title, "status": "working", "detail": detail})
 
     def add(self, key: str, title: str, status: str, detail: str, call: dict | None = None,
             data: dict | None = None) -> None:
@@ -55,6 +66,11 @@ class Trace:
         if data is not None:
             step["data"] = data
         self.steps.append(step)
+        if self.on_step:
+            self.on_step(step)
+            if self.delay:
+                time.sleep(self.delay)
+                self._t = time.perf_counter()  # the demo pause is not part of the measured step time
 
 
 def _hhmm(value: str, default: str) -> dtime:
@@ -93,6 +109,9 @@ class Pipeline:
         self._human_lock = threading.Lock()
         # Extra allowlist entries that apply only when a real mailbox is connected (e.g. "@yale.edu").
         self.mailbox_allow: list[str] = []
+        # Live view of the agents (dashboard "Agents at work"): callback(email, step) and demo pacing in seconds.
+        self.on_step = None
+        self.step_delay = 0.0
 
     # ------------------------------------------------------------- settings
     @property
@@ -157,7 +176,11 @@ class Pipeline:
         settings = self.settings()
         autonomous, schedule_label = self.schedule_state(settings)
         limits = self.policy.get("limits", {})
-        trace = Trace()
+        trace = Trace(on_step=(lambda step: self.on_step(email, step)) if self.on_step else None,
+                      delay=self.step_delay)
+        if self.on_step:
+            self.on_step(email, {"key": "start", "title": "New email", "status": "info",
+                                 "detail": f"{email.get('from_name') or email.get('from_addr')}: {email.get('subject')}"})
         trace.add("webhook", "Webhook received", "ok",
                   f"{email.get('event_type') or 'message.received'} for thread {email['thread_id']} · {signature_note}")
         run: dict = {
@@ -226,6 +249,11 @@ class Pipeline:
         run["id"] = saved_id
         if run.get("sent") and draft:
             self.store.add_outbox(saved_id, email["thread_id"], draft["to"][0], draft["subject"], draft["body"], "agent")
+        if self.on_step:
+            self.on_step(email, {"key": "end", "title": run.get("outcome_label") or run.get("outcome", ""),
+                                 "status": run.get("outcome", ""), "detail": run.get("headline", ""),
+                                 "data": {"run_id": saved_id, "sent": bool(run.get("sent")),
+                                          "cost_usd": (run.get("usage") or {}).get("cost_usd", 0)}})
         return run
 
     # ------------------------------------------------------------------ core
@@ -319,6 +347,8 @@ class Pipeline:
         ctx = AgentContext(email=email, kb=self.kb, policy=self.policy, llm=llm, meter=meter, thread=thread)
 
         # 5. Manager: triage.
+        trace.working("manager", "Manager agent", "Reading the email: what does the supplier want, which questions, "
+                                                   "anything that needs Wei (price, dates, orders, changes)?")
         triage, call = run_manager(ctx)
         run["triage"] = triage
         n_q = len(triage["questions"])
@@ -329,10 +359,23 @@ class Pipeline:
                   + _usage_brief(call),
                   call, data={"summary": triage["summary"], "questions": triage["questions"],
                               "topic_evidence": triage.get("topic_evidence", {})})
+        # 5b. Spec check (code, no model): does the supplier state something that contradicts the spec?
+        claims = "\n".join(c.rstrip(".") + "." for c in triage.get("claims", []))
+        triage["spec_conflicts"] = find_conflicts((email.get("visible_text") or "") + "\n" + claims, self.kb)
+        if triage["spec_conflicts"]:
+            triage["reply_needed"] = True  # our question to the supplier, even if they asked nothing
+            trace.add("spec_check", "Spec check", "warn",
+                      "Supplier statement contradicts the spec: " + "; ".join(
+                          f"\"{c['claim'][:80]}\" ({c['detail']})" for c in triage["spec_conflicts"][:3]),
+                      data={"conflicts": triage["spec_conflicts"]})
+        else:
+            trace.add("spec_check", "Spec check", "ok", "No supplier statement contradicts the spec.")
         if not triage["questions"] and not triage["hard_topics"] and not triage.get("reply_needed", True):
             return self._finish(run, "FYI", f"FYI only: {triage['summary'][:120]}", ["fyi"])
 
         # 6. Internal context: answer from SHAREABLE spec only.
+        trace.working("context", "Internal context agent",
+                      f"Looking up {len(triage['questions'])} question(s) in the shareable spec only.")
         answers, call = run_context(ctx, triage["questions"])
         run["answers"] = {str(k): v for k, v in answers.items()}
         if call is None:
@@ -348,19 +391,23 @@ class Pipeline:
                       call, data={"answers": run["answers"]})
 
         # 7. Email agent: draft. Recipients, subject and attachments are set by code, not the model.
+        trace.working("drafter", "Email agent", "Writing the reply as John: spec answers, \"Wei will review\", "
+                                                 "and the questions Wei needs answered.")
         body, call = run_drafter(ctx, triage, answers)
         draft = {"to": [sender["address"]], "cc": [], "subject": reply_subject(email.get("subject", "")),
                  "body": body, "attachments": []}
         run["draft"] = draft
         trace.add("drafter", "Email agent: draft reply", "ok",
                   f"Drafted {len(body.split())} words to {sender['address']} (recipient locked by code)."
-                  + _usage_brief(call), call)
+                  + _usage_brief(call), call, data={"preview": body[:400]})
 
         # 8. Compliance: deterministic checks + LLM second opinion (LLM can only make it stricter).
         det = check_outbound(body, to=draft["to"], cc=draft["cc"], attachments=draft["attachments"],
                              original_sender=sender["address"], sensitive_terms=self.sensitive_terms,
                              shareable_text=self.shareable_text, signature=ctx.signature)
-        review, call = run_compliance_review(ctx, body, triage["hard_topics"], answers)
+        trace.working("compliance", "Compliance agent", "Checking the draft: 11 hard rules in code, then a second "
+                                                         "opinion that sees only the draft, never the supplier email.")
+        review, call = run_compliance_review(ctx, body, triage["hard_topics"], answers, triage.get("spec_conflicts"))
         run["compliance"] = {"deterministic": det, "llm_review": review}
         passed = sum(1 for c in det["checks"] if c["ok"])
         status = "ok" if det["passed"] and review["verdict"] == "pass" else "warn" if det["passed"] else "stop"
@@ -408,13 +455,14 @@ class Pipeline:
             why = "; ".join(f"{c['label']} ({c['detail']})" if c["detail"] else c["label"] for c in det["blocking"])
             return done("ESCALATED", f"Compliance blocked the draft: {why}. Nothing sent.",
                         ["compliance_block"], status="stop")
-        decision_keys = list(triage["hard_topics"]) + (["engineering_change"] if triage.get("engineering_change") else [])
+        decision_keys = (list(triage["hard_topics"]) + (["engineering_change"] if triage.get("engineering_change") else [])
+                         + (["spec_conflict"] if triage.get("spec_conflicts") else []))
         if decision_keys:
             labels = ", ".join(TOPIC_LABELS[t] for t in decision_keys)
             # The decision always stays with Wei. At Medium and High the supplier still gets a reply right away:
             # what the spec covers, "Wei will review", and the questions Wei needs answered to decide (D8).
             # Never for "are you a bot?" (Wei answers that personally), never in answer to a pure status update.
-            asked = triage.get("supplier_asked", True)
+            asked = triage.get("supplier_asked", True) or bool(triage.get("spec_conflicts"))
             reply_ok = (autonomous and risk in ("medium", "high") and not soft and asked
                         and "identity" not in triage["hard_topics"])
             asking = bool(supplier_questions(triage))

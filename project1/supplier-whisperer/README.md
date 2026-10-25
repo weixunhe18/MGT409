@@ -128,6 +128,16 @@ flowchart LR
 | Compliance | Second opinion that sees **only the draft**, so the supplier email can't manipulate it | Draft + list of forbidden topics | gpt-6-luna |
 | Guardrails (code) | Sender gate, injection scan, topic detection, number grounding, outbound checks, budget, loop guard | Regex/HTML parser/HMAC | none |
 
+### Spec check: supplier statements that contradict your spec
+
+Before drafting, code (no model) compares what the supplier states with the spec line about the same part:
+materials ("the probe is copper" vs. "Probe material: stainless steel") and numbers with units ("2.8 mm" vs. "maximum
+2.5 mm"). In live mode the manager agent also rewrites the supplier's claims as full sentences (so a bare "Copper"
+becomes "The probe is made of copper") and those go through the same check. A conflict is escalated to you, and at
+Medium/High the reply quotes the supplier's statement next to your requirement and asks which is correct, with a
+datasheet or photo. Proposals that name your spec's material too ("EPDM instead of silicone?") are handled by the
+change rule, not reported as conflicts. Conflicts also lower the supplier's knowledge score.
+
 ### Supplier scorecard (Suppliers tab)
 
 Each allowlisted supplier gets a 0–100 score from deterministic code (no model calls): **answers** (did they answer

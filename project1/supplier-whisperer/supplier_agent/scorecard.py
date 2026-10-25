@@ -16,6 +16,8 @@ import re
 from datetime import datetime
 from statistics import median
 
+from .conflicts import find_conflicts
+
 # Wei had to chase: "hello?", "any update?", "?" on its own.
 _NUDGE_RE = re.compile(r"^\s*(?:hello\??|hi\??|\?+|any update\??|hi,? do you have any update\??|keep me posted\.?|"
                        r"following up\.?|just checking in\.?)\s*$", re.I)
@@ -67,7 +69,7 @@ def _substantive(turn: dict) -> bool:
     return bool(_TECH_RE.search(text)) or turn["attachments"] > 0 or len(text.split()) >= 25
 
 
-def score(messages: list[dict], ghost_hours: float = 72.0, now: datetime | None = None) -> dict:
+def score(messages: list[dict], ghost_hours: float = 72.0, now: datetime | None = None, kb=None) -> dict:
     now = (now or datetime.now()).replace(tzinfo=None)
     turns = _turns(messages)
     buyer_msgs = [m for m in messages if m["role"] == "buyer"]
@@ -100,13 +102,16 @@ def score(messages: list[dict], ghost_hours: float = 72.0, now: datetime | None 
     technical = sum(1 for s in supplier_text if _TECH_RE.search(s))
     documents = sum(1 for m in supplier_msgs if m.get("attachment") in ("file", "image", "video"))
     nudges = sum(1 for m in buyer_msgs if _NUDGE_RE.match(m.get("text") or ""))
+    # Statements that contradict the spec (e.g. "the probe is copper" vs. stainless) count against knowledge.
+    conflicts = sum(1 for s in supplier_text if find_conflicts(s, kb)) if kb is not None else 0
 
     med = median(reply_hours) if reply_hours else None
     answer_rate = answered / asked if asked else None
     # 0-100 sub-scores. Speed matters, but less than substance: a fast "I'll ask the factory" is not an answer.
     speed = (100 if med is not None and med <= 4 else 80 if med is not None and med <= 24 else
              50 if med is not None and med <= 72 else 20)
-    knowledge = round(100 * technical / max(1, technical + gaps)) if (technical or gaps) else 50
+    knowledge = (round(100 * technical / max(1, technical + gaps + 2 * conflicts))
+                 if (technical or gaps or conflicts) else 50)
     reliability = max(0, 100 - 15 * ghosted - 10 * nudges - 10 * max(0, gaps - documents))
     answers = round(100 * answer_rate) if answer_rate is not None else 50
     overall = round(0.2 * speed + 0.3 * answers + 0.3 * knowledge + 0.2 * reliability)
@@ -118,6 +123,8 @@ def score(messages: list[dict], ghost_hours: float = 72.0, now: datetime | None 
         notes.append(f"Answered {answered}/{asked} of your questions with substance")
     if gaps:
         notes.append(f"{gaps} 'don't know / ask the factory' replies")
+    if conflicts:
+        notes.append(f"{conflicts} statement(s) contradict your spec")
     if ghosted:
         notes.append(f"{ghosted} time(s) no reply within {ghost_hours:.0f} h")
     if nudges:
@@ -129,7 +136,7 @@ def score(messages: list[dict], ghost_hours: float = 72.0, now: datetime | None 
         "subscores": {"speed": speed, "answers": answers, "knowledge": knowledge, "reliability": reliability},
         "median_reply_hours": round(med, 2) if med is not None else None,
         "questions_asked": asked, "questions_answered": answered,
-        "knowledge_gaps": gaps, "promises": promises, "technical_messages": technical,
+        "knowledge_gaps": gaps, "spec_conflicts": conflicts, "promises": promises, "technical_messages": technical,
         "documents_shared": documents, "nudges_needed": nudges, "ghosted": ghosted,
         "messages": {"buyer": len(buyer_msgs), "supplier": len(supplier_msgs)},
         "notes": notes,

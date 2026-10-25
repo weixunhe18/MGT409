@@ -22,7 +22,7 @@ import urllib.request
 import webbrowser
 from collections import Counter, deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from .config import STATIC_DIR, AppConfig, load_policy, load_sample_events
 from .knowledge import KnowledgeBase
@@ -67,11 +67,37 @@ class App:
         self.busy = False
         self.replay_running = False
         self.webhook_log: deque = deque(maxlen=60)
+        # "Agents at work": every agent step as it happens, so the demo shows who is doing what.
+        self.activity: deque = deque(maxlen=500)
+        self.activity_seq = 0
+        self._activity_lock = threading.Lock()
+        self.pipeline.on_step = self._on_step
         loop_host = "127.0.0.1" if config.host in LOOPBACK_HOSTS + ("0.0.0.0", "", "::") else config.host
         if ":" in loop_host:
             loop_host = f"[{loop_host}]"
         self.base_url = f"http://{loop_host}:{config.port}"
         threading.Thread(target=self._worker, name="agent-worker", daemon=True).start()
+
+    # Demo pacing (seconds per agent step) while the "Run demo inbox" emails are processed, so people can follow.
+    DEMO_STEP_DELAY = {"mock": 0.45, "live": 0.15}
+
+    def _on_step(self, email: dict, step: dict) -> None:
+        data = step.get("data") or {}
+        event = {"at": now_iso(), "email": email.get("message_id", ""), "from": email.get("from_name")
+                 or email.get("from_addr", ""), "subject": email.get("subject", ""), "key": step.get("key", ""),
+                 "title": step.get("title", ""), "status": step.get("status", ""), "detail": step.get("detail", ""),
+                 "usage": step.get("usage"), "data": {k: data[k] for k in ("summary", "questions", "conflicts",
+                                                                           "preview", "run_id", "sent", "cost_usd")
+                                                      if k in data}}
+        with self._activity_lock:
+            self.activity_seq += 1
+            event["seq"] = self.activity_seq
+            self.activity.append(event)
+
+    def activity_since(self, since: int) -> dict:
+        with self._activity_lock:
+            events = [e for e in self.activity if e["seq"] > since]
+        return {"live": not self.idle, "seq": self.activity_seq, "events": events[-200:]}
 
     @property
     def live_available(self) -> bool:
@@ -90,6 +116,8 @@ class App:
             finally:
                 self.busy = False
                 self.jobs.task_done()
+                if self.jobs.empty() and not self.replay_running:
+                    self.pipeline.step_delay = 0.0  # demo over: real mail runs at full speed
 
     def log(self, text: str) -> None:
         self.webhook_log.append({"at": now_iso(), "text": text})
@@ -150,6 +178,8 @@ class App:
             self.store.reset()
         events = load_sample_events(self.config.dataset_dir)
         self.replay_running = True
+        mode = "live" if self.pipeline.settings()["llm_mode"] == "live" else "mock"
+        self.pipeline.step_delay = self.DEMO_STEP_DELAY[mode]
 
         def run() -> None:
             try:
@@ -172,7 +202,7 @@ class App:
         for address, messages in self.store.supplier_conversations().items():
             contact = contacts.get(address) or {}
             rows.append({"address": address, "name": contact.get("name", ""), "company": contact.get("company", ""),
-                         **score(messages)})
+                         **score(messages, kb=self.kb)})
         return sorted(rows, key=lambda r: -r["overall"])
 
     def state(self) -> dict:
@@ -315,6 +345,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"ok": True, "time": now_iso()})
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/activity":  # the "Agents at work" panel polls this every half second
+            q = parse_qs(urlparse(self.path).query)
+            try:
+                since = int((q.get("since") or ["0"])[0])
+            except ValueError:
+                since = 0
+            return self._json(self.app.activity_since(since))
         m = re.match(r"^/api/runs/(\d+)$", path)
         if m:
             run = self.app.store.get_run(int(m.group(1)))

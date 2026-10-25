@@ -28,6 +28,7 @@ TOPIC_LABELS = {
     "drawing": "drawings",
     "identity": "who you are talking to",
     "engineering_change": "a proposed spec or part change",
+    "spec_conflict": "a statement that contradicts our spec",
 }
 
 _ADDR_RE = re.compile(r"^\s*(?:\"?(?P<name>[^\"<]*?)\"?\s*)?<\s*(?P<addr>[^<>\s]+@[^<>\s]+)\s*>\s*$")

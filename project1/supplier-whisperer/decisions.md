@@ -217,3 +217,16 @@ update?"), the agent re-asks for what Wei's last email requested and asks for a 
 as a proposed substitution. Four new public demo emails (10–13) reenact the patterns with the fictional TB-1
 product: an unexplained price add-on, a trader passing questions to the factory and offering a substitute, weeks
 of silence then "any update?", and a cheaper material swap.
+
+---
+
+## D10. Catch supplier statements that contradict the spec (decided Sat evening)
+
+- **Why:** in a real thread, supplier B wrote "the probe is made of copper" against a spec that said stainless steel,
+  twice. The agent let it pass; Wei caught it himself. A wrong premise poisons every later decision.
+- **How:** deterministic code compares the supplier's statements with the best-matching spec line, for materials and
+  numbers with units. The manager agent only rewrites claims into full sentences; code decides what conflicts.
+- **Then:** a conflict is "needs your decision"; at Medium/High the reply quotes the statement next to the requirement
+  and asks which is correct, with evidence. It is sent even if the supplier asked nothing, because the question is ours.
+- **Limits:** only materials and numbers with units; a claim with no part named ("Copper") needs live mode's claim
+  rewrite; numbers without units are skipped.

@@ -18,6 +18,7 @@ Return JSON with exactly these keys:
      "topics": ["subset of: price, quantity, date, po, payment, drawing, identity"],
      "engineering_change": false}
   ],
+  "claims": ["each factual statement the supplier makes about the product (material, dimension, process, standard), rewritten as a short standalone sentence that names the part, e.g. 'The probe is made of copper.' Use the earlier messages to resolve one-word answers. Max 8."],
   "suspicious_instructions": false,
   "reply_needed": true,
   "urgency": "low | normal | high"

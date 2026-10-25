@@ -89,6 +89,34 @@
   .small { font-size: 12px; color: var(--muted); }
   .kbd { font-family: ui-monospace, Consolas, monospace; background: #f1f5f9; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 12px; }
   .banner { background: var(--amber-bg); color: #78350f; border: 1px solid #fcd34d; }
+
+  /* Agents at work: live view of which agent is active and how they hand off */
+  .agents { border: 2px solid var(--blue-bg); }
+  .agents.live { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37,99,235,.08); }
+  .agents .ag-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .agents .ag-head h3 { margin: 0; font-size: 15px; }
+  .agents .ag-pill { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--slate-bg); color: var(--slate); }
+  .agents.live .ag-pill { background: var(--blue-bg); color: var(--blue); }
+  .agents .ag-summary { color: var(--muted); font-size: 12.5px; flex: 1; }
+  .agents .ag-body { margin-top: 12px; }
+  .agents.collapsed .ag-body { display: none; }
+  .ag-email { font-size: 13px; margin-bottom: 10px; } .ag-email b { color: var(--navy); }
+  .ag-flow { display: flex; align-items: stretch; gap: 4px; flex-wrap: wrap; margin-bottom: 12px; }
+  .ag-node { flex: 1 1 92px; min-width: 92px; border: 1px solid var(--line); border-radius: 10px; padding: 7px 8px; text-align: center; background: #fff; transition: all .25s; }
+  .ag-node .i { font-size: 18px; } .ag-node .n { font-size: 11.5px; font-weight: 600; } .ag-node .s { font-size: 10.5px; color: var(--muted); min-height: 13px; }
+  .ag-node.ok { background: var(--green-bg); border-color: #86efac; } .ag-node.warn { background: var(--amber-bg); border-color: #fcd34d; }
+  .ag-node.stop { background: var(--red-bg); border-color: #fca5a5; } .ag-node.skip { opacity: .45; }
+  .ag-node.active { border-color: var(--accent); background: var(--blue-bg); animation: agpulse 1s ease-in-out infinite; }
+  @keyframes agpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(37,99,235,.35); } 50% { box-shadow: 0 0 0 6px rgba(37,99,235,0); } }
+  .ag-arrow { align-self: center; color: var(--muted); font-size: 13px; }
+  .ag-think { background: #0b1f3a; color: #e2e8f0; border-radius: 10px; padding: 10px 12px; font-size: 13px; margin-bottom: 10px; min-height: 42px; }
+  .ag-think .who { font-weight: 700; color: #93c5fd; } .ag-think .dots::after { content: '…'; animation: agdots 1.2s steps(4) infinite; }
+  @keyframes agdots { 0% { content: ''; } 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+  .ag-log { max-height: 230px; overflow-y: auto; border-top: 1px solid var(--line); padding-top: 6px; }
+  .ag-msg { font-size: 12.5px; padding: 4px 0; display: flex; gap: 8px; } .ag-msg .t { color: var(--muted); font-size: 11px; min-width: 44px; }
+  .ag-msg .hand { color: var(--accent); font-weight: 600; white-space: nowrap; }
+  .ag-msg ul { margin: 3px 0 0 16px; padding: 0; } .ag-msg .pv { white-space: pre-wrap; background: #f8fafc; border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; margin-top: 3px; font-size: 12px; }
+  .ag-done { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 </style>
 </head>
 <body>
@@ -163,6 +191,19 @@
   </aside>
 
   <main>
+    <div class="card agents collapsed" id="agents" style="display:none">
+      <div class="ag-head" onclick="toggleAgents()">
+        <h3>🧠 Agents at work</h3><span class="ag-pill" id="ag-pill">Idle</span>
+        <span class="ag-summary" id="ag-summary"></span><span class="small" id="ag-toggle">show ▾</span>
+      </div>
+      <div class="ag-body">
+        <div class="ag-email" id="ag-email"></div>
+        <div class="ag-flow" id="ag-flow"></div>
+        <div class="ag-think" id="ag-think"></div>
+        <div class="ag-log" id="ag-log"></div>
+        <div class="ag-done" id="ag-done"></div>
+      </div>
+    </div>
     <div class="card banner" id="dev-banner" style="display:none"></div>
     <div class="card brief">
       <h2 id="brief-title">Good morning</h2>
@@ -470,6 +511,87 @@ window.addEventListener('hashchange', applyHash);
 preset('tech');
 refresh().then(applyHash);
 setInterval(refresh, 1500);
+// ------------------------------------------------------------ Agents at work
+// Streams every agent step while email is being processed: which agent is active, what it is doing,
+// and what it hands to the next one. Opens when mail starts flowing, collapses when it stops.
+const AG_NODES = [
+  ['inbox', '📨', 'Inbox'], ['guard', '🛡️', 'Guardrails'], ['manager', '🧭', 'Manager'], ['spec', '📏', 'Spec check'],
+  ['context', '📚', 'Context'], ['drafter', '✍️', 'Email agent'], ['compliance', '✅', 'Compliance'], ['decision', '⚖️', 'Decision']];
+const AG_NODE_OF = {webhook: 'inbox', start: 'inbox', kill_switch: 'guard', loop_guard: 'guard', sender: 'guard',
+  injection: 'guard', memory: 'guard', budget: 'guard', manager: 'manager', spec_check: 'spec', context: 'context',
+  drafter: 'drafter', compliance: 'compliance', decision: 'decision', last_check: 'decision', error: 'decision', end: 'decision'};
+const AG_NEXT = {inbox: 'Guardrails', guard: 'Manager', manager: 'Context', spec: 'Context', context: 'Email agent',
+  drafter: 'Compliance', compliance: 'Decision'};
+const AG = {seq: 0, live: false, wasLive: false, open: false, userToggled: false, email: null, nodes: {}, log: [], done: [], think: null, collapseTimer: null};
+function toggleAgents() { AG.userToggled = true; setAgentsOpen(!AG.open); }
+function setAgentsOpen(open) {
+  AG.open = open; const el = document.getElementById('agents');
+  el.classList.toggle('collapsed', !open); document.getElementById('ag-toggle').textContent = open ? 'hide ▴' : 'show ▾';
+}
+function agNodeState(st) { return {ok: 'ok', info: 'ok', warn: 'warn', stop: 'stop', skip: 'skip', working: 'active'}[st] || 'ok'; }
+function agHandle(e) {
+  const node = AG_NODE_OF[e.key] || 'guard';
+  if (e.key === 'start') { AG.email = e; AG.nodes = {inbox: 'active'}; AG.log = []; AG.think = {who: '📨 Inbox', text: 'New email from ' + e.from + ': ' + e.subject, working: false}; }
+  else if (e.key === 'end') {
+    AG.nodes.decision = {AUTO_SENT: 'ok', ESCALATED: 'warn', NEEDS_APPROVAL: 'warn', FYI: 'ok'}[e.status] || 'stop';
+    Object.keys(AG.nodes).forEach(k => { if (AG.nodes[k] === 'active') AG.nodes[k] = 'ok'; });
+    AG.done.push({from: e.from, outcome: e.status, label: e.title, run: (e.data || {}).run_id});
+    AG.think = {who: '⚖️ Decision', text: e.detail, working: false};
+  } else {
+    AG.nodes[node] = agNodeState(e.status);
+    const label = (AG_NODES.find(n => n[0] === node) || [])[1] + ' ' + e.title;
+    AG.think = {who: label, text: e.detail, working: e.status === 'working'};
+  }
+  if (e.status !== 'working') AG.log.push(e);
+}
+function agBody(e) {
+  const d = e.data || {};
+  let extra = '';
+  if (d.questions && d.questions.length) extra += '<ul>' + d.questions.map(q => `<li>${esc(q.text || q)}</li>`).join('') + '</ul>';
+  if (d.conflicts && d.conflicts.length) extra += '<ul>' + d.conflicts.map(c => `<li>“${esc(c.claim)}” ✗ ${esc(c.spec)}</li>`).join('') + '</ul>';
+  if (d.preview) extra += `<div class="pv">${esc(d.preview)}</div>`;
+  const node = AG_NODE_OF[e.key];
+  const hand = e.key !== 'end' && AG_NEXT[node] && e.status !== 'stop' ? `<span class="hand">→ ${AG_NEXT[node]}</span>` : '';
+  const icon = (AG_NODES.find(n => n[0] === node) || [, '•'])[1];
+  return `<div class="ag-msg"><span class="t">${hhmm(e.at)}</span><div>${icon} <b>${esc(e.title)}</b> ${hand}<div>${esc(e.detail)}</div>${extra}</div></div>`;
+}
+function renderAgents() {
+  const el = document.getElementById('agents');
+  if (!AG.seq && !AG.live) { el.style.display = 'none'; return; }
+  el.style.display = ''; el.classList.toggle('live', AG.live);
+  document.getElementById('ag-pill').textContent = AG.live ? '● Live' : 'Idle';
+  const sent = AG.done.filter(d => ['AUTO_SENT', 'ESCALATED'].includes(d.outcome)).length;
+  const stopped = AG.done.filter(d => ['QUARANTINED', 'BLOCKED', 'HELD'].includes(d.outcome)).length;
+  document.getElementById('ag-summary').textContent = AG.live ? `Working on email ${AG.done.length + 1}…` :
+    `Agents handled ${AG.done.length} email(s) · ${stopped} stopped before any model saw them`;
+  const em = AG.email;
+  document.getElementById('ag-email').innerHTML = em ? `📨 <b>${esc(em.from)}</b> · ${esc(em.subject)}` : '';
+  document.getElementById('ag-flow').innerHTML = AG_NODES.map(([k, i, n], idx) => {
+    const st = AG.nodes[k]; const cls = !st ? 'skip' : st;
+    const sub = st === 'active' ? 'thinking' : st === 'ok' ? 'done' : st === 'warn' ? 'flagged' : st === 'stop' ? 'stopped' : '';
+    return (idx ? '<span class="ag-arrow">→</span>' : '') + `<div class="ag-node ${cls}"><div class="i">${i}</div><div class="n">${n}</div><div class="s">${sub}</div></div>`;
+  }).join('');
+  const th = AG.think;
+  document.getElementById('ag-think').innerHTML = th ? `<span class="who">${esc(th.who)}</span> ${th.working ? '<span class="dots">is working</span>' : ''}<div>${esc(th.text)}</div>` : '';
+  const log = document.getElementById('ag-log');
+  log.innerHTML = AG.log.slice(-40).map(agBody).join(''); log.scrollTop = log.scrollHeight;
+  document.getElementById('ag-done').innerHTML = AG.done.slice(-20).map(d =>
+    `<span class="chip ${esc(d.outcome)}" style="cursor:pointer" onclick="openRun(${Number(d.run) || 0})">${esc((d.from || '').split(' ')[0])}: ${esc(d.label)}</span>`).join('');
+}
+async function pollActivity() {
+  try {
+    const a = await (await fetch('/api/activity?since=' + AG.seq)).json();
+    (a.events || []).forEach(agHandle);
+    AG.seq = a.seq || AG.seq; AG.live = !!a.live;
+    if (AG.live && !AG.wasLive) { AG.done = []; if (!AG.userToggled) setAgentsOpen(true); clearTimeout(AG.collapseTimer); }
+    if (!AG.live && AG.wasLive && !AG.userToggled) { AG.collapseTimer = setTimeout(() => setAgentsOpen(false), 2500); }
+    if (AG.live && !AG.wasLive) AG.userToggled = false;
+    AG.wasLive = AG.live;
+    renderAgents();
+  } catch (e) { /* server restarting */ }
+}
+setInterval(pollActivity, 500);
+
 </script>
 </body>
 </html>

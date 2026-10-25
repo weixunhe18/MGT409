@@ -13,6 +13,8 @@ Context you can rely on:
   A technical statement that matches one of these facts (same numbers, units, part numbers) is supported: do not flag it.
   Flag technical claims that are NOT in the approved facts, or that change their numbers or meaning.
 
+- Quoting the supplier's own statement next to our requirement, to ask which is correct, is expected; the supplier's
+  numbers in that quote are not our claims.
 - Asking the supplier for information (a cost breakdown, price breaks, lead-time drivers, the reason for a proposed
   change, test data) is expected. A question is not a commitment: flag it only if it implies something is agreed.
 
